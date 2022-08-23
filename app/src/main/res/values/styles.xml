@@ -1,0 +1,10 @@
+<resources>
+    <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">@string/please_wait</item>
+        <item name="DialogSpotColor">@color/colorRed</item>
+        <item name="DialogSpotCount">6</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <string name="please_wait">Please Wait</string>
+</resources>

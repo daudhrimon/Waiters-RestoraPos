@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "687351075355",
+    "project_id": "restora-pos",
+    "storage_bucket": "restora-pos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687351075355:android:165aa204d38b7653b3debe",
+        "android_client_info": {
+          "package_name": "com.restorapos.waiters"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "687351075355-oo20csio4nbhdpk9dqg3di6vj7fhhruc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.restorapos.waiters",
+            "certificate_hash": "46721e2f0b6e1b96fc36cce548ce3625c961ea7a"
+          }
+        },
+        {
+          "client_id": "687351075355-jitkl3trmo2slolt9220tjdju9ummuf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5XGL7iQXRsi-kWCkDXKfJecRLJPkjZII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "687351075355-jitkl3trmo2slolt9220tjdju9ummuf1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

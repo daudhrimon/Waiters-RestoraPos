@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/badge_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/border_black.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/button_ash_border_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/button_green_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/button_light_red_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/button_red_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/button_red_background_login.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/circle.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.2105" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_chair.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_chair_black.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_close.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_exit_to_app_white_24dp.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_food_tray.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_history_white_24dp.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_keyboard_backspace_white_24dp.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_minus.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_notifications_green_24dp.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_tray.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/ic_writing.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/icon_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/image_null_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/login_button_style.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/rounded_black_background.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/rounded_border_black.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/selector_back.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/selector_dashboard.xml" value="0.227" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/drawable/selector_search_coss.xml" value="0.2135" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_food_cart.xml" value="0.33" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_food_item.xml" value="0.33" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_login.xml" value="0.36615384615384616" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_main.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_splash_screen.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/activity_view_order.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/app_bar_main.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/custom_action_item_layout.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/custom_action_item_ready_layout.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/customdialogforperson.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_complete_cancel_order_item_new.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_dashboard_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_food_cart_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_food_cart_item_addons.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_food_view_order_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_food_view_order_item_new.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_foods_item.xml" value="0.19166666666666668" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_foods_item_new.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_notification.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_pending_order_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_pending_order_item_new.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_sub_category_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/design_tablelist_item.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/food_cart_dialog.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_cancel_order.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_complete_order.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_dashboard.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_pending_order.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_processing_order.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/fragment_ready_list.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/nav_header_main.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/person_select_layout.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/layout/spinnerlayout.xml" value="0.371875" />
+        <entry key="..\:/Bhojon-Waiters/app/src/main/res/menu/menu.xml" value="0.371875" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/button_green_background.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/button_light_red_background.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/button_red_background.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/button_red_background_login.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/ic_history_white_24dp.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/ic_round_check_circle_outline_24.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/rounded_border_black.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/selector_back.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/selector_view_cart.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/drawable/shape_mainsearch.xml" value="0.147" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout-v26/app_bar.xml" value="0.25833333333333336" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/activity_food_cart.xml" value="0.264" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/activity_food_item.xml" value="0.2" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/activity_login.xml" value="0.22962962962962963" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/activity_view_order.xml" value="0.22962962962962963" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/app_bar.xml" value="0.264" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/app_bar_main.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/custom_action_item_layout.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/design_complete_cancel_order_item.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/design_dashboard_item.xml" value="0.22962962962962963" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/design_food_view_order_item.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/design_notification.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/design_tablelist_item.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/food_cart_dialog.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_cancel_order.xml" value="0.25833333333333336" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_complete_order.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_dashboard.xml" value="0.22962962962962963" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_foods.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_notification.xml" value="0.2" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_order_history.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_order_list.xml" value="0.2" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_pending_order.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_processing_order.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/fragment_ready_list.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/nav_header_main.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/layout/person_select_layout.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/menu/btm_menu.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/menu/btm_nav.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/menu/main.xml" value="0.259375" />
+        <entry key="..\:/WORK-SPACE/Bhojon-Waiters/app/src/main/res/menu/menu.xml" value="0.259375" />
+        <entry key="..\:/Waiters/app/src/main/res/layout/activity_food_cart.xml" value="0.371875" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

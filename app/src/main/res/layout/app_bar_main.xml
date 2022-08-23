@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:background="@color/colorRed">
+
+        <ImageView
+            android:id="@+id/appMenu"
+            android:layout_width="@dimen/_34sdp"
+            android:layout_height="@dimen/_34sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/selector_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="7dp"
+            android:src="@drawable/menu"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/appHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_toEndOf="@id/appMenu"
+            android:text="Menu"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:id="@+id/appSearchLay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/appMenu"
+            android:layout_alignParentEnd="true"
+            android:layout_marginVertical="6dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/shape_mainsearch"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/appSearchBar"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_36sdp"
+                android:layout_weight="5.1"
+                app:searchIcon="@drawable/ic_search_red_24dp"
+                app:closeIcon="@null"
+                app:iconifiedByDefault="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:focusedByDefault="false"
+                tools:ignore="UnusedAttribute"/>
+
+            <ImageView
+                android:id="@+id/appCross"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".8"
+                android:layout_margin="@dimen/_1sdp"
+                android:clickable="true"
+                android:background="@drawable/selector_search_cross"
+                android:padding="9dp"
+                android:src="@drawable/ic_close"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/appBtnLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginEnd="6dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:id="@+id/appSearch"
+                android:layout_width="@dimen/_34sdp"
+                android:layout_height="@dimen/_34sdp"
+                android:background="@drawable/selector_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="7dp"
+                android:src="@drawable/ic_baseline_search_24"
+                app:tint="@color/colorWhite"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <FrameLayout
+                android:id="@+id/appCartLay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="1dp"
+                android:clipToPadding="false"
+                android:focusable="true"
+                tools:ignore="RtlSymmetry">
+
+                <ImageView
+                    android:id="@+id/appCart"
+                    android:layout_width="@dimen/_34sdp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/selector_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_remove_shopping_cart_black_24dp"
+                    app:tint="@color/colorWhite"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/appCartBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="-1dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:padding="0dp"
+                    android:text="0"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,SmallSp"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appBar"
+            android:layout_above="@+id/btmNav"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context=".MainActivity"
+            android:id="@+id/content_main"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/btmNav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_47sdp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite"
+        app:itemIconSize="@dimen/_22sdp"
+        android:paddingHorizontal="@dimen/_2sdp"
+        app:itemRippleColor="@color/colorRed"
+        app:labelVisibilityMode="auto"
+        app:menu="@menu/btm_nav" />
+
+</RelativeLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:paddingLeft="@dimen/_5sdp"
+    android:paddingRight="@dimen/_5sdp"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical"
+    android:id="@+id/layoutId"
+    android:background="@color/colorWhite">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_chair_black"
+            tools:ignore="MissingConstraints"
+            android:id="@+id/catergoryImageId"/>
+
+        <TextView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:text="10"
+            android:gravity="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_10sdp"
+            android:id="@+id/catergoryNameId"/>
+
+        <TextView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:text="1:1"
+            android:gravity="center"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/_10sdp"
+            android:id="@+id/personAvailable"/>
+    </LinearLayout>
+
+</LinearLayout>
