@@ -83,6 +83,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     public static String countedPerson;
     public static String tableID = "";
 
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

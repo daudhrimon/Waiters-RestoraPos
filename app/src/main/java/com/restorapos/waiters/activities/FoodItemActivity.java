@@ -84,6 +84,7 @@ public class FoodItemActivity extends AppCompatActivity {
     private final List<Foodinfo> orderedItems = new ArrayList<>();
     private String quantity = "";
     private int countNow= 1;
+    private LinearLayout parentLay;
 
     @SuppressLint("NewApi")
     @Override
@@ -167,6 +168,7 @@ public class FoodItemActivity extends AppCompatActivity {
         userId = SharedPref.read("ID", "");
         progressDialog.show();
         MainActivity.appBarDefault();
+        parentLay = findViewById(R.id.parentLay);
     }
 
     private void getAllFooditemWithMultipleVariants() {
@@ -1035,8 +1037,12 @@ public class FoodItemActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        searchviewId.setFocusable(false);
+        parentLay.requestFocus();
         setFoodCartHeaders();
         Utils.hideKeyboard(this);
+        searchviewId.setFocusable(true);
+        searchviewId.setFocusableInTouchMode(true);
     }
 
     @Override
