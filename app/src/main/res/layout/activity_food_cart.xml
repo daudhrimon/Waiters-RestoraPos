@@ -42,6 +42,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/selector_green_button"
+            android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
@@ -396,6 +397,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/disLay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -409,9 +411,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Discount"
+                            android:textColor="@android:color/black"
                             android:textSize="15sp" />
 
-                        <EditText
+                        <!--<EditText
                             android:id="@+id/discountId"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -422,7 +425,21 @@
                             android:inputType="number"
                             android:padding="5dp"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold" />-->
+
+                        <TextView
+                            android:id="@+id/disTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@color/colorWhite"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:padding="5dp"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -476,6 +493,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_red_button"
+                android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -491,6 +509,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_green_button"
+                android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"

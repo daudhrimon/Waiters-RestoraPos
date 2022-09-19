@@ -25,6 +25,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.restorapos.waiters.MainActivity;
@@ -49,7 +50,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -406,19 +410,28 @@ public class FoodItemActivity extends AppCompatActivity {
                 Foodinfo unitListItem = new Foodinfo();
                 unitListItem.setProductName(foodinfo.getProductName());
                 unitListItem.setProductId(foodinfo.getProductId());
+
+                unitListItem.setOfferIsavailable(foodinfo.getOfferIsavailable());
+                unitListItem.setOfferstartdate(foodinfo.getOfferstartdate());
+                unitListItem.setOfferendate(foodinfo.getOfferendate());
+                unitListItem.setOffersRate(foodinfo.getOffersRate());
+
                 unitListItem.setVariantid(foodinfo.getVariantid());
                 unitListItem.setVariantName(foodinfo.getVariantName());
                 unitListItem.setAddOnsTotal(foodinfo.getAddOnsTotal());
                 unitListItem.setPrice(foodinfo.getPrice());
+
                 unitListItem.setProductvat(foodinfo.getProductvat());
                 unitListItem.setAddOnsName(foodinfo.getAddOnsName());
                 unitListItem.setAddons(foodinfo.getAddons());
+
                 if (addOnsChecker==1){
                     if (foodinfo.getAddons()==1) {
                         unitListItem.setAddonsinfo(foodinfo.getAddonsinfo());
                     }
                 }
                 unitListItem.quantitys = Integer.parseInt(quantity);
+
                 DatabaseClient.getInstance(FoodItemActivity.this).getAppDatabase()
                         .taskDao()
                         .insertFood(unitListItem);
@@ -450,8 +463,15 @@ public class FoodItemActivity extends AppCompatActivity {
                 unitListItem.setProductvat(foodinfo.getProductvat());
                 unitListItem.setAddOnsName(foodinfo.getAddOnsName());
                 unitListItem.setId(foodinfo.getId());
+
+                unitListItem.setOfferIsavailable(foodinfo.getOfferIsavailable());
+                unitListItem.setOfferstartdate(foodinfo.getOfferstartdate());
+                unitListItem.setOfferendate(foodinfo.getOfferendate());
+                unitListItem.setOffersRate(foodinfo.getOffersRate());
+
                 unitListItem.setAddons(foodinfo.getAddons());
                 unitListItem.quantitys = quantity;
+
                 DatabaseClient.getInstance(FoodItemActivity.this).getAppDatabase()
                         .taskDao()
                         .updateFood(unitListItem);
@@ -540,6 +560,13 @@ public class FoodItemActivity extends AppCompatActivity {
             viewHolder.price.setText(SharedPref.read("CURRENCY", "") + " " + items.get(i).getPrice());
             viewHolder.notes.setText(items.get(i).getDestcription());
             viewHolder.varient.setText(items.get(i).getVariantName());
+
+            if (items.get(i).getOfferIsavailable() != null) {
+                if (items.get(i).getOfferIsavailable().equals("1") && isOfferAvailable2(items.get(i).getOfferstartdate(), items.get(i).getOfferendate())) {
+                    viewHolder.offerLay.setVisibility(View.VISIBLE);
+                    viewHolder.offerRate.setText(items.get(i).getOffersRate());
+                }
+            }
 
             viewHolder.mview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -702,12 +729,13 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            TextView categoryName, price, notes, qunatity, varient;
+            TextView categoryName, price, notes, qunatity, varient,offerRate;
             ImageView qtyShowTv;
             ImageView plus, minus;
             ImageView categoryImage;
             CardView layoutDesignFoodItem;
             View mview;
+            RelativeLayout offerLay;
             public ViewHolder(View view) {
                 super(view);
                 mview = view;
@@ -721,7 +749,28 @@ public class FoodItemActivity extends AppCompatActivity {
                 plus = view.findViewById(R.id.plusId);
                 minus = view.findViewById(R.id.minusId);
                 qunatity = view.findViewById(R.id.quantityId);
+                offerLay = view.findViewById(R.id.offerLay);
+                offerRate = view.findViewById(R.id.offerRate);
+            }
+        }
 
+        private boolean isOfferAvailable2(String offerstartdate, String offerendate) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date strDate = null;
+            Date endDate = null;
+            try {
+                strDate = sdf.parse(offerstartdate);
+                endDate = sdf.parse(offerendate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (System.currentTimeMillis() >= strDate.getTime() &&
+                    System.currentTimeMillis() <= endDate.getTime()) {
+                Log.wtf("TRUE","");
+                return true;
+            } else {
+                Log.wtf("False","");
+                return false;
             }
         }
 
@@ -866,7 +915,7 @@ public class FoodItemActivity extends AppCompatActivity {
                 Log.d("addonslisize", "" + addonsinfoList.size());
                 addOnsitems = addonsinfoList;
 
-               
+
                 if (addOnsitems.size() == 0) {
                     rv.setVisibility(View.GONE);
                 }
@@ -1026,7 +1075,7 @@ public class FoodItemActivity extends AppCompatActivity {
                 }, 1000);
 
                 insertFood(this.items.get(pos));
-                
+
                 Toasty.success(FoodItemActivity.this,"Item added to cart").show();
                 getAllFoodItem();
             });

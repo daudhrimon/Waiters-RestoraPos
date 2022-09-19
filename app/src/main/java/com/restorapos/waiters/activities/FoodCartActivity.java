@@ -47,7 +47,10 @@ import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -60,20 +63,20 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     private RecyclerView recyclerView, tableRecyclerview;
     private WaitersService waitersService;
     private String id, typeId, orderId;
-    private TextView grandTotalTv, vatTv, customerNameTv, serviceCharge;
+    private TextView grandTotalTv, vatTv, customerNameTv, serviceChargeTv,disTv;
     private EditText customerTypeTv, tableId;
-    private EditText discount;
     private double serviceCrg;
+    private String serviceType;
     private EditText notes;
     private Double grandTotal;
-    private double restaurantVat;
+    private double globalVat;
     private String jsonText;
     private TextView addNewItem, place, cancel;
     private SpotsDialog progressDialog;
     private List<Foodinfo> foodtasks;
-    private double sumD = 0, vatD = 0;
+    private double sumD = 0.0, vatD = 0.0, crgD = 0.0, disD = 0.0;
     private SumInterface sumInterface;
-    private LinearLayout memberLayout;
+    private LinearLayout memberLayout,disLay;
     private ImageView backbtn;
     private TextView personsetupinTV,cartHeader;
     private int totalPerson = 0;
@@ -82,7 +85,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     private List<SelectedTableList> selectedTables;
     public static String countedPerson;
     public static String tableID = "";
-
+    private String currency = "";
 
     @SuppressLint("NewApi")
     @Override
@@ -91,10 +94,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         setContentView(R.layout.activity_food_cart);
 
         initial();
-        /*if (orderId != null && !orderId.isEmpty() && memberLayout.getVisibility() == View.VISIBLE) {
-            memberLayout.setVisibility(View.GONE);
 
-        }*/
         String OREDERID = SharedPref.read("ORDERID", "");
         if (!OREDERID.isEmpty()){
             cartHeader.setText("Cart ( Order Id : " + OREDERID + " )");
@@ -120,10 +120,10 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             }
         });
 
-        serviceCharge.setText(SharedPref.read("CURRENCY", "") + SharedPref.read("SC", ""));
-        serviceCrg = Double.parseDouble(SharedPref.read("SC", ""));
+        serviceChargeTv.setText(SharedPref.read("CURRENCY", "") + SharedPref.read("SC", ""));
 
-        discount.addTextChangedListener(new TextWatcher() {
+
+        /*discount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -134,11 +134,11 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    grandTotal = calculateTotal(Double.valueOf(sumD), Double.valueOf(vatD), serviceCharge.getText().toString());
+                    grandTotal = calculateTotal(Double.valueOf(sumD), Double.valueOf(vatD), crgD);
                     grandTotalTv.setText(SharedPref.read("CURRENCY", "") + grandTotal);
-                } catch (Exception e) {/**/}
+                } catch (Exception e) {*//**//*}
             }
-        });
+        });*/
 
         addNewItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,16 +258,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         dt.execute();
     }
 
-    private double calculateTotal(Double sum, Double vat, String serviceCharge) {
-        int discount = 0;
-        double sc = 0;
-        if (!TextUtils.isEmpty(serviceCharge)) {
-            sc = Double.parseDouble(serviceCharge);
-        }
-        Double totalPrice = sum + vat + sc - discount;
-        return totalPrice;
-    }
-
     private void initial() {
         sumInterface = this;
         SharedPref.init(this);
@@ -280,8 +270,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         cartHeader = findViewById(R.id.cartHeader);
         customerNameTv = findViewById(R.id.customerNameId);
         customerTypeTv = findViewById(R.id.customerTypeId);
-        serviceCharge = findViewById(R.id.serviceChargeId);
-        discount = findViewById(R.id.discountId);
+        serviceChargeTv = findViewById(R.id.serviceChargeId);
+        disLay = findViewById(R.id.disLay);
+        disTv = findViewById(R.id.disTv);
         place = findViewById(R.id.orderPlaceId);
         notes = findViewById(R.id.notesId);
         addNewItem = findViewById(R.id.addId);
@@ -291,12 +282,16 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         backbtn = findViewById(R.id.backId);
         selectedTables = new ArrayList<>();
         waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        try {restaurantVat = Double.parseDouble(SharedPref.read("RESTAURANT_VAT", ""));
-            tableId.setText(SharedPref.read("UPDATETABLE", ""));
-            customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
-        } catch (Exception e) {/**/}
         id = SharedPref.read("ID", "");
         orderId = getIntent().getStringExtra("ORDERID");
+        try {
+            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
+            serviceType = SharedPref.read("SCT", "0");
+            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
+            tableId.setText(SharedPref.read("UPDATETABLE", ""));
+            customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
+            currency = SharedPref.read("CURRENCY", "");
+        } catch (Exception e) {/**/}
         progressDialog = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
     }
@@ -328,13 +323,13 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                         } catch (Exception e) {/**/}
                         insertFood(iteminfoItem, addOnsTotal, addonsName);
                     }
-                    serviceCharge.setText(response.body().getData().getServicecharge());
-                    discount.setText(response.body().getData().getDiscount());
+                    serviceChargeTv.setText(response.body().getData().getServicecharge());
+                    //discount.setText(response.body().getData().getDiscount());
                     SharedPref.write("UPDATETABLE", response.body().getData().getTable());
                     SharedPref.write("MEMBERNAME", response.body().getData().getCustomername());
                     getTableList();
                     Log.d("sfdfgfdgdfsdf", "onResponse: " + response.body().getData().getTable());
-                    //updateInsert();
+
                 } catch (Exception ignored) {/**/}
             }
             @Override
@@ -358,7 +353,12 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 unitListItem.setPrice(foodinfo.getPrice());
                 unitListItem.setProductvat(foodinfo.getProductvat());
                 unitListItem.setAddOnsName(addOnsname);
+                unitListItem.setOfferIsavailable(foodinfo.getOfferIsavailable());
+                unitListItem.setOfferstartdate(foodinfo.getOfferstartdate());
+                unitListItem.setOfferendate(foodinfo.getOfferendate());
+                unitListItem.setOffersRate(foodinfo.getOffersRate());
                 unitListItem.quantitys = Integer.parseInt(foodinfo.getItemqty());
+
                 DatabaseClient.getInstance(FoodCartActivity.this).getAppDatabase()
                         .taskDao()
                         .insertFood(unitListItem);
@@ -367,6 +367,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
                 getUnit();
             }
         }
@@ -389,7 +390,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             @Override
             protected void onPostExecute(List<Foodinfo> tasks) {
                 super.onPostExecute(tasks);
+
                 foodtasks = tasks;
+
                 getFoodCart();
             }
         }
@@ -431,38 +434,76 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
     private void getFoodCart() {
         try {
-            Log.d("asasas", "getFoodCart: " + new Gson().toJson(foodtasks));
-            sumD = 0;
+            sumD = 0.0;
+            vatD = 0.0;
+            crgD = 0.0;
+            disD = 0.0;
+
             for (int i = 0; i < foodtasks.size(); i++) {
+                sumD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal());
+                vatD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) * Double.parseDouble(foodtasks.get(i).getProductvat())) / 100;
+                //disD = disD + (((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal())*//////////////////)
 
-                sumD = sumD + Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys + Double.valueOf(foodtasks.get(i).getAddOnsTotal());
-                vatD = vatD + (Double.parseDouble(foodtasks.get(i).getPrice()) * Double.parseDouble(foodtasks.get(i).getProductvat())) / 100;
+                if (foodtasks.get(i).getOfferIsavailable() != null){
+                    if (foodtasks.get(i).getOfferIsavailable().equals("1") && isOfferAvailable(foodtasks.get(i).getOfferstartdate(),foodtasks.get(i).getOfferendate())){
+                        disD += ((Double.parseDouble(foodtasks.get(i).getPrice())*foodtasks.get(i).quantitys)*Double.parseDouble(foodtasks.get(i).getOffersRate()))/100;
+                        disLay.setVisibility(View.VISIBLE);
+                        disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+                    }
+                }
             }
-            Log.d("SUM", "getFoodCart: " + sumD);
 
-            if (restaurantVat > 0) {
-                vatD = (restaurantVat * Double.valueOf(sumD)) / 100;
+            if (globalVat > 0.0) {
+                vatD += (globalVat * sumD);
+            }
 
-                grandTotal = Double.valueOf(sumD) + vatD;
-                Log.d("SUM", "onReceive: " + grandTotal + "\t" + vatD);
-                vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-                grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
-            } else {
-                vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-                grandTotal = Double.valueOf(sumD) + vatD;
-                grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
+            if (foodtasks.size() > 0){
+                if (serviceCrg > 0.0 && serviceType.equals("1")){
+                    crgD = serviceCrg * sumD;
+                } else {
+                    crgD = serviceCrg;
+                }
             }
-            try {
-                grandTotal = calculateTotal(sumD, vatD, String.valueOf(serviceCrg));
-                grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
-            } catch (Exception ignored) {
-                Log.d("dsafdsad", "getFoodCart: " + ignored.getLocalizedMessage());
-            }
-            Log.d("SUM33", new Gson().toJson(foodtasks));
-            FoodCartsAdaptersNew foodCartsAdapters = new FoodCartsAdaptersNew(FoodCartActivity.this, foodtasks, sumInterface);
-            recyclerView.setAdapter(foodCartsAdapters);
-        } catch (Exception ignored) {
-            Log.d("SUM", "getFoodCart: " + ignored.getLocalizedMessage());
+
+            grandTotal = (sumD + vatD + crgD)-disD;
+
+            setResults();
+
+            recyclerView.setAdapter(new FoodCartsAdaptersNew(FoodCartActivity.this, foodtasks, sumInterface));
+
+        } catch (Exception ignored) {/**/}
+
+        setCartCount();
+    }
+
+    private void setResults() {
+        vatTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(vatD))));
+        serviceChargeTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(crgD))));
+        grandTotalTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(grandTotal))));
+    }
+
+    private void setCartCount() {
+        SharedPref.write("CartCount",String.valueOf(foodtasks.size()));
+        SharedPref.write("CartTotal",String.valueOf(grandTotal));
+    }
+
+    private boolean isOfferAvailable(String offerstartdate, String offerendate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date strDate = null;
+        Date endDate = null;
+        try {
+            strDate = sdf.parse(offerstartdate);
+            endDate = sdf.parse(offerendate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (System.currentTimeMillis() >= strDate.getTime() &&
+                System.currentTimeMillis() <= endDate.getTime()) {
+            Log.wtf("TRUE","");
+            return true;
+        } else {
+            Log.wtf("False","");
+            return false;
         }
     }
 
@@ -541,7 +582,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 waitersService.postFoodCart(id, String.valueOf(vatD), tableID,
                         customerTypeTv.getText().toString(),
                         typeId,
-                        String.valueOf(serviceCrg), discount.getText().toString(), String.valueOf(sumD),
+                        String.valueOf(crgD), /*discount.getText().toString()*/String.valueOf(disD), String.valueOf(sumD),
                         String.valueOf(grandTotal),
                         datas, notes.getText().toString(), tableMultipleall, multipersonall,
                         countedPerson).enqueue(new Callback<PlaceOrderResponse>() {
@@ -560,8 +601,8 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     public void onFailure(Call<PlaceOrderResponse> call, Throwable t) {/**/}
                 });
             } else {
-                waitersService.modifyFoodCart(id, String.valueOf(vatD), tableID, SharedPref.read("ORDERID", ""), String.valueOf(serviceCrg)
-                        , discount.getText().toString(), String.valueOf(sumD), String.valueOf(grandTotal), datas).enqueue(new Callback<PlaceOrderResponse>() {
+                waitersService.modifyFoodCart(id, String.valueOf(vatD), tableID, SharedPref.read("ORDERID", ""), String.valueOf(crgD)
+                        , /*discount.getText().toString()*/String.valueOf(disD), String.valueOf(sumD), String.valueOf(grandTotal), datas).enqueue(new Callback<PlaceOrderResponse>() {
                     @Override
                     public void onResponse(Call<PlaceOrderResponse> call, Response<PlaceOrderResponse> response) {
                         try {
@@ -581,65 +622,171 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         }
         SharedPref.write("CartCount","0");
         SharedPref.write("CartTotal","0.0");
+
         deleteTable();
     }
 
     @Override
     public void addedSum(Foodinfo foodinfo) {
-        if (foodinfo.quantitys == 1) {
-            sumD = sumD + Double.parseDouble(foodinfo.getPrice()) + foodinfo.getAddOnsTotal();
-        } else {
-            sumD = sumD + Double.parseDouble(foodinfo.getPrice());
-        }
-        vatD = vatD + ((Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100);
-        if (restaurantVat > 0) {
-            vatD = (restaurantVat * sumD) / 100;
 
-            grandTotal = sumD + vatD;
-            Log.d("SUM", "onReceive: " + grandTotal + "\t" + vatD);
-            vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
+        double sSum = (Double.parseDouble(foodinfo.getPrice()) + foodinfo.getAddOnsTotal());
+
+        if (foodinfo.quantitys == 1) {
+            sumD += sSum;
         } else {
-            vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-            grandTotal = sumD + vatD;
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
+            sumD += Double.parseDouble(foodinfo.getPrice());
         }
-        try {
-            grandTotal = calculateTotal(sumD, vatD, String.valueOf(serviceCrg));
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
-        } catch (Exception ignored) {
-            Log.d("dsafdsad", "getFoodCart: " + ignored.getLocalizedMessage());
+
+        vatD += (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100;
+
+        if (foodinfo.getOfferIsavailable() != null) {
+            if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
+                disD += (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
+                disLay.setVisibility(View.VISIBLE);
+                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+            }
         }
-        Log.d("SUMS", "addedSum: " + sumD);
+
+        if (globalVat > 0.0) {
+            vatD += (globalVat * sSum);
+        }
+
+        if (serviceCrg > 0.0 && serviceType.equals("1")){
+            crgD += (serviceCrg * sSum);
+        } else {
+            crgD = serviceCrg;
+        }
+
+        grandTotal = (sumD + vatD + disD)-disD;
+
+        setResults();
+
+        UpdateFood(foodinfo);
+
+        setCartCount();
     }
 
     @Override
     public void divideSum(Foodinfo foodinfo) {
-        Log.d("SUMMS", "divideSum: " + foodinfo.quantitys);
-        if (foodinfo.quantitys == 0) {
-            sumD = sumD - Double.parseDouble(foodinfo.getPrice()) - foodinfo.getAddOnsTotal();
-        } else {
-            sumD = sumD - Double.parseDouble(foodinfo.getPrice());
-        }
-        vatD = vatD - ((Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100);
-        if (restaurantVat > 0) {
-            vatD = (restaurantVat * sumD) / 100;
 
-            grandTotal = sumD + vatD;
-            Log.d("SUM", "onReceive: " + grandTotal + "\t" + vatD);
-            vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
+        double sSum = (Double.parseDouble(foodinfo.getPrice()) + foodinfo.getAddOnsTotal());
+
+        if (foodinfo.quantitys == 0) {
+            sumD -= sSum;
         } else {
-            vatTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(vatD)));
-            grandTotal = sumD + vatD;
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
+            sumD -= Double.parseDouble(foodinfo.getPrice());
         }
-        try {
-            grandTotal = calculateTotal(sumD, vatD, String.valueOf(serviceCrg));
-            grandTotalTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(grandTotal)));
-        } catch (Exception ignored) {
-            Log.d("dsafdsad", "getFoodCart: " + ignored.getLocalizedMessage());
+
+        vatD -= ((Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100);
+
+        if (foodinfo.getOfferIsavailable() != null) {
+            if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
+                disD -= (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
+                disLay.setVisibility(View.VISIBLE);
+                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+            }
         }
+
+        if (globalVat > 0.0) {
+            vatD -= (globalVat * sSum);
+        }
+
+        if (serviceCrg > 0.0 && serviceType.equals("1")){
+            crgD -= serviceCrg * sSum;
+        } else {
+            crgD = serviceCrg;
+        }
+
+        grandTotal = (sumD + vatD + disD)-disD;
+
+        setResults();
+
+        UpdateFood(foodinfo);
+
+        setCartCount();
+    }
+
+    @Override
+    public void deleteSum(Foodinfo foodinfo,int pos) {
+
+        /*double sSum = (Double.parseDouble(foodinfo.getPrice()) + foodinfo.getAddOnsTotal());
+
+        sumD -= sSum;
+
+        vatD -= ((Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100);
+
+        if (foodinfo.getOfferIsavailable() != null) {
+            if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
+                disD -= (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
+                disLay.setVisibility(View.VISIBLE);
+                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+            }
+        }
+
+        if (foodtasks.size() == 1){
+            vatD = 0.0;
+            crgD = 0.0;
+        } else {
+            if (globalVat > 0.0) {
+                vatD -= (globalVat * sSum);
+            }
+
+            if (serviceCrg > 0.0 && serviceType.equals("1")){
+                crgD -= serviceCrg * sSum;
+            } else {
+                crgD = serviceCrg;
+            }
+        }
+
+        grandTotal = (sumD+vatD+crgD)-disD;
+
+        setResults();*/
+
+        foodtasks.remove(pos);
+
+        getFoodCart();
+
+        deleteFood(foodinfo);
+    }
+
+    private void deleteFood(Foodinfo foodinfo) {
+        class AddProduct extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(FoodCartActivity.this).getAppDatabase()
+                        .taskDao()
+                        .delete(foodinfo);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        AddProduct st = new AddProduct();
+        st.execute();
+
+    }
+
+    private void UpdateFood(Foodinfo foodinfo) {
+        class AddProduct extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(FoodCartActivity.this).getAppDatabase()
+                        .taskDao()
+                        .updateFood(foodinfo);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        AddProduct st = new AddProduct();
+        st.execute();
+
     }
 
     public void setup_person(String tableno, String availableperson) {

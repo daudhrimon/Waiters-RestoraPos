@@ -2,9 +2,12 @@ package com.restorapos.waiters.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
@@ -17,6 +20,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         SharedPref.init(this);
+        TextView version = findViewById(R.id.version);
+
+        try {
+            PackageInfo pInfo =   this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            String verName = pInfo.versionName;
+            int verCode = pInfo.versionCode;
+            version.setText(String.valueOf("Version : "+verName+"."+verCode));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         try {
             //WaitersService waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);

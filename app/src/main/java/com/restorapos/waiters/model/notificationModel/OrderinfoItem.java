@@ -2,6 +2,8 @@ package com.restorapos.waiters.model.notificationModel;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class OrderinfoItem{
 
 	@SerializedName("amount")
@@ -12,6 +14,9 @@ public class OrderinfoItem{
 
 	@SerializedName("customer")
 	private String customer;
+
+	@SerializedName("iteminfo")
+	private List<ItemsInfo> iteminfo;
 
 	public void setAmount(String amount){
 		this.amount = amount;

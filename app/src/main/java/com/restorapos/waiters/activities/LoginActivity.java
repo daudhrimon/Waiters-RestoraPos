@@ -36,8 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView signInBtn,reset;
     private EditText emailET, passwordET;
     private SpotsDialog progressDialog;
-    private String serviceChargeStatus;
-    public static boolean service_status = false;
+    private String serviceType;
     private String TOKEN = "";
 
     @Override
@@ -116,24 +115,26 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPref.write("POWERBY", loginResponse.getData().getPowerBy());
                                 SharedPref.write("CURRENCY", loginResponse.getData().getCurrencysign());
                                 SharedPref.write("tableMap", loginResponse.getData().getTablemaping());
-                                SharedPref.write("vat", loginResponse.getData().getVat());
-                                serviceChargeStatus = loginResponse.getData().getServiceChargeType();
+                                SharedPref.write("vat", String.valueOf(Double.parseDouble(loginResponse.getData().getVat())/100));
+                                Log.wtf("VAT",String.valueOf(Double.parseDouble(loginResponse.getData().getVat())/100));
+                                serviceType = loginResponse.getData().getServiceChargeType();
                                 String serviceCharge = loginResponse.getData().getServicecharge();
                                 double serviceChargechange = Double.parseDouble(serviceCharge);
-                                if (serviceChargeStatus.contains("1")) {
+
+                                if (serviceType.equals("1")) {
                                     progressDialog.dismiss();
-                                    service_status = true;
-                                    serviceChargechange = serviceChargechange / 100;
+                                    serviceChargechange /= 100;
                                     SharedPref.write("SC", String.valueOf(serviceChargechange));
-                                    SharedPref.write("servicestatus", "true");
-                                } else if (serviceChargeStatus.contains("0")) {
+                                    SharedPref.write("SCT", "1");
+                                } else if (serviceType.contains("0")) {
                                     progressDialog.dismiss();
                                     SharedPref.write("SCNOCHANGE", loginResponse.getData().getServicecharge());
-                                    SharedPref.write("servicestatus", "false");
+                                    SharedPref.write("SCT", "0");
                                     SharedPref.write("SC", String.valueOf(serviceChargechange));
                                 }
+
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            } else{
+                            } else {
                                 Toasty.warning(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }

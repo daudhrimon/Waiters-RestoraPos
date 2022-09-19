@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorRed"
-    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".activities.SplashScreenActivity">
+    tools:context="activities.SplashScreenActivity"
+    android:background="@color/colorRed">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:src="@drawable/logo"
         android:layout_margin="@dimen/_80sdp"/>
 
     <TextView
+        android:id="@+id/version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_version"
-        android:textColor="@color/colorWhite" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/devInf"
+        android:textColor="@color/colorWhite"
+        android:padding="1dp"
+        android:textSize="12sp"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/devInf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:text="@string/app_dev"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp" />
+
+</RelativeLayout>

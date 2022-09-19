@@ -122,7 +122,7 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
         });
         viewHolder.minus.setOnClickListener(v -> {
             int count = Integer.parseInt(String.valueOf(viewHolder.qty.getText()));
-            if (count > 0) {
+            if (count > 1) {
                 count--;
                 viewHolder.qty.setText(String.valueOf(count));
                 items.get(i).quantitys = count;
@@ -134,6 +134,8 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
                 viewHolder.totalPrice.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
 
                 sumInterface.divideSum(items.get(i));
+            } else {
+                sumInterface.deleteSum(items.get(i),i);
             }
         });
     }
