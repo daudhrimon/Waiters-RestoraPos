@@ -465,8 +465,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 }
             }
 
-            grandTotal = (sumD + vatD + crgD)-disD;
-
             setResults();
 
             recyclerView.setAdapter(new FoodCartsAdaptersNew(FoodCartActivity.this, foodtasks, sumInterface));
@@ -477,6 +475,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     }
 
     private void setResults() {
+
+        grandTotal = (sumD + vatD + crgD)-disD;
+
         vatTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(vatD))));
         serviceChargeTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(crgD))));
         grandTotalTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(grandTotal))));
@@ -657,8 +658,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             crgD = serviceCrg;
         }
 
-        grandTotal = (sumD + vatD + disD)-disD;
-
         setResults();
 
         UpdateFood(foodinfo);
@@ -696,8 +695,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         } else {
             crgD = serviceCrg;
         }
-
-        grandTotal = (sumD + vatD + disD)-disD;
 
         setResults();
 
