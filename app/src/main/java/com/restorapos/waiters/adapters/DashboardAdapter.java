@@ -53,8 +53,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
         public ViewHolder(View view) {
             super(view);
-            categoryImage = view.findViewById(R.id.catergoryImageId);
-            categoryName = view.findViewById(R.id.catergoryNameId);
+            categoryImage = view.findViewById(R.id.categoryImage);
+            categoryName = view.findViewById(R.id.categoryName);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

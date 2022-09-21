@@ -12,11 +12,11 @@
         android:padding="@dimen/_3sdp"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/_15sdp"
-        android:id="@+id/subcatergoryNameId" />
+        android:id="@+id/subCategory" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/_3sdp"
         android:gravity="bottom"
         android:background="@color/colorRed"
-        android:id="@+id/tvId"/>
+        android:id="@+id/selector"/>
 </LinearLayout>

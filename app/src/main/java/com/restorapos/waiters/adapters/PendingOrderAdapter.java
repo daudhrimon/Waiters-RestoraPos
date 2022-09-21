@@ -67,7 +67,7 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
             super(view);
             orderId = view.findViewById(R.id.orderId);
             customerName = view.findViewById(R.id.customerId);
-            table = view.findViewById(R.id.tableId);
+            table = view.findViewById(R.id.tableTv);
             date = view.findViewById(R.id.dateId);
             amount = view.findViewById(R.id.amountId);
             action = view.findViewById(R.id.actionId);
@@ -76,7 +76,7 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    viewInterface.view(items.get(pos).getOrderId());
+                    viewInterface.viewOrder(items.get(pos).getOrderId());
                     //Toast.makeText(context, items.get(pos).getName(), Toast.LENGTH_SHORT).show();
                 }
             });

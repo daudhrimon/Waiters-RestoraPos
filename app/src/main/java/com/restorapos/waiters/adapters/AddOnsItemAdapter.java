@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.FoodItemActivity;
+import com.restorapos.waiters.databinding.DesignFoodCartItemAddonsBinding;
 import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
@@ -32,11 +33,13 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
     private int addOnsCounter=1;
     private double addOnPrice;
     private int addOnsChecker = 0;
+    private TextView variantPriceTV;
 
-    public AddOnsItemAdapter(Context applicationContext, List<Addonsinfo> itemArrayList, String s) {
+    public AddOnsItemAdapter(Context applicationContext, List<Addonsinfo> itemArrayList, String s, TextView variantPriceTV) {
         this.context = applicationContext;
         this.items = itemArrayList;
         this.mainPrice = s;
+        this.variantPriceTV = variantPriceTV;
     }
 
     public AddOnsItemAdapter(Context applicationContext, List<Addonsinfo> itemArrayList) {
@@ -52,33 +55,33 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
 
     @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ViewHolder holder, final int i) {
 
-        viewHolder.productName.setText(items.get(i).getAddOnName());
-        viewHolder.unitPrice.setText(items.get(i).getAddonsprice());
-        viewHolder.qty.setText("" + addOnsCounter);
-        final int count = Integer.parseInt(String.valueOf(viewHolder.qty.getText()));
+        holder.binding.productName.setText(items.get(i).getAddOnName());
+        holder.binding.unitPriceTv.setText(items.get(i).getAddonsprice());
+        holder.binding.quantityTv.setText("" + addOnsCounter);
+        final int count = Integer.parseInt(String.valueOf(holder.binding.quantityTv.getText()));
         if (!items.get(i).getAddonsprice().equals("")) {
             total = Double.parseDouble(items.get(i).getAddonsprice()) * count;
         }
         FoodItemActivity.addOnsChecker = addOnsChecker;
-        viewHolder.totalPrice.setText(String.valueOf(total));
+        holder.binding.totalPriceTv.setText(String.valueOf(total));
 
-        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.binding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (viewHolder.checkBox.isChecked()) {
+                if (holder.binding.checkBox.isChecked()) {
                     checker++;
                     SharedPref.write("AddOnsCheck", "" + checker);
-                    foodPrice = Double.parseDouble(FoodItemActivity.variantPriceTV.getText().toString());
-                    double itemPice = foodPrice + Double.parseDouble(viewHolder.unitPrice.getText().toString());
-                    FoodItemActivity.variantPriceTV.setText("" + itemPice);
-                    items.get(i).setAddonsquantity(Integer.parseInt(viewHolder.qty.getText().toString()));
+                    foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
+                    double itemPice = foodPrice + Double.parseDouble(holder.binding.unitPriceTv.getText().toString());
+                    variantPriceTV.setText("" + itemPice);
+                    items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
 
                     Addonsinfo addonsinfo = new Addonsinfo(items.get(i).getAddonsid(),
-                            items.get(i).getAddOnName(), viewHolder.totalPrice.getText().toString(),
-                            Integer.parseInt(viewHolder.qty.getText().toString()));
+                            items.get(i).getAddOnName(), holder.binding.totalPriceTv.getText().toString(),
+                            Integer.parseInt(holder.binding.quantityTv.getText().toString()));
 
                     if (items2.size()==0) {
                         items2.add(addonsinfo);
@@ -93,12 +96,12 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
                     addOnsChecker = 1;
                     FoodItemActivity.addOnsChecker = addOnsChecker;
                 }
-                if (!viewHolder.checkBox.isChecked()) {
+                if (!holder.binding.checkBox.isChecked()) {
                     checker--;
                     SharedPref.write("AddOnsCheck", "" + checker);
-                    foodPrice = Double.parseDouble(FoodItemActivity.variantPriceTV.getText().toString());
-                    Double addsonPrice = Double.valueOf(viewHolder.unitPrice.getText().toString());
-                    FoodItemActivity.variantPriceTV.setText("" + (foodPrice - addsonPrice));
+                    foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
+                    Double addsonPrice = Double.valueOf(holder.binding.unitPriceTv.getText().toString());
+                    variantPriceTV.setText("" + (foodPrice - addsonPrice));
 
                     Type type = new TypeToken<List<Addonsinfo>>() {
                     }.getType();
@@ -118,19 +121,21 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
             }
         });
 
-        viewHolder.plus.setOnClickListener(new View.OnClickListener() {
+
+
+        holder.binding.plusTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                foodPrice = Double.parseDouble(FoodItemActivity.variantPriceTV.getText().toString());
+                foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
                 addOnsCounter++;
-                viewHolder.qty.setText("" + addOnsCounter);
+                holder.binding.quantityTv.setText("" + addOnsCounter);
 
-                viewHolder.totalPrice.setText("" + Double.parseDouble(items.get(i).getAddonsprice()) * addOnsCounter);
+                holder.binding.totalPriceTv.setText("" + Double.parseDouble(items.get(i).getAddonsprice()) * addOnsCounter);
 
-                if (viewHolder.checkBox.isChecked()) {
+                if (holder.binding.checkBox.isChecked()) {
                     double itemPice = foodPrice + Double.parseDouble(items.get(i).getAddonsprice());
-                    FoodItemActivity.variantPriceTV.setText("" + itemPice);
-                    items.get(i).setAddonsquantity(Integer.parseInt(viewHolder.qty.getText().toString()));
+                    variantPriceTV.setText("" + itemPice);
+                    items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                     Type type = new TypeToken<List<Addonsinfo>>() {
                     }.getType();
                     items2 = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
@@ -138,7 +143,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
                     for (int j = 0; j < items2.size(); j++) {
                         if (items.get(i).getAddonsid().equals(items2.get(j).getAddonsid()) &&
                                 items.get(i).getAddOnName().equals(items2.get(j).getAddOnName())) {
-                            items2.get(j).setAddonsquantity(Integer.parseInt(viewHolder.qty.getText().toString()));
+                            items2.get(j).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                             SharedPref.write("addOnslist", new Gson().toJson(items2));
                         }
                     }
@@ -147,25 +152,27 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
             }
         });
 
-        viewHolder.minus.setOnClickListener(new View.OnClickListener() {
+
+
+        holder.binding.minusTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                foodPrice = Double.parseDouble(FoodItemActivity.variantPriceTV.getText().toString());
-                double price = Double.parseDouble(viewHolder.totalPrice.getText().toString());
-                addOnsCounter = Integer.parseInt(viewHolder.qty.getText().toString());
+                foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
+                double price = Double.parseDouble(holder.binding.totalPriceTv.getText().toString());
+                addOnsCounter = Integer.parseInt(holder.binding.quantityTv.getText().toString());
                 addOnPrice = Double.parseDouble(items.get(i).getAddonsprice());
 
                 if (addOnsCounter > 1) {
                     addOnsCounter--;
-                    viewHolder.qty.setText("" + addOnsCounter);
+                    holder.binding.quantityTv.setText("" + addOnsCounter);
 
-                    viewHolder.totalPrice.setText("" + (price - addOnPrice));
+                    holder.binding.totalPriceTv.setText("" + (price - addOnPrice));
 
-                    if (viewHolder.checkBox.isChecked()) {
+                    if (holder.binding.checkBox.isChecked()) {
 
                         double itemPrice = foodPrice - addOnPrice;
-                        FoodItemActivity.variantPriceTV.setText("" + itemPrice);
-                        items.get(i).setAddonsquantity(Integer.parseInt(viewHolder.qty.getText().toString()));
+                        variantPriceTV.setText("" + itemPrice);
+                        items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                         Type type = new TypeToken<List<Addonsinfo>>() {
                         }.getType();
                         items2 = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
@@ -173,7 +180,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
                         for (int j = 0; j < items2.size(); j++) {
                             if (items.get(i).getAddonsid().equals(items2.get(j).getAddonsid()) &&
                                     items.get(i).getAddOnName().equals(items2.get(j).getAddOnName())) {
-                                items2.get(j).setAddonsquantity(Integer.parseInt(viewHolder.qty.getText().toString()));
+                                items2.get(j).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                                 SharedPref.write("addOnslist", new Gson().toJson(items2));
                             }
                         }
@@ -191,20 +198,11 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, unitPrice, qty, totalPrice, plus, minus;
-        CheckBox checkBox;
+        private DesignFoodCartItemAddonsBinding binding;
 
         public ViewHolder(View view) {
             super(view);
-            productName = view.findViewById(R.id.productNameId);
-            unitPrice = view.findViewById(R.id.unitPriceId);
-            qty = view.findViewById(R.id.quantityId);
-            totalPrice = view.findViewById(R.id.totalPriceId);
-            plus = view.findViewById(R.id.plusId);
-            minus = view.findViewById(R.id.minusId);
-            checkBox = view.findViewById(R.id.checkId);
-
-
+            binding = DesignFoodCartItemAddonsBinding.bind(view);
         }
     }
 }

@@ -1,3 +1,4 @@
+/*
 package com.restorapos.waiters.adapters;
 
 import android.annotation.SuppressLint;
@@ -134,12 +135,12 @@ public class FoodsAdapter extends RecyclerView.Adapter<FoodsAdapter.ViewHolder> 
 
         public ViewHolder(View view) {
             super(view);
-            categoryImage = view.findViewById(R.id.categoryImageId);
-            categoryName = view.findViewById(R.id.categoryNameId);
-            price = view.findViewById(R.id.categoryPriceId);
-            notes = view.findViewById(R.id.categoryNotesId);
-            qtyShowTv = view.findViewById(R.id.quantityShowId);
-            layoutDesignFoodItem = view.findViewById(R.id.layoutDesignFoodItemId);
+            categoryImage = view.findViewById(R.id.categoryImage);
+            categoryName = view.findViewById(R.id.categoryName);
+            price = view.findViewById(R.id.price);
+            notes = view.findViewById(R.id.notes);
+            qtyShowTv = view.findViewById(R.id.qtyShowTv);
+            layoutDesignFoodItem = view.findViewById(R.id.layoutDesignFoodItem);
 
         }
     }
@@ -166,8 +167,8 @@ public class FoodsAdapter extends RecyclerView.Adapter<FoodsAdapter.ViewHolder> 
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view2 = inflater.inflate(R.layout.food_cart_dialog, null);
         builder.setView(view2);
-        RecyclerView rv = view2.findViewById(R.id.recyclerDialogId);
-        Button ok = view2.findViewById(R.id.okId);
+        RecyclerView rv = view2.findViewById(R.id.recyclerDialog);
+        Button ok = view2.findViewById(R.id.addToCartBtn);
         rv.setLayoutManager(new LinearLayoutManager(context));
         try {
 
@@ -216,4 +217,4 @@ public class FoodsAdapter extends RecyclerView.Adapter<FoodsAdapter.ViewHolder> 
 
     }
 }
-
+*/

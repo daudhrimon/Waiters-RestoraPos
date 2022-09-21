@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.ActivityFoodCartBinding;
+import com.restorapos.waiters.databinding.ActivityLoginBinding;
 import com.restorapos.waiters.model.loginModel.LoginResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
@@ -33,16 +35,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    private TextView signInBtn,reset;
-    private EditText emailET, passwordET;
+    private ActivityLoginBinding binding;
     private SpotsDialog progressDialog;
     private String serviceType;
-    private String TOKEN = "";
+    private String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         initial();
 
@@ -65,25 +67,25 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-            signInBtn.setOnClickListener(v -> {
-                if (!Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()){
-                    emailET.setError("Enter an email address");
-                    emailET.requestFocus();
+            binding.loginBtn.setOnClickListener(v -> {
+                if (!Patterns.EMAIL_ADDRESS.matcher(binding.emailEt.getText().toString()).matches()){
+                    binding.emailEt.setError("Enter an email address");
+                    binding.emailEt.requestFocus();
                     return;
                 }
-                if (passwordET.getText().toString().length() < 5){
-                    passwordET.setError("Password is too short");
-                    passwordET.requestFocus();
+                if (binding.passwordEt.getText().toString().length() < 5){
+                    binding.passwordEt.setError("Password is too short");
+                    binding.passwordEt.requestFocus();
                     return;
                 }
-                if (TOKEN.isEmpty()){
-                    Toasty.warning(this, "Something went wrong, in this case your device will not get notifications", Toast.LENGTH_SHORT).show();
+                if (TOKEN == null){
+                    Toasty.warning(this, "Something went wrong, in this case you will not be able to get notifications", Toast.LENGTH_SHORT).show();
                 }
                 progressDialog.show();
                 signIN();
             });
 
-            reset.setOnClickListener(view -> {
+            binding.resetBtn.setOnClickListener(view -> {
                 SharedPref.write("BASEURL", "");
                 startActivity(new Intent(LoginActivity.this, QrCodeActivity.class));
             });
@@ -98,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIN() {
         WaitersService waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        waitersService.doSignIn(emailET.getText().toString(), passwordET.getText().toString(), TOKEN).
+        waitersService.doSignIn(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString(), TOKEN).
                 enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -153,10 +155,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initial() {
         SharedPref.init(this);
-        reset = findViewById(R.id.reset);
-        signInBtn = findViewById(R.id.signInBtnId);
-        emailET = findViewById(R.id.emailId);
-        passwordET = findViewById(R.id.passwordId);
         progressDialog = new SpotsDialog(this, R.style.Custom);
     }
 

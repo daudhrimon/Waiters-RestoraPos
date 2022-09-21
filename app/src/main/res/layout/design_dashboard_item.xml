@@ -18,7 +18,7 @@
         android:padding="6dp">
 
         <ImageView
-            android:id="@+id/catergoryImageId"
+            android:id="@+id/categoryImage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_90sdp"
             android:elevation="3dp"
@@ -28,7 +28,7 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/catergoryNameId"
+            android:id="@+id/categoryName"
             android:layout_width="@dimen/_135sdp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/_1sdp"

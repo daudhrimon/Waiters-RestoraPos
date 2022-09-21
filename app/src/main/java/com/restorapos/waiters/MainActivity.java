@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import com.restorapos.waiters.activities.FoodCartActivity;
 import com.restorapos.waiters.activities.LoginActivity;
-import com.restorapos.waiters.activities.ViewOrderActivity;
 import com.restorapos.waiters.fragments.CompleteOrderFragment;
 import com.restorapos.waiters.utils.Utils;
 import com.bumptech.glide.Glide;
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         // AppBars OnClicks
 
+
         appMenu.setOnClickListener(v -> {
             if (drawer.isDrawerVisible(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -87,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         appCart.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this.getApplicationContext(), FoodCartActivity.class));
         });
+
 
         appSearch.setOnClickListener(view -> {
             if (appHeader.getVisibility() == View.VISIBLE){
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 appSearchBar.requestFocus();
             }
         });
+
 
         appCross.setOnClickListener(view -> {
             appSearchLay.setVisibility(View.GONE);
@@ -190,11 +193,11 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
                 appBarDefault();
             } else {
-                SharedPref.write("ORDERSTATUS", "2");
+               /* SharedPref.write("ORDERSTATUS", "2");
                 Intent intent = new Intent(MainActivity.this, ViewOrderActivity.class);
                 intent.putExtra("ORDERID", getIntent().getStringExtra("OVI"));
                 startActivity(intent);
-                appBarDefault();
+                appBarDefault();*/
             }
         } catch (Exception e) {
             try {
@@ -258,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
         //drawer views set
 
+
         LoginResponse loginResponse = new Gson().fromJson(SharedPref.read("LOGINRESPONSE", ""), LoginResponse.class);
         CircleImageView profilePic = headerView.findViewById(R.id.profile_pic);
         TextView profileName = headerView.findViewById(R.id.profile_name);
@@ -278,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(MessageReceiver,
                 new IntentFilter("REALDATA"));
     }
+
 
     private void initial() {
         SharedPref.init(this);
@@ -310,12 +315,14 @@ public class MainActivity extends AppCompatActivity {
         rootMenu = false;
     }
 
+
     private BroadcastReceiver MessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             getAllOnlineOrderCount();
         }
     };
+
 
     private void getAllOnlineOrderCount() {
         WaitersService waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
@@ -339,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -355,10 +363,10 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
                 appHeader.setText("Menu");
             } else {
-                SharedPref.write("ORDERSTATUS", "2");
+               /* SharedPref.write("ORDERSTATUS", "2");
                 Intent intent = new Intent(MainActivity.this, ViewOrderActivity.class);
                 intent.putExtra("ORDERID", SharedPref.read("OVI", ""));
-                startActivity(intent);
+                startActivity(intent);*/
             }
             SharedPref.write("OVI", "");
         } catch (Exception e) {
@@ -371,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void setSelectorColor(TextView enable, TextView disable1, TextView disable2, TextView disable3, TextView disable4) {
         enable.setBackgroundColor(0x30ffffff);
         disable1.setBackgroundColor(0x00000000);
@@ -378,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
         disable3.setBackgroundColor(0x00000000);
         disable4.setBackgroundColor(0x00000000);
     }
+
 
     private void showAlertDialog(String message, boolean exit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -410,6 +420,7 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
@@ -428,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public static void onResumeAppFrags(){
         appSearchBar.setQuery("",false);
         if (Integer.parseInt(SharedPref.read("CartCount","0")) > 0){
@@ -437,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
             appCartBadge.setVisibility(View.GONE);
         }
     }
+
 
     public static void appBarDefault(){
         appSearchLay.setVisibility(View.GONE);

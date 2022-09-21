@@ -34,7 +34,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/closepaymentpageIV"
+                    android:id="@+id/closeBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -58,7 +58,7 @@
                 android:weightSum="4">
 
                 <TextView
-                    android:id="@+id/variantName"
+                    android:id="@+id/variantNameTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -73,7 +73,7 @@
                     android:background="#BCBCBC" />
 
                 <Spinner
-                    android:id="@+id/spinnerVariants"
+                    android:id="@+id/variantSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -96,7 +96,7 @@
                     android:weightSum="3">
 
                     <ImageView
-                        android:id="@+id/minusItems"
+                        android:id="@+id/minusBtn"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -117,7 +117,7 @@
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageView
-                        android:id="@+id/addItems"
+                        android:id="@+id/plusBtn"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -132,7 +132,7 @@
                     android:background="#BCBCBC" />
 
                 <TextView
-                    android:id="@+id/variantPrice"
+                    android:id="@+id/variantPriceTV"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -145,7 +145,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/addonsUpper"
+            android:id="@+id/addonsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/varientLayout"
@@ -205,22 +205,22 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerDialogId"
+            android:id="@+id/recyclerDialog"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_220sdp"
-            android:layout_below="@+id/addonsUpper" />
+            android:layout_below="@+id/addonsHeader" />
 
         <LinearLayout
             android:id="@+id/btnLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recyclerDialogId"
+            android:layout_below="@+id/recyclerDialog"
             android:layout_marginTop="9dp"
             android:gravity="end"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/addmultipleVariant"
+                android:id="@+id/addMultipleBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_34sdp"
                 android:layout_gravity="right"
@@ -229,18 +229,20 @@
                 android:backgroundTint="@color/colorRed"
                 android:paddingHorizontal="10dp"
                 android:text="Add Multiple Variant"
+                android:maxLines="1"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <Button
-                android:id="@+id/okId"
+                android:id="@+id/addToCartBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_34sdp"
                 android:layout_gravity="right"
                 android:background="@drawable/border_black"
                 android:backgroundTint="@color/colorRed"
                 android:paddingHorizontal="10dp"
+                android:maxLines="1"
                 android:text="Add To Cart"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"

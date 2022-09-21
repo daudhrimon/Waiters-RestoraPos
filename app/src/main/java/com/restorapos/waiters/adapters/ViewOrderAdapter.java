@@ -14,12 +14,12 @@ import java.util.List;
 public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.ViewHolder> {
     private List<IteminfoItem> items;
     private Context context;
-    private String status;
+    private String orderTag;
 
-    public ViewOrderAdapter(Context applicationContext, List<IteminfoItem> itemArrayList,String status) {
+    public ViewOrderAdapter(Context applicationContext, List<IteminfoItem> itemArrayList,String orderTag) {
         this.context = applicationContext;
         this.items = itemArrayList;
-        this.status = status;
+        this.orderTag = orderTag;
         SharedPref.init(context);
     }
 
@@ -55,7 +55,7 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.View
             viewHolder.status.setBackgroundResource(R.drawable.selector_green_button);
         }
 
-        viewHolder.status.setText(status);
+        viewHolder.status.setText(orderTag);
         viewHolder.sizeTv.setText("Size: "+items.get(i).getVarientname());
         viewHolder.qty.setText("Quantity: "+String.valueOf(items.get(i).getItemqty()));
         try {
@@ -79,8 +79,8 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.View
         public ViewHolder(View view) {
             super(view);
             productName = view.findViewById(R.id.productNameId);
-            qty = view.findViewById(R.id.quantityId);
-            totalPrice = view.findViewById(R.id.totalPriceId);
+            qty = view.findViewById(R.id.quantityTv);
+            totalPrice = view.findViewById(R.id.totalPriceTv);
             sizeTv = view.findViewById(R.id.sizeId);
             addOnName = view.findViewById(R.id.addOnNameId);
             status = view.findViewById(R.id.status);

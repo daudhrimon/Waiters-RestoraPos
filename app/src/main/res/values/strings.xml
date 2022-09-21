@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RestoraPOS Waiters</string>
+    <string name="app_name">Restora POS Waiters</string>
     <string name="app_dev">Powered by RestoraPos</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

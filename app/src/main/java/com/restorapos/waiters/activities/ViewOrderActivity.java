@@ -1,3 +1,4 @@
+/*
 package com.restorapos.waiters.activities;
 
 import android.annotation.SuppressLint;
@@ -90,10 +91,15 @@ public class ViewOrderActivity extends AppCompatActivity {
                     serviceChage.setText(SharedPref.read("CURRENCY","")+response.body().getData().getServiceCharge());
                     orderDate.setText("Date: "+response.body().getData().getOrderdate());
                     table.setText("Table : " + response.body().getData().getTableName());
-                } catch (Exception ignored) {/**/}
+                } catch (Exception ignored) {*/
+/**//*
+}
             }
             @Override
-            public void onFailure(Call<ViewOrderResponse> call, Throwable t) {/**/}
+            public void onFailure(Call<ViewOrderResponse> call, Throwable t) {*/
+/**//*
+}
         });
     }
 }
+*/

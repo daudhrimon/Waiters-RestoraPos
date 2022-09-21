@@ -22,14 +22,14 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/processingOrderRecyclerViewId"
+            android:id="@+id/processingRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_weight="9" />
 
         <LinearLayout
-            android:id="@+id/layoutId"
+            android:id="@+id/emptyLay"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
@@ -59,7 +59,7 @@
             android:paddingRight="20dp">
 
             <Button
-                android:id="@+id/previewId"
+                android:id="@+id/prevBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="10dp"
@@ -69,7 +69,7 @@
                 android:visibility="gone" />
 
             <Button
-                android:id="@+id/nextId"
+                android:id="@+id/nextBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:background="#303030"

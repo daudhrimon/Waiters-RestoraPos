@@ -125,7 +125,7 @@
                         android:layout_height="0dp"
                         android:background="@color/colorBlack"
                         android:gravity="center"
-                        android:id="@+id/tableId"
+                        android:id="@+id/tableTv"
                         android:textColor="@color/colorWhite"
                         android:textSize="11sp" />
                 </LinearLayout>

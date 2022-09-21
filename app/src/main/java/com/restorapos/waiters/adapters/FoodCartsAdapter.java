@@ -8,24 +8,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.DesignFoodCartItemBinding;
 import com.restorapos.waiters.interfaces.SumInterface;
 import com.restorapos.waiters.model.foodlistModel.Foodinfo;
 import com.restorapos.waiters.utils.SharedPref;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdaptersNew.ViewHolder> {
+public class FoodCartsAdapter extends RecyclerView.Adapter<FoodCartsAdapter.ViewHolder> {
 
     private List<Foodinfo> items;
     private Context context;
     double total = 0.0;
     SumInterface sumInterface;
 
-    public FoodCartsAdaptersNew(Context applicationContext, List<Foodinfo> itemArrayList, SumInterface sumInterface) {
+    public FoodCartsAdapter(Context applicationContext, List<Foodinfo> itemArrayList, SumInterface sumInterface) {
         this.context = applicationContext;
         this.items = itemArrayList;
         this.sumInterface = sumInterface;
@@ -40,19 +40,20 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
 
     @SuppressLint({"SetTextI18n", "RecyclerView"})
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ViewHolder holder, final int i) {
+
         Log.d("ASDas", "onBindViewHolder: ");
         if (items.get(i).getAddOnsName() == null) {
-            viewHolder.productName.setText(items.get(i).getProductName());
+            holder.binding.productName.setText(items.get(i).getProductName());
         } else {
-            viewHolder.productName.setText(items.get(i).getProductName());
+            holder.binding.productName.setText(items.get(i).getProductName());
             try {
                 for (int j = 0; j < items.get(i).getAddonsinfo().size(); j++) {
                     try {
                         int p = items.get(i).getAddonsinfo().get(j).addonsquantity;
                         Log.d("poisdfsd", "onBindViewHolder: " + p);
                         if (p > 0) {
-                            viewHolder.productName.append("," + items.get(i).getAddonsinfo().get(j).getAddOnName());
+                            holder.binding.productName.append("," + items.get(i).getAddonsinfo().get(j).getAddOnName());
                         }
                     } catch (Exception ign) {
                         Log.d("poisdfsd", "onBindViewHolder: " + ign.getLocalizedMessage());
@@ -61,10 +62,12 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
             } catch (Exception e) {
             }
         }
-        viewHolder.unitPrice.setText(SharedPref.read("CURRENCY", "") + items.get(i).getPrice());
-        viewHolder.sizeTv.setText(items.get(i).getVariantName());
-        viewHolder.qty.setText(String.valueOf(items.get(i).quantitys));
-        viewHolder.varientId.setText(items.get(i).getVariantName());
+
+
+        holder.binding.unitPriceTv.setText(SharedPref.read("CURRENCY", "") + items.get(i).getPrice());
+        holder.binding.sizeTv.setText(items.get(i).getVariantName());
+        holder.binding.quantityTv.setText(String.valueOf(items.get(i).quantitys));
+        holder.binding.variantTv.setText(items.get(i).getVariantName());
 
         double x = 0;
         try {
@@ -78,8 +81,11 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
         int counts = items.get(i).quantitys;
         items.get(i).setQuantity(counts);
         total = Double.parseDouble(items.get(i).getPrice()) * counts + Double.valueOf(items.get(i).getAddOnsTotal());
-        viewHolder.totalPrice.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
-        viewHolder.itemNotes.addTextChangedListener(new TextWatcher() {
+        holder.binding.totalPriceTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
+
+
+
+        holder.binding.itemNoteEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -95,43 +101,53 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
                 items.get(i).itemNote = String.valueOf(editable);
             }
         });
-        viewHolder.notesShowTv.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        holder.binding.noteShowTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewHolder.itemNotes.getVisibility()==View.GONE){
-                    viewHolder.notesShowTv.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up_24,0);
-                    viewHolder.itemNotes.setVisibility(View.VISIBLE);
+                if (holder.binding.itemNoteEt.getVisibility()==View.GONE){
+                    holder.binding.noteShowTv.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up_24,0);
+                    holder.binding.itemNoteEt.setVisibility(View.VISIBLE);
                 }
                 else {
-                    viewHolder.notesShowTv.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_down_24,0);
-                    viewHolder.itemNotes.setVisibility(View.GONE);
+                    holder.binding.noteShowTv.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_down_24,0);
+                    holder.binding.itemNoteEt.setVisibility(View.GONE);
                 }
             }
         });
-        viewHolder.plus.setOnClickListener(v -> {
-            int count = Integer.parseInt(String.valueOf(viewHolder.qty.getText()));
+
+
+
+        holder.binding.plusBtn.setOnClickListener(v -> {
+            int count = Integer.parseInt(String.valueOf(holder.binding.quantityTv.getText()));
             count++;
-            viewHolder.qty.setText(String.valueOf(count));
+            holder.binding.quantityTv.setText(String.valueOf(count));
             items.get(i).quantitys = count;
             items.get(i).setQuantity(count);
             total = Double.parseDouble(items.get(i).getPrice()) * count + Double.valueOf(items.get(i).getAddOnsTotal());
-            viewHolder.totalPrice.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
+            holder.binding.totalPriceTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
 
             sumInterface.addedSum(items.get(i));
 
         });
-        viewHolder.minus.setOnClickListener(v -> {
-            int count = Integer.parseInt(String.valueOf(viewHolder.qty.getText()));
+
+
+
+        holder.binding.minusBtn.setOnClickListener(v -> {
+            int count = Integer.parseInt(String.valueOf(holder.binding.quantityTv.getText()));
             if (count > 1) {
                 count--;
-                viewHolder.qty.setText(String.valueOf(count));
+                holder.binding.quantityTv.setText(String.valueOf(count));
                 items.get(i).quantitys = count;
                 items.get(i).setQuantity(count);
                 total = Double.parseDouble(items.get(i).getPrice()) * count + Double.valueOf(items.get(i).getAddOnsTotal());
                 if (items.get(i).quantitys == 0) {
                     total = total - Double.valueOf(items.get(i).getAddOnsTotal());
                 }
-                viewHolder.totalPrice.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
+                holder.binding.totalPriceTv.setText(SharedPref.read("CURRENCY", "") + Double.valueOf(new DecimalFormat("##.##").format(total)));
 
                 sumInterface.divideSum(items.get(i));
             } else {
@@ -146,22 +162,11 @@ public class FoodCartsAdaptersNew extends RecyclerView.Adapter<FoodCartsAdapters
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, unitPrice, qty, totalPrice, plus, minus, sizeTv,notesShowTv,varientId;
-        EditText itemNotes;
+        private DesignFoodCartItemBinding binding;
 
         public ViewHolder(View view) {
             super(view);
-            productName = view.findViewById(R.id.productNameId);
-            itemNotes = view.findViewById(R.id.notesId);
-            unitPrice = view.findViewById(R.id.unitPriceId);
-            qty = view.findViewById(R.id.quantityId);
-            totalPrice = view.findViewById(R.id.totalPriceId);
-            plus = view.findViewById(R.id.plusId);
-            minus = view.findViewById(R.id.minusId);
-            sizeTv = view.findViewById(R.id.sizeId);
-            notesShowTv = view.findViewById(R.id.notesShow);
-            varientId = view.findViewById(R.id.varientNAME);
-
+            binding = DesignFoodCartItemBinding.bind(view);
         }
     }
 }

@@ -1,35 +1,25 @@
 package com.restorapos.waiters.activities;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.adapters.FoodCartsAdaptersNew;
+import com.restorapos.waiters.adapters.FoodCartsAdapter;
 import com.restorapos.waiters.adapters.TableListAdapter;
+import com.restorapos.waiters.databinding.ActivityFoodCartBinding;
 import com.restorapos.waiters.interfaces.SumInterface;
 import com.restorapos.waiters.model.PlaceOrderResponse;
-import com.restorapos.waiters.model.TableBookDetails;
 import com.restorapos.waiters.model.customerModel.CustomerFullList;
 import com.restorapos.waiters.model.customerModel.CustomerFullListResponse;
 import com.restorapos.waiters.model.customerModel.CustomerResponse;
@@ -59,50 +49,48 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FoodCartActivity extends AppCompatActivity implements SumInterface {
+    private ActivityFoodCartBinding binding;
     private int all_members = 0;
-    private RecyclerView recyclerView, tableRecyclerview;
     private WaitersService waitersService;
-    private String id, typeId, orderId;
-    private TextView grandTotalTv, vatTv, customerNameTv, serviceChargeTv,disTv;
-    private EditText customerTypeTv, tableId;
+    private String id,orderId,typeId;
     private double serviceCrg;
     private String serviceType;
-    private EditText notes;
     private Double grandTotal;
     private double globalVat;
     private String jsonText;
-    private TextView addNewItem, place, cancel;
     private SpotsDialog progressDialog;
     private List<Foodinfo> foodtasks;
     private double sumD = 0.0, vatD = 0.0, crgD = 0.0, disD = 0.0;
     private SumInterface sumInterface;
-    private LinearLayout memberLayout,disLay;
-    private ImageView backbtn;
-    private TextView personsetupinTV,cartHeader;
-    private int totalPerson = 0;
-    private int available_person;
-    private List<TableBookDetails> tableBookDetails;
     private List<SelectedTableList> selectedTables;
     public static String countedPerson;
     public static String tableID = "";
     private String currency = "";
+    //private List<TableBookDetails> tableBookDetails;
+    //private int totalPerson = 0;
+    //private int available_person;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_cart);
+        binding = ActivityFoodCartBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         initial();
 
-        String OREDERID = SharedPref.read("ORDERID", "");
-        if (!OREDERID.isEmpty()){
-            cartHeader.setText("Cart ( Order Id : " + OREDERID + " )");
-            place.setText("Update Order");
+        String OREDER_ID = SharedPref.read("ORDERID", "");
+        if (!OREDER_ID.isEmpty()){
+
+            binding.cartHeader.setText("Cart ( Order Id : " + OREDER_ID + " )");
+
+            binding.placeOrderBtn.setText("Update Order");
         }
 
         if (orderId != null) {
-            addNewItem.setVisibility(View.VISIBLE);
+
+            binding.addNewItem.setVisibility(View.VISIBLE);
+
             updateOrder();
         }
 
@@ -112,7 +100,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
         getTableList();
 
-        backbtn.setOnClickListener(new View.OnClickListener() {
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -120,7 +108,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             }
         });
 
-        serviceChargeTv.setText(SharedPref.read("CURRENCY", "") + SharedPref.read("SC", ""));
+        binding.serviceChargeTv.setText(SharedPref.read("CURRENCY", "") + SharedPref.read("SC", ""));
 
 
         /*discount.addTextChangedListener(new TextWatcher() {
@@ -140,7 +128,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             }
         });*/
 
-        addNewItem.setOnClickListener(new View.OnClickListener() {
+        binding.addNewItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 double Total = 0.0;
@@ -153,7 +141,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        binding.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (orderId != null){
@@ -165,24 +153,24 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             }
         });
 
-        customerTypeTv.addTextChangedListener(new TextWatcher() {
+        binding.customerTypeTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
             @Override
             public void afterTextChanged(Editable editable) {
-                getCustomerName(customerTypeTv.getText().toString().trim());
+                getCustomerName(binding.customerTypeTv.getText().toString().trim());
             }
         });
 
-        place.setOnClickListener(new View.OnClickListener() {
+        binding.placeOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (tableID.equals("")) {
                     Toasty.error(FoodCartActivity.this, "Please Select table ", Toast.LENGTH_SHORT, true).show();
-                } else if (TextUtils.isEmpty(customerNameTv.getText())) {
-                    customerTypeTv.requestFocus();
+                } else if (TextUtils.isEmpty(binding.customerNameTv.getText())) {
+                    binding.customerTypeTv.requestFocus();
                     Toasty.error(FoodCartActivity.this, "Please Insert valid Member id", Toast.LENGTH_SHORT, true).show();
                 } else {
                     progressDialog.show();
@@ -220,7 +208,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     }
 
     private void tableValidation() {
-        waitersService.checktable(tableId.getText().toString().trim()).enqueue(new Callback<LoginResponse>() {
+        waitersService.checktable(binding.tableEt.getText().toString().trim()).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 try {
@@ -258,43 +246,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         dt.execute();
     }
 
-    private void initial() {
-        sumInterface = this;
-        SharedPref.init(this);
-        SharedPref.write("TABLE", "");
-        tableBookDetails = new ArrayList<>();
-        grandTotalTv = findViewById(R.id.grandTotalId);
-        recyclerView = findViewById(R.id.foodCartRecyclerViewId);
-        tableRecyclerview = findViewById(R.id.tableRecyclerviewId);
-        vatTv = findViewById(R.id.vatId);
-        cartHeader = findViewById(R.id.cartHeader);
-        customerNameTv = findViewById(R.id.customerNameId);
-        customerTypeTv = findViewById(R.id.customerTypeId);
-        serviceChargeTv = findViewById(R.id.serviceChargeId);
-        disLay = findViewById(R.id.disLay);
-        disTv = findViewById(R.id.disTv);
-        place = findViewById(R.id.orderPlaceId);
-        notes = findViewById(R.id.notesId);
-        addNewItem = findViewById(R.id.addId);
-        cancel = findViewById(R.id.cancelId);
-        tableId = findViewById(R.id.tableId);
-        memberLayout = findViewById(R.id.memberLayoutId);
-        backbtn = findViewById(R.id.backId);
-        selectedTables = new ArrayList<>();
-        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        orderId = getIntent().getStringExtra("ORDERID");
-        try {
-            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
-            serviceType = SharedPref.read("SCT", "0");
-            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
-            tableId.setText(SharedPref.read("UPDATETABLE", ""));
-            customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
-            currency = SharedPref.read("CURRENCY", "");
-        } catch (Exception e) {/**/}
-        progressDialog = new SpotsDialog(this, R.style.Custom);
-        progressDialog.show();
-    }
 
     private void updateOrder() {
         waitersService.getUpdateOrder(orderId).enqueue(new Callback<UpdateOrderResponse>() {
@@ -305,10 +256,10 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     jsonText = gson.toJson(response.body().getData());
                     Log.d("TAG", "onResponse: " + jsonText);
                     String addonsName = "";
-                    tableId.setText(response.body().getData().getTable());
+                    binding.tableEt.setText(response.body().getData().getTable());
                     tableID = response.body().getData().getTable();
                     Log.d("TAG", "TableID: " + tableID);
-                    customerNameTv.setText(response.body().getData().getCustomername());
+                    binding.customerNameTv.setText(response.body().getData().getCustomername());
                     for (int i = 0; i < response.body().getData().getIteminfo().size(); i++) {
                         IteminfoItem iteminfoItem = response.body().getData().getIteminfo().get(i);
                         double addOnsTotal = 0;
@@ -323,7 +274,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                         } catch (Exception e) {/**/}
                         insertFood(iteminfoItem, addOnsTotal, addonsName);
                     }
-                    serviceChargeTv.setText(response.body().getData().getServicecharge());
+                    binding.serviceChargeTv.setText(response.body().getData().getServicecharge());
                     //discount.setText(response.body().getData().getDiscount());
                     SharedPref.write("UPDATETABLE", response.body().getData().getTable());
                     SharedPref.write("MEMBERNAME", response.body().getData().getCustomername());
@@ -408,7 +359,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     List<TableInfo> items = response.body().getData().getTableinfo();
                     progressDialog.dismiss();
                     if (items.size() > 0){
-                        tableRecyclerview.setAdapter(new TableListAdapter(FoodCartActivity.this, items,
+                        binding.tableRecyclerview.setAdapter(new TableListAdapter(FoodCartActivity.this, items,
                                 FoodCartActivity.this));
                     } else {
                         Toasty.warning(FoodCartActivity.this,"Something went Wrong",Toast.LENGTH_SHORT).show();
@@ -439,18 +390,22 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             crgD = 0.0;
             disD = 0.0;
 
-            for (int i = 0; i < foodtasks.size(); i++) {
-                sumD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal());
-                vatD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) * Double.parseDouble(foodtasks.get(i).getProductvat())) / 100;
-                //disD = disD + (((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal())*//////////////////)
+            if (foodtasks.size() > 0){
+                for (int i = 0; i < foodtasks.size(); i++) {
+                    sumD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal());
+                    vatD += ((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) * Double.parseDouble(foodtasks.get(i).getProductvat())) / 100;
+                    //disD = disD + (((Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal())*//////////////////)
 
-                if (foodtasks.get(i).getOfferIsavailable() != null){
-                    if (foodtasks.get(i).getOfferIsavailable().equals("1") && isOfferAvailable(foodtasks.get(i).getOfferstartdate(),foodtasks.get(i).getOfferendate())){
-                        disD += ((Double.parseDouble(foodtasks.get(i).getPrice())*foodtasks.get(i).quantitys)*Double.parseDouble(foodtasks.get(i).getOffersRate()))/100;
-                        disLay.setVisibility(View.VISIBLE);
-                        disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+                    if (foodtasks.get(i).getOfferIsavailable() != null){
+                        if (foodtasks.get(i).getOfferIsavailable().equals("1") && isOfferAvailable(foodtasks.get(i).getOfferstartdate(),foodtasks.get(i).getOfferendate())){
+                            disD += ((Double.parseDouble(foodtasks.get(i).getPrice())*foodtasks.get(i).quantitys)*Double.parseDouble(foodtasks.get(i).getOffersRate()))/100;
+                            binding.disLay.setVisibility(View.VISIBLE);
+                            binding.disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+                        }
                     }
                 }
+            } else {
+                binding.disLay.setVisibility(View.GONE);
             }
 
             if (globalVat > 0.0) {
@@ -467,7 +422,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
             setResults();
 
-            recyclerView.setAdapter(new FoodCartsAdaptersNew(FoodCartActivity.this, foodtasks, sumInterface));
+            binding.recyclerView.setAdapter(new FoodCartsAdapter(FoodCartActivity.this, foodtasks, sumInterface));
 
         } catch (Exception ignored) {/**/}
 
@@ -478,9 +433,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
         grandTotal = (sumD + vatD + crgD)-disD;
 
-        vatTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(vatD))));
-        serviceChargeTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(crgD))));
-        grandTotalTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(grandTotal))));
+        binding.vatTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(vatD))));
+        binding.serviceChargeTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(crgD))));
+        binding.grandTotalTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(grandTotal))));
     }
 
     private void setCartCount() {
@@ -516,19 +471,19 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 try {
                     Log.d("ppp", "customer name: " + new Gson().toJson(response.body()));
                     if (response.body().getStatusCode() == 1) {
-                        customerNameTv.setText(response.body().getData().getCustomerName());
+                        binding.customerNameTv.setText(response.body().getData().getCustomerName());
                     } else {
                         Toasty.error(FoodCartActivity.this, response.body().getMessage(), Toasty.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    customerNameTv.setText("");
+                    binding.customerNameTv.setText("");
                     Log.d("ppp", "onResponse: " + e.getLocalizedMessage());
                 }
             }
             @Override
             public void onFailure(Call<CustomerResponse> call, Throwable t) {
-                customerNameTv.setText("");
+                binding.customerNameTv.setText("");
             }
         });
     }
@@ -581,11 +536,10 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         } else {
             if (SharedPref.read("ORDERID", "").isEmpty()) {
                 waitersService.postFoodCart(id, String.valueOf(vatD), tableID,
-                        customerTypeTv.getText().toString(),
-                        typeId,
+                        binding.customerTypeTv.getText().toString(), typeId,
                         String.valueOf(crgD), /*discount.getText().toString()*/String.valueOf(disD), String.valueOf(sumD),
                         String.valueOf(grandTotal),
-                        datas, notes.getText().toString(), tableMultipleall, multipersonall,
+                        datas, binding.orderNoteEt.getText().toString(), tableMultipleall, multipersonall,
                         countedPerson).enqueue(new Callback<PlaceOrderResponse>() {
                     @Override
                     public void onResponse(Call<PlaceOrderResponse> call, Response<PlaceOrderResponse> response) {
@@ -643,8 +597,8 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         if (foodinfo.getOfferIsavailable() != null) {
             if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
                 disD += (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
-                disLay.setVisibility(View.VISIBLE);
-                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+                binding.disLay.setVisibility(View.VISIBLE);
+                binding.disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
             }
         }
 
@@ -681,8 +635,8 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         if (foodinfo.getOfferIsavailable() != null) {
             if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
                 disD -= (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
-                disLay.setVisibility(View.VISIBLE);
-                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
+                binding.disLay.setVisibility(View.VISIBLE);
+                binding.disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
             }
         }
 
@@ -705,39 +659,6 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
     @Override
     public void deleteSum(Foodinfo foodinfo,int pos) {
-
-        /*double sSum = (Double.parseDouble(foodinfo.getPrice()) + foodinfo.getAddOnsTotal());
-
-        sumD -= sSum;
-
-        vatD -= ((Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getProductvat())) / 100);
-
-        if (foodinfo.getOfferIsavailable() != null) {
-            if (foodinfo.getOfferIsavailable().equals("1") && isOfferAvailable(foodinfo.getOfferstartdate(), foodinfo.getOfferendate())) {
-                disD -= (Double.parseDouble(foodinfo.getPrice()) * Double.parseDouble(foodinfo.getOffersRate())) / 100;
-                disLay.setVisibility(View.VISIBLE);
-                disTv.setText(String.format("%s%s", currency, Double.valueOf(new DecimalFormat("##.##").format(disD))));
-            }
-        }
-
-        if (foodtasks.size() == 1){
-            vatD = 0.0;
-            crgD = 0.0;
-        } else {
-            if (globalVat > 0.0) {
-                vatD -= (globalVat * sSum);
-            }
-
-            if (serviceCrg > 0.0 && serviceType.equals("1")){
-                crgD -= serviceCrg * sSum;
-            } else {
-                crgD = serviceCrg;
-            }
-        }
-
-        grandTotal = (sumD+vatD+crgD)-disD;
-
-        setResults();*/
 
         foodtasks.remove(pos);
 
@@ -786,7 +707,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
     }
 
-    public void setup_person(String tableno, String availableperson) {
+    /*public void setup_person(String tableno, String availableperson) {
 
         int tablenum;
         tablenum = Integer.parseInt(tableno);
@@ -798,7 +719,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         View view2 = inflater.inflate(R.layout.customdialogforperson, null);
         builder.setView(view2);
         ImageView plusbuttonInperson = view2.findViewById(R.id.plusbuttonInperson);
-        personsetupinTV = view2.findViewById(R.id.personsetupinTV);
+        TextView personsetupinTV = view2.findViewById(R.id.personsetupinTV);
         ImageView minusbuttonInperson = view2.findViewById(R.id.minusbuttonInperson);
         personsetupinTV.setText(String.valueOf(totalPerson));
         TextView textViewconfirmationForPerson = view2.findViewById(R.id.textViewconfirmationForPerson);
@@ -834,9 +755,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             alert.dismiss();
         });
         alert.show();
-    }
+    }*/
 
-    public int checktableExistence(String tableid) {
+    public int checkTableExistence(String tableid) {
         Log.d("table_details", "" + new Gson().toJson(selectedTables));
         for (int i = 0; i < selectedTables.size(); i++) {
             if (selectedTables.get(i).getTableId().contains(tableid)) {
@@ -862,5 +783,26 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             cancelButtonAction();
         }
         finish();
+    }
+
+    private void initial() {
+        sumInterface = this;
+        SharedPref.init(this);
+        SharedPref.write("TABLE", "");
+        //tableBookDetails = new ArrayList<>();
+        selectedTables = new ArrayList<>();
+        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
+        id = SharedPref.read("ID", "");
+        orderId = getIntent().getStringExtra("ORDERID");
+        try {
+            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
+            serviceType = SharedPref.read("SCT", "0");
+            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
+            //binding.tableEt.setText(SharedPref.read("UPDATETABLE", ""));
+            binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
+            currency = SharedPref.read("CURRENCY", "");
+        } catch (Exception e) {/**/}
+        progressDialog = new SpotsDialog(this, R.style.Custom);
+        progressDialog.show();
     }
 }

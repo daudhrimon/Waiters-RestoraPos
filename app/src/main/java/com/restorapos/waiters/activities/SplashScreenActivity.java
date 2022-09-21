@@ -7,36 +7,38 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.ActivitySplashScreenBinding;
 import com.restorapos.waiters.utils.SharedPref;
 
 public class SplashScreenActivity extends AppCompatActivity {
+    private ActivitySplashScreenBinding binding;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         SharedPref.init(this);
-        TextView version = findViewById(R.id.version);
 
         try {
             PackageInfo pInfo =   this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
             String verName = pInfo.versionName;
             int verCode = pInfo.versionCode;
-            version.setText(String.valueOf("Version : "+verName+"."+verCode));
+            binding.version.setText(String.valueOf("Version : "+verName+"."+verCode));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
-            //WaitersService waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
             SharedPref.write("FOOD", "");
             SharedPref.write("name", "");
-            /*SharedPref.write("ORDERID", "");
-            SharedPref.write("UPDATETABLE", "");*/
             String id = SharedPref.read("ID", "");
 
         } catch (Exception e) {/**/}

@@ -78,7 +78,7 @@
             tools:listitem="@layout/design_notification" />
 
         <LinearLayout
-            android:id="@+id/layoutId"
+            android:id="@+id/emptyLay"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"

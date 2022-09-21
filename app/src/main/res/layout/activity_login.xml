@@ -35,7 +35,7 @@
                 app:boxBackgroundMode="none">
 
                 <EditText
-                    android:id="@+id/emailId"
+                    android:id="@+id/emailEt"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
@@ -58,7 +58,7 @@
                 app:passwordToggleTint="#BCBCBC">
 
                 <EditText
-                    android:id="@+id/passwordId"
+                    android:id="@+id/passwordEt"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
@@ -71,12 +71,12 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/signInBtnId"
+                android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_49sdp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_red_button"
-                android:text="Log In"
+                android:text="Log in"
                 android:gravity="center"
                 android:clickable="true"
                 android:textAllCaps="false"
@@ -101,7 +101,7 @@
                 android:textColor="@android:color/black" />
 
             <TextView
-                android:id="@+id/reset"
+                android:id="@+id/resetBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

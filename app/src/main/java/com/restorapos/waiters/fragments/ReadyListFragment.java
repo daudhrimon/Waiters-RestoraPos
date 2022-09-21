@@ -3,14 +3,13 @@ package com.restorapos.waiters.fragments;
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.rootMenu;
 import static com.restorapos.waiters.fragments.OrderListFragment.orderSwipe;
-import android.app.AlertDialog;
-import android.content.Context;
+
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -20,24 +19,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.activities.ViewOrderDialog;
 import com.restorapos.waiters.adapters.ReadyOrderAdapter;
-import com.restorapos.waiters.adapters.ViewOrderAdapter;
+import com.restorapos.waiters.databinding.FragmentReadyListBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.Readyorder.ReadyOrderResponse;
 import com.restorapos.waiters.model.Readyorder.ReadyorderData;
-import com.restorapos.waiters.model.viewOrderModel.IteminfoItem;
-import com.restorapos.waiters.model.viewOrderModel.ViewOrderResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.restorapos.waiters.utils.Utils;
-import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
@@ -46,25 +44,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReadyListFragment extends Fragment implements ViewInterface {
+    private FragmentReadyListBinding binding;
     private boolean search = false;
-    private RecyclerView readyOrderRecyclerViewId;
     private WaitersService waitersService;
     private String id;
-    private Button previewBtn, nextBtn;
     private int start = 0;
-    private LinearLayout layout;
     private SpotsDialog progressDialog;
-    private RecyclerView foodCartRecyclerView;
-    private TextView vat, total, grandTotal, discount, serviceChage, orderDate, table;
     private List<ReadyorderData> items = new ArrayList<>();
     private ReadyOrderAdapter readyOrderAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ready_list, container, false);
+        binding = FragmentReadyListBinding.inflate(inflater, container, false);
 
-        initial(view);
+        initial();
 
 
         getAllReadyOrder(start);
@@ -96,30 +90,33 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
             }
         });
 
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+        binding.nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start += 10;
                 Log.d("TAG", "onClick: " + start);
                 getAllReadyOrder(start);
                 if (0 < start) {
-                    previewBtn.setVisibility(View.VISIBLE);
+                    binding.prevBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        previewBtn.setOnClickListener(new View.OnClickListener() {
+        binding.prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start -= 10;
                 getAllReadyOrder(start);
                 if (start < 10) {
-                    previewBtn.setVisibility(View.GONE);
+                    binding.prevBtn.setVisibility(View.GONE);
                 }
             }
         });
 
-        return view;
+
+
+
+        return binding.getRoot();
     }
 
 
@@ -133,12 +130,12 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
                         newList.add(items.get(i));
                     }
                 }
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), newList,ReadyListFragment.this::view);
-                readyOrderRecyclerViewId.setAdapter(readyOrderAdapter);
+                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), newList,ReadyListFragment.this::viewOrder);
+                binding.readyRecycler.setAdapter(readyOrderAdapter);
 
             }else {
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::view);
-                readyOrderRecyclerViewId.setAdapter(readyOrderAdapter);
+                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::viewOrder);
+                binding.readyRecycler.setAdapter(readyOrderAdapter);
             }
         }
 
@@ -153,31 +150,29 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
                 if (response.body().getStatus().equals("success")){
                     if(response.body().getReadyOrderOtherInfo().getTotalorder()!=null){
                         if (starts > response.body().getReadyOrderOtherInfo().getTotalorder()) {
-                            nextBtn.setVisibility(View.GONE);
+                            binding.nextBtn.setVisibility(View.GONE);
                         } else {
-                            nextBtn.setVisibility(View.VISIBLE);
+                            binding.nextBtn.setVisibility(View.VISIBLE);
                         }
                     }
                     items = response.body().getReadyOrderOtherInfo().getReadyOrderData();
                     if (items.size() > 0){
-                        layout.setVisibility(View.GONE);
-                        readyOrderRecyclerViewId.setVisibility(View.VISIBLE);
-                        readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::view);
-                        readyOrderRecyclerViewId.setAdapter(readyOrderAdapter);
+                        binding.emptyLay.setVisibility(View.GONE);
+                        binding.readyRecycler.setVisibility(View.VISIBLE);
+                        readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::viewOrder);
+                        binding.readyRecycler.setAdapter(readyOrderAdapter);
                     } else {
-                        readyOrderRecyclerViewId.setVisibility(View.GONE);
-                        nextBtn.setVisibility(View.GONE);
-                        layout.setVisibility(View.VISIBLE);
+                        binding.readyRecycler.setVisibility(View.GONE);
+                        binding.nextBtn.setVisibility(View.GONE);
+                        binding.emptyLay.setVisibility(View.VISIBLE);
                     }
-                    orderSwipe.setRefreshing(false);
-                    progressDialog.dismiss();
                 } else {
-                    readyOrderRecyclerViewId.setVisibility(View.GONE);
-                    nextBtn.setVisibility(View.GONE);
-                    layout.setVisibility(View.VISIBLE);
-                    orderSwipe.setRefreshing(false);
-                    progressDialog.dismiss();
+                    binding.readyRecycler.setVisibility(View.GONE);
+                    binding.nextBtn.setVisibility(View.GONE);
+                    binding.emptyLay.setVisibility(View.VISIBLE);
                 }
+                orderSwipe.setRefreshing(false);
+                progressDialog.dismiss();
             }
 
             @Override
@@ -185,9 +180,9 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        readyOrderRecyclerViewId.setVisibility(View.GONE);
-                        nextBtn.setVisibility(View.GONE);
-                        layout.setVisibility(View.VISIBLE);
+                        binding.readyRecycler.setVisibility(View.GONE);
+                        binding.nextBtn.setVisibility(View.GONE);
+                        binding.emptyLay.setVisibility(View.VISIBLE);
                         orderSwipe.setRefreshing(false);
                         progressDialog.dismiss();
                     }
@@ -196,80 +191,43 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
         });
     }
 
-    public void view(String orderId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = (LayoutInflater) getContext().
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view2 = inflater.inflate(R.layout.custom_alert_view, null);
-        builder.setView(view2);
-        ImageView close = view2.findViewById(R.id.closeId);
-        foodCartRecyclerView = view2.findViewById(R.id.foodCartRecyclerViewId);
-        vat = view2.findViewById(R.id.vatId);
-        total = view2.findViewById(R.id.totalId);
-        grandTotal = view2.findViewById(R.id.grandTotalId);
-        discount = view2.findViewById(R.id.discountId);
-        serviceChage = view2.findViewById(R.id.serviceChargeId);
-        orderDate = view2.findViewById(R.id.OrderDateId);
-        table = view2.findViewById(R.id.tableId);
-        foodCartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        Log.d("aaaaaaa",""+orderId+ " "+SharedPref.read("ORDERSTATUS", ""));
-        viewOrder(orderId, SharedPref.read("ORDERSTATUS", ""));
-        AlertDialog alert = builder.create();
-        close.setOnClickListener(view -> alert.dismiss());
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alert.setCancelable(false);
-        alert.show();
-        Log.d("asdd", "view: " + orderId);
+
+
+
+
+    @Override
+    public void viewOrder(String orderId) {
+        Dialog dialog = new ViewOrderDialog(getContext(),id,orderId,"3","Ready");
+        dialog.show();
+        Window win = dialog.getWindow();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        win.setLayout((14*width)/15,(19*height)/20);
+        win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    private void viewOrder(String orderId, String orderStatus) {
-        Log.d("TAG", "viewOrder: " + id +" "+ orderStatus +" "+ orderId);
-        waitersService.viewOrder(id, orderStatus, orderId).enqueue(new Callback<ViewOrderResponse>() {
-            @Override
-            public void onResponse(Call<ViewOrderResponse> call, Response<ViewOrderResponse> response) {
 
-                Log.d("TAG", "onResponse: " + new Gson().toJson(response.body()));
-                try {
-                    List<IteminfoItem> items = response.body().getData().getIteminfo();
-                    foodCartRecyclerView.setAdapter(new ViewOrderAdapter(getContext(), items,"Ready"));
-                    vat.setText(response.body().getData().getVAT()+SharedPref.read("CURRENCY", ""));
-                    total.setText(response.body().getData().getSubtotal()+SharedPref.read("CURRENCY", ""));
-                    grandTotal.setText(response.body().getData().getOrderTotal()+SharedPref.read("CURRENCY", ""));
-                    discount.setText(response.body().getData().getDiscount()+SharedPref.read("CURRENCY", ""));
-                    serviceChage.setText(response.body().getData().getServiceCharge()+SharedPref.read("CURRENCY", ""));
-                    orderDate.setText("Date: " + response.body().getData().getOrderdate());
-                    table.setText("Table No: " + response.body().getData().getTableName());
-                } catch (Exception ignored) {
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ViewOrderResponse> call, Throwable t) {
-                Log.d("TAG", "onResponse: " + t.getLocalizedMessage());
-            }
-        });
-    }
 
-    private void initial(View view) {
+
+    private void initial() {
         SharedPref.init(getContext());
         progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
         waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
         id = SharedPref.read("ID", "");
-        SharedPref.write("ORDERSTATUS", "3");
-        readyOrderRecyclerViewId = view.findViewById(R.id.readyOrderRecyclerViewId);
-        previewBtn = view.findViewById(R.id.previewId);
-        layout = view.findViewById(R.id.layoutId);
-        nextBtn = view.findViewById(R.id.nextId);
+       // SharedPref.write("ORDERSTATUS", "3");
         rootMenu = true;
         appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
         appSearchBar.setQueryHint("Search Here");
         progressDialog.show();
     }
 
+
+
+
     @Override
     public void onResume() {
         super.onResume();
-        Utils.hideKeyboard(getActivity());
         MainActivity.onResumeAppFrags();
     }
 }

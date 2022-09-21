@@ -23,7 +23,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/processingOrderRecyclerViewId"
+            android:id="@+id/processingRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="6dp"
@@ -31,7 +31,7 @@
             tools:listitem="@layout/design_pending_order_item" />
 
         <LinearLayout
-            android:id="@+id/layoutId"
+            android:id="@+id/emptyLay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

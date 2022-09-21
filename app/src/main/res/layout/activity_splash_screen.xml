@@ -33,6 +33,7 @@
         android:layout_marginBottom="22dp"
         android:text="@string/app_dev"
         android:textColor="@color/colorWhite"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:viewBindingIgnore="true"/>
 
 </RelativeLayout>

@@ -184,13 +184,17 @@ public class OrderHistoryFragment extends Fragment {
             }
         });
     }
+
+
     public static final int[] VORDIPLOM_COLORS = {
             Color.rgb(255, 33, 59), Color.rgb(0, 0, 0)};
+
+
+
 
     @Override
     public void onResume() {
         super.onResume();
-        Utils.hideKeyboard(getActivity());
         MainActivity.onResumeAppFrags();
     }
 }
