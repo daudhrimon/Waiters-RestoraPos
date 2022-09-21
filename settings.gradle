@@ -16,5 +16,5 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "Waiters-RestoraPos"
+rootProject.name = "Waiters-RestoraPOS"
 include ':app'
