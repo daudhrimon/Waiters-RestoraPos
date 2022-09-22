@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,11 +43,11 @@ import com.restorapos.waiters.model.foodlistModel.FoodlistResponse;
 import com.restorapos.waiters.model.foodlistModel.Varientlist;
 import com.restorapos.waiters.model.foodlistModel2.Foodinfo2;
 import com.restorapos.waiters.model.foodlistModel2.FoodlistResponse2;
+import com.restorapos.waiters.offlineDb.AppDatabase;
 import com.restorapos.waiters.offlineDb.DatabaseClient;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.restorapos.waiters.utils.Utils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -85,6 +84,7 @@ public class FoodItemActivity extends AppCompatActivity {
     private String quantity = "";
     private int countNow= 1;
     private FoodssAdapter foodssAdapter;
+    private AppDatabase appDatabase;
 
     @SuppressLint("NewApi")
     @Override
@@ -92,6 +92,9 @@ public class FoodItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityFoodItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+
 
         initial();
 
@@ -102,6 +105,7 @@ public class FoodItemActivity extends AppCompatActivity {
         getSubCategoryItem();
 
         getAllFoodItem();
+
 
 
 
@@ -125,12 +129,13 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
 
+
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                customfilterList(charSequence.toString());
+                customFilterList(charSequence.toString());
             }
             @Override
             public void afterTextChanged(Editable editable) {/**/}
@@ -150,7 +155,7 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
 
-    private void customfilterList(String value) {
+    private void customFilterList(String value) {
         List<Foodinfo> newList = new ArrayList<>();
         if (value != null && !value.isEmpty()) {
             newList.clear();
@@ -181,9 +186,8 @@ public class FoodItemActivity extends AppCompatActivity {
         progressDialog.show();
 
         MainActivity.appBarDefault();
+        appDatabase = DatabaseClient.getInstance(this).getAppDatabase();
     }
-
-
 
 
 
@@ -214,8 +218,6 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
 
-
-
     public void getSubCategoryItem() {
         waitersService.foodSubCategory(userId, pCategoryId).enqueue(new Callback<FoodlistResponse>() {
             @Override
@@ -232,8 +234,6 @@ public class FoodItemActivity extends AppCompatActivity {
             public void onFailure(Call<FoodlistResponse> call, Throwable t) {/**/}
         });
     }
-
-
 
 
 
@@ -281,8 +281,6 @@ public class FoodItemActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 
@@ -344,22 +342,20 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
 
-
-
-
     private void getFoodCart() {
         try {
             double Total = 0.0;
-            //double vatTotal = 0.0;
             for (int i = 0; i < foodtasks.size(); i++) {
                 Total += (Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal();
-                //vatTotal += (Double.parseDouble(foodtasks.get(i).getPrice()) * Double.parseDouble(foodtasks.get(i).getProductvat())) / 100;
             }
-            binding.countTv.setText(String.valueOf(foodtasks.size()));
+
             String cartTotal = String.valueOf(Double.valueOf(new DecimalFormat("##.##").format(Total)));
-            binding.totalTv.setText(SharedPref.read("CURRENCY", "")+" "+cartTotal);
-            SharedPref.write("CartCount", binding.countTv.getText().toString());
+
+            SharedPref.write("CartCount", String.valueOf(foodtasks.size()));
             SharedPref.write("CartTotal",cartTotal);
+
+            setFoodCartHeaders();
+
         } catch (Exception ignored) {/**/}
     }
 
@@ -476,15 +472,16 @@ public class FoodItemActivity extends AppCompatActivity {
                 }
                 unitListItem.quantitys = Integer.parseInt(quantity);
 
-                DatabaseClient.getInstance(FoodItemActivity.this).getAppDatabase()
-                        .taskDao()
-                        .insertFood(unitListItem);
+
+                appDatabase.taskDao().insertFood(unitListItem);
+
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
                 getUnit();
             }
         }
@@ -516,9 +513,9 @@ public class FoodItemActivity extends AppCompatActivity {
                 unitListItem.setAddons(foodinfo.getAddons());
                 unitListItem.quantitys = quantity;
 
-                DatabaseClient.getInstance(FoodItemActivity.this).getAppDatabase()
-                        .taskDao()
-                        .updateFood(unitListItem);
+
+                appDatabase.taskDao().updateFood(unitListItem);
+
                 return null;
             }
 
@@ -539,19 +536,20 @@ public class FoodItemActivity extends AppCompatActivity {
 
             @Override
             protected List<Foodinfo> doInBackground(Void... voids) {
-                List<Foodinfo> productList = DatabaseClient
-                        .getInstance(FoodItemActivity.this)
-                        .getAppDatabase()
-                        .taskDao()
-                        .getAllUnit();
+
+                List<Foodinfo> productList = appDatabase.taskDao().getAllUnit();
+
                 foodtasks = productList;
+
                 return productList;
             }
 
             @Override
             protected void onPostExecute(List<Foodinfo> tasks) {
                 super.onPostExecute(tasks);
+
                 foodtasks = tasks;
+
                 getFoodCart();
             }
         }
@@ -559,19 +557,20 @@ public class FoodItemActivity extends AppCompatActivity {
         gt.execute();
     }
 
-    private void delete(Foodinfo foodinfo) {
+    private void deleteFood(Foodinfo foodinfo) {
         class DeleteTask extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(FoodItemActivity.this).getAppDatabase()
-                        .taskDao()
-                        .delete(foodinfo);
+
+                appDatabase.taskDao().delete(foodinfo);
+
                 return null;
             }
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
                 getUnit();
             }
         }
@@ -709,7 +708,7 @@ public class FoodItemActivity extends AppCompatActivity {
                                 if (list.equals(list1)) {
                                     Log.d("000", "onBindViewHolder: " + list + " " + list1);
                                     Log.d("ooo", "onBind: " + t);
-                                    delete(foodtasks.get(t));
+                                    deleteFood(foodtasks.get(t));
                                 }
                             }
                         } else {
