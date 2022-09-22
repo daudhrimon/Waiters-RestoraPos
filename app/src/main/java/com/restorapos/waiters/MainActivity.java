@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         // Load Fragments
 
         DashboardFragment dashboardFragment = new DashboardFragment();
