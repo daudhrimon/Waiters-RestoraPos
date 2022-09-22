@@ -95,7 +95,7 @@ public class FoodActivity extends AppCompatActivity {
 
         initial();
 
-        getAllFooditemWithMultipleVariants();
+        getAllFoodItemWithMultipleVariant();
 
         getUnit();
 
@@ -189,7 +189,7 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-    private void getAllFooditemWithMultipleVariants() {
+    private void getAllFoodItemWithMultipleVariant() {
         waitersService.getallfoodwithMultipleVariants(userId, pCategoryId).enqueue(new Callback<FoodlistResponse2>() {
             @Override
             public void onResponse(Call<FoodlistResponse2> call, Response<FoodlistResponse2> response) {
@@ -951,6 +951,10 @@ public class FoodActivity extends AppCompatActivity {
             SharedPref.write("name", "");
             SharedPref.write("SUM", "");
 
+
+
+
+
             dBinding.addToCartBtn.setOnClickListener(v -> {
                 List<Addonsinfo> addonsinfos = new ArrayList<>();
                 Gson g = new Gson();
@@ -981,7 +985,6 @@ public class FoodActivity extends AppCompatActivity {
                             Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
                             addonsinfos = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
                             this.items.get(pos).setAddonsinfo(addonsinfos);
-
                         }
                     }
 
@@ -1007,6 +1010,10 @@ public class FoodActivity extends AppCompatActivity {
 
                 this.items.get(pos).quantity = 0;
 
+                insertFood(this.items.get(pos));
+
+                Toasty.success(FoodActivity.this,"Item added to cart").show();
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1014,13 +1021,17 @@ public class FoodActivity extends AppCompatActivity {
                     }
                 }, 1000);
 
-                insertFood(this.items.get(pos));
                 dialog.dismiss();
-                Toasty.success(FoodActivity.this,"Item added to cart").show();
-                getAllFoodItem();
+
+                qtyShowTv.setVisibility(View.GONE);
+               //getAllFoodItem();
             });
 
             List<Addonsinfo> finalAddonsinfoList1 = addonsinfoList;
+
+
+
+
 
             dBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1029,6 +1040,10 @@ public class FoodActivity extends AppCompatActivity {
                     qtyShowTv.setVisibility(View.GONE);
                 }
             });
+
+
+
+
 
             dBinding.addMultipleBtn.setOnClickListener(v -> {
                 List<Addonsinfo> addonsinfos = new ArrayList<>();
@@ -1086,6 +1101,10 @@ public class FoodActivity extends AppCompatActivity {
 
                 this.items.get(pos).quantity = 0;
 
+                insertFood(this.items.get(pos));
+
+                Toasty.success(FoodActivity.this,"Item added to cart").show();
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1093,10 +1112,7 @@ public class FoodActivity extends AppCompatActivity {
                     }
                 }, 1000);
 
-                insertFood(this.items.get(pos));
-
-                Toasty.success(FoodActivity.this,"Item added to cart").show();
-                getAllFoodItem();
+                //getAllFoodItem();
             });
 
             dialog.show();
