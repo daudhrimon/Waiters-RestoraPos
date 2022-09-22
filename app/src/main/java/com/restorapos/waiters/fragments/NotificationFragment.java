@@ -109,27 +109,27 @@ public class NotificationFragment extends Fragment implements NotificationInterf
                         List<OrderinfoItem> list = response.body().getData().getOrderinfo();
                         if (list.size() > 0){
                             binding.emptyLay.setVisibility(View.GONE);
-                            binding.foodNotification.setVisibility(View.VISIBLE);
-                            binding.foodNotification.setAdapter(new NotificationAdapter(getContext(), list, notificationInterface));
+                            binding.notifyRecycler.setVisibility(View.VISIBLE);
+                            binding.notifyRecycler.setAdapter(new NotificationAdapter(getContext(), list, notificationInterface));
                             MainActivity.notifyBadge.setVisible(true);
                             MainActivity.notifyBadge.setNumber(list.size());
                         } else {
                             binding.emptyLay.setVisibility(View.VISIBLE);
-                            binding.foodNotification.setVisibility(View.GONE);
+                            binding.notifyRecycler.setVisibility(View.GONE);
                             MainActivity.notifyBadge.setVisible(false);
                         }
                         binding.notySwipe.setRefreshing(false);
                         progressDialog.dismiss();
                     } else {
                         binding.emptyLay.setVisibility(View.VISIBLE);
-                        binding.foodNotification.setVisibility(View.GONE);
+                        binding.notifyRecycler.setVisibility(View.GONE);
                         binding.notySwipe.setRefreshing(false);
                         progressDialog.dismiss();
                         MainActivity.notifyBadge.setVisible(false);
                     }
                 } catch (Exception e) {
                     binding.emptyLay.setVisibility(View.VISIBLE);
-                    binding.foodNotification.setVisibility(View.GONE);
+                    binding.notifyRecycler.setVisibility(View.GONE);
                     binding.notySwipe.setRefreshing(false);
                     progressDialog.dismiss();
                     MainActivity.notifyBadge.setVisible(false);
@@ -141,7 +141,7 @@ public class NotificationFragment extends Fragment implements NotificationInterf
                     @Override
                     public void run() {
                         binding.emptyLay.setVisibility(View.VISIBLE);
-                        binding.foodNotification.setVisibility(View.GONE);
+                        binding.notifyRecycler.setVisibility(View.GONE);
                         binding.notySwipe.setRefreshing(false);
                         progressDialog.dismiss();
                         MainActivity.notifyBadge.setVisible(false);

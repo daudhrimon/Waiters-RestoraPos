@@ -18,6 +18,6 @@
     <string name="unit_price">Unit Price</string>
     <string name="quantity">Quantity</string>
     <string name="total_price">Total Price</string>
-    <string name="no_foods_available">No Foods Available</string>
+    <string name="no_foods_available">No Foods available</string>
     <string name="Customer_name">Customer Name</string>
 </resources>

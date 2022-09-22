@@ -145,11 +145,11 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                     }
                 }
                 completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CompleteFragment.this::viewOrder);
-                binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
 
             } else {
                 completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
-                binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
             }
         }
 
@@ -172,24 +172,24 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                         items = response.body().getData().getOrderinfo();
                         if (items.size() > 0){
                             binding.emptyLay.setVisibility(View.GONE);
-                            binding.processingRecycler.setVisibility(View.VISIBLE);
+                            binding.completeRecycler.setVisibility(View.VISIBLE);
                             completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
-                            binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                            binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
                         } else {
                             progressDialog.dismiss();
-                            binding.processingRecycler.setVisibility(View.GONE);
+                            binding.completeRecycler.setVisibility(View.GONE);
                             binding.nextBtn.setVisibility(View.GONE);
                             binding.emptyLay.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        binding.processingRecycler.setVisibility(View.GONE);
+                        binding.completeRecycler.setVisibility(View.GONE);
                         binding.nextBtn.setVisibility(View.GONE);
                         binding.emptyLay.setVisibility(View.VISIBLE);
                     }
                     binding.cOrderSwipe.setRefreshing(false);
                     progressDialog.dismiss();
                 } catch (Exception e) {
-                    binding.processingRecycler.setVisibility(View.GONE);
+                    binding.completeRecycler.setVisibility(View.GONE);
                     binding.nextBtn.setVisibility(View.GONE);
                     binding.emptyLay.setVisibility(View.VISIBLE);
                     binding.cOrderSwipe.setRefreshing(false);
@@ -201,7 +201,7 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        binding.processingRecycler.setVisibility(View.GONE);
+                        binding.completeRecycler.setVisibility(View.GONE);
                         binding.nextBtn.setVisibility(View.GONE);
                         binding.emptyLay.setVisibility(View.VISIBLE);
                         binding.cOrderSwipe.setRefreshing(false);

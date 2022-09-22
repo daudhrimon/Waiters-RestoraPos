@@ -46,9 +46,13 @@ public class DashboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
 
+
+
         initial();
 
         getDashboardItem();
+
+
 
         appSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -81,18 +85,25 @@ public class DashboardFragment extends Fragment {
         return binding.getRoot();
     }
 
+
+
+
     private void initial() {
         btmNav.setVisibility(View.VISIBLE);
+        btmNav.setSelectedItemId(R.id.bMenu);
         SharedPref.init(getActivity());
         waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
         dbItems = new ArrayList<>();
         id = SharedPref.read("ID", "");
         rootMenu = false;
         appSearchBar.setInputType(InputType.TYPE_CLASS_TEXT);
         appSearchBar.setQueryHint("Search Food Category");
+        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
         progressDialog.show();
     }
+
+
+
 
     private void getDashboardItem() {
         waitersService.getDashboardItem(id).enqueue(new Callback<DashboardResponse>() {
@@ -133,6 +144,9 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
+
+
 
     private void SearchDashboardItem(String query) {
         if (query != null && !query.isEmpty()) {

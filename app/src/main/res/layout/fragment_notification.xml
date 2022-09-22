@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notySwipe"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:animationCache="true">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -69,35 +72,39 @@
                     android:text="Action" />
 
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/foodNotification"
+            android:id="@+id/notifyRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/design_notification" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/design_notification"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/emptyLay"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_111sdp"
+                android:layout_height="@dimen/_111sdp"
+                android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No Order Available to Receive"
+                android:text="No order available to Receive"
                 android:textColor="@color/colorRed"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_13sdp" />
+
         </LinearLayout>
 
     </LinearLayout>

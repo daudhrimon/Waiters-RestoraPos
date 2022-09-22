@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentLay"
@@ -11,11 +11,13 @@
     android:animationCache="true">
 
     <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/colorRed"
         android:layout_marginBottom="10dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        tools:viewBindingIgnore="true">
 
         <ImageView
             android:id="@+id/backBtn"
@@ -55,9 +57,7 @@
         android:id="@+id/subCategoryRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/_3sdp"
-        android:paddingBottom="@dimen/_3sdp"
-        android:layout_marginBottom="@dimen/_3sdp"
+        android:layout_below="@id/topBar"
         android:background="@color/colorWhite"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
@@ -67,23 +67,27 @@
         android:id="@+id/foodRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:paddingHorizontal="6dp"
+        android:layout_below="@id/subCategoryRecycler"
+        android:layout_above="@id/viewCartTv"
+        android:paddingTop="5dp"
+        android:paddingHorizontal="7dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/design_foods_item" />
+        tools:listitem="@layout/design_foods_item"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/emptyLay"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_111sdp"
+            android:layout_height="@dimen/_111sdp"
+            android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
 
         <TextView
@@ -92,7 +96,8 @@
             android:gravity="center"
             android:text="@string/no_foods_available"
             android:textColor="@color/colorRed"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_13sdp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -100,6 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/selector_view_cart"
+        android:layout_alignParentBottom="true"
         android:gravity="center"
         android:clickable="true"
         android:orientation="horizontal"
@@ -154,4 +160,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,57 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ReadyFragment">
+    tools:context=".fragments.ReadyFragment"
+    android:animateLayoutChanges="true"
+    android:animationCache="true">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/readyRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_above="@id/btmLay"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/design_complete_cancel_order_item"
+        android:visibility="gone"/>
 
-        <androidx.cardview.widget.CardView
+    <LinearLayout
+        android:id="@+id/emptyLay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/_111sdp"
+            android:layout_height="@dimen/_111sdp"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:layout_marginTop="8dp">
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/readyRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/design_complete_cancel_order_item"
-            android:layout_weight="9" />
-
-        <LinearLayout
-            android:id="@+id/emptyLay"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:text="No Ready order available"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/_13sdp" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="No Order Available"
-                android:textColor="@color/colorRed"
-                android:textSize="@dimen/_15sdp" />
-        </LinearLayout>
-
-        <LinearLayout
+    <LinearLayout
+            android:id="@+id/btmLay"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -78,6 +69,5 @@
                 android:text="Next"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>
-    </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

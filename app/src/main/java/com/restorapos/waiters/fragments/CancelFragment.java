@@ -129,11 +129,11 @@ public class CancelFragment extends Fragment implements ViewInterface {
                     }
                 }
                 completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CancelFragment.this::viewOrder);
-                binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                binding.cancelRecycler.setAdapter(completeCancelOrderAdapter);
 
             }else {
                 completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CancelFragment.this::viewOrder);
-                binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                binding.cancelRecycler.setAdapter(completeCancelOrderAdapter);
             }
         }
 
@@ -157,24 +157,24 @@ public class CancelFragment extends Fragment implements ViewInterface {
                         items = response.body().getData().getOrderinfo();
                         if (items.size() > 0){
                             binding.emptyLay.setVisibility(View.GONE);
-                            binding.processingRecycler.setVisibility(View.VISIBLE);
+                            binding.cancelRecycler.setVisibility(View.VISIBLE);
                             completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CancelFragment.this::viewOrder);
-                            binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
+                            binding.cancelRecycler.setAdapter(completeCancelOrderAdapter);
                             binding.nextBtn.setVisibility(View.VISIBLE);
                         } else {
-                            binding.processingRecycler.setVisibility(View.GONE);
+                            binding.cancelRecycler.setVisibility(View.GONE);
                             binding.nextBtn.setVisibility(View.GONE);
                             binding.emptyLay.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        binding.processingRecycler.setVisibility(View.GONE);
+                        binding.cancelRecycler.setVisibility(View.GONE);
                         binding.nextBtn.setVisibility(View.GONE);
                         binding.emptyLay.setVisibility(View.VISIBLE);
                     }
                     orderSwipe.setRefreshing(false);
                     progressDialog.dismiss();
                 } catch (Exception e) {
-                    binding.processingRecycler.setVisibility(View.GONE);
+                    binding.cancelRecycler.setVisibility(View.GONE);
                     binding.nextBtn.setVisibility(View.GONE);
                     binding.emptyLay.setVisibility(View.VISIBLE);
                     orderSwipe.setRefreshing(false);
@@ -187,7 +187,7 @@ public class CancelFragment extends Fragment implements ViewInterface {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        binding.processingRecycler.setVisibility(View.GONE);
+                        binding.cancelRecycler.setVisibility(View.GONE);
                         binding.nextBtn.setVisibility(View.GONE);
                         binding.emptyLay.setVisibility(View.VISIBLE);
                         orderSwipe.setRefreshing(false);

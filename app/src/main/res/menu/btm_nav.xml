@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_food_tray"/>
 
     <item android:id="@+id/bCmplt"
-        android:title="Completed"
+        android:title="Complete"
         android:icon="@drawable/ic_round_check_circle_outline_24"/>
 
     <item android:id="@+id/bNotify"

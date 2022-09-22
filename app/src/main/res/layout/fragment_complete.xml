@@ -7,53 +7,49 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CompleteFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:layout_marginTop="10dp">
-
-        </androidx.cardview.widget.CardView>
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:animationCache="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/processingRecycler"
+            android:id="@+id/completeRecycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_above="@id/btmLay"
+            android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_weight="9" />
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/emptyLay"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_111sdp"
+                android:layout_height="@dimen/_111sdp"
+                android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No Order Available"
+                android:text="No Complete order available"
                 android:textColor="@color/colorRed"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/btmLay"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            android:layout_alignParentBottom="true"
             android:gravity="right|center"
             android:orientation="horizontal"
             android:paddingRight="20dp">
@@ -79,6 +75,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

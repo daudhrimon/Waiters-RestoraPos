@@ -70,15 +70,17 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean rootMenu;
     private boolean go = true;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         initial();
 
-        // AppBars OnClicks
 
+        // AppBars OnClicks
 
         appMenu.setOnClickListener(v -> {
             if (drawer.isDrawerVisible(GravityCompat.START)) {
@@ -89,9 +91,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         appCart.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this.getApplicationContext(), CartActivity.class));
         });
+
 
 
         appSearch.setOnClickListener(view -> {
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         appCross.setOnClickListener(view -> {
             appSearchLay.setVisibility(View.GONE);
             appHeader.setVisibility(View.VISIBLE);
@@ -113,72 +118,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //bottom Nav OnClicks
-
-        btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() != btmNav.getSelectedItemId() && go){
-                    switch (item.getItemId()) {
-
-                        case R.id.bMenu: {
-                            DashboardFragment dashboardFragment = new DashboardFragment();
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, dashboardFragment, dashboardFragment.getTag())
-                                    .commit();
-                            setSelectorColor(menu, orderList, completeOrder, orderHistory, logout);
-                            drawer.closeDrawer(GravityCompat.START);
-                            appBarDefault();
-                            appHeader.setText("Menu");
-                            appSearch.setVisibility(View.VISIBLE);
-                        }
-                        break;
-
-                        case R.id.bOrders: {
-                            OrderFragment orderFragment = new OrderFragment();
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, orderFragment, orderFragment.getTag())
-                                    .commit();
-                            setSelectorColor(orderList, menu, completeOrder, orderHistory, logout);
-                            drawer.closeDrawer(GravityCompat.START);
-                            appSearch.setVisibility(View.VISIBLE);
-                        }
-                        break;
-
-                        case R.id.bProcess: {
-                            if (SharedPref.read("OVI", "").equals("admin")) {
-                                SharedPref.write("RED", "1");
-                            } else {
-                                SharedPref.write("RED", "2");
-                            }
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderFragment(), "ovi").commit();
-                            appSearch.setVisibility(View.VISIBLE);
-                        }
-                        break;
-
-                        case R.id.bCmplt: {
-                            CompleteFragment completeFragment = new CompleteFragment();
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, completeFragment, completeFragment.getTag())
-                                    .commit();
-                            setSelectorColor(completeOrder, menu, orderList, orderHistory, logout);
-                            drawer.closeDrawer(GravityCompat.START);
-                            appBarDefault();
-                            appHeader.setText("Complete Orders");
-                            appSearch.setVisibility(View.VISIBLE);
-                        }
-                        break;
-
-                        case R.id.bNotify: {
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new NotificationFragment(), "ovi").commit();
-                            appBarDefault();
-                            appHeader.setText("Customer Orders");
-                            appSearch.setVisibility(View.GONE);
-                        }
-                        break;
-                    }
-                }
-                return true;
-            }
-        });
 
 
         // Load Fragments
@@ -193,13 +132,13 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.content_main, new OrderFragment(), "ovi")
                         .commit();
                 appBarDefault();
-            } else {
-               /* SharedPref.write("ORDERSTATUS", "2");
+            } /*else {
+                SharedPref.write("ORDERSTATUS", "2");
                 Intent intent = new Intent(MainActivity.this, ViewOrderActivity.class);
                 intent.putExtra("ORDERID", getIntent().getStringExtra("OVI"));
                 startActivity(intent);
-                appBarDefault();*/
-            }
+                appBarDefault();
+            }*/
         } catch (Exception e) {
             try {
                 if (getIntent().getStringExtra("PENDING").equals("1")) {
@@ -224,6 +163,87 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
+
+        //bottom Nav OnClicks
+
+        btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if (item.getItemId() != btmNav.getSelectedItemId() && go){
+
+                    switch (item.getItemId()) {
+
+
+                        case R.id.bMenu: {
+                            DashboardFragment dashboardFragment = new DashboardFragment();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, dashboardFragment, dashboardFragment.getTag())
+                                    .commit();
+                            drawer.closeDrawer(GravityCompat.START);
+                            setSelectorColor(menu, orderList, completeOrder, orderHistory, logout);
+                            appBarDefault();
+                            appHeader.setText("Menu");
+                            appSearch.setVisibility(View.VISIBLE);
+                        }
+                        break;
+
+
+                        case R.id.bOrders: {
+                            OrderFragment orderFragment = new OrderFragment();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, orderFragment, orderFragment.getTag())
+                                    .commit();
+                            drawer.closeDrawer(GravityCompat.START);
+                            setSelectorColor(orderList, menu, completeOrder, orderHistory, logout);
+                            appSearch.setVisibility(View.VISIBLE);
+                        }
+                        break;
+
+
+                        case R.id.bProcess: {
+                            if (SharedPref.read("OVI", "").equals("admin")) {
+                                SharedPref.write("RED", "1");
+                            } else {
+                                SharedPref.write("RED", "2");
+                            }
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderFragment(), "ovi").commit();
+                            appSearch.setVisibility(View.VISIBLE);
+                        }
+                        break;
+
+
+                        case R.id.bCmplt: {
+                            CompleteFragment completeFragment = new CompleteFragment();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, completeFragment, completeFragment.getTag())
+                                    .commit();
+                            drawer.closeDrawer(GravityCompat.START);
+                            setSelectorColor(completeOrder, menu, orderList, orderHistory, logout);
+                            appBarDefault();
+                            appHeader.setText("Complete Orders");
+                            appSearch.setVisibility(View.VISIBLE);
+                        }
+                        break;
+
+
+                        case R.id.bNotify: {
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new NotificationFragment(), "ovi").commit();
+                            appBarDefault();
+                            appHeader.setText("Customer Orders");
+                            appSearch.setVisibility(View.GONE);
+                        }
+                        break;
+
+                    }
+                }
+
+                return true;
+            }
+        });
+
+
+
+
         // drawer On Clicks
 
         menu.setOnClickListener(v -> {
@@ -231,23 +251,29 @@ public class MainActivity extends AppCompatActivity {
             btmNav.setSelectedItemId(R.id.bMenu);
         });
 
+
+
         orderList.setOnClickListener(v -> {
             go = true;
             btmNav.setSelectedItemId(R.id.bOrders);
         });
+
+
 
         completeOrder.setOnClickListener(v -> {
             go = true;
             btmNav.setSelectedItemId(R.id.bCmplt);
         });
 
+
+
         orderHistory.setOnClickListener(v -> {
             if (go){
                 HistoryFragment historyFragment = new HistoryFragment();
                 getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, historyFragment, historyFragment.getTag())
                         .commit();
-                setSelectorColor(orderHistory, menu, orderList, completeOrder, logout);
                 drawer.closeDrawer(GravityCompat.START);
+                setSelectorColor(orderHistory, menu, orderList, completeOrder, logout);
                 go = false;
                 appHeader.setText("Order History");
                 appSearch.setVisibility(View.GONE);
@@ -255,13 +281,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         logout.setOnClickListener(v -> {
             drawer.closeDrawer(GravityCompat.START);
             showAlertDialog("Are you sure to logout ?",false);
         });
 
-        //drawer views set
 
+
+
+
+        //drawer views set
 
         LoginResponse loginResponse = new Gson().fromJson(SharedPref.read("LOGINRESPONSE", ""), LoginResponse.class);
         CircleImageView profilePic = headerView.findViewById(R.id.profile_pic);
@@ -278,11 +309,16 @@ public class MainActivity extends AppCompatActivity {
         poweredBy.setText(SharedPref.read("POWERBY", ""));
 
 
+
+
         // broadcast receiver
 
         LocalBroadcastManager.getInstance(this).registerReceiver(MessageReceiver,
                 new IntentFilter("REALDATA"));
     }
+
+
+
 
 
     private void initial() {
@@ -317,12 +353,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     private BroadcastReceiver MessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             getAllOnlineOrderCount();
         }
     };
+
+
 
 
     private void getAllOnlineOrderCount() {
@@ -346,6 +386,8 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<NotificationResponse> call, Throwable t) {/**/}
         });
     }
+
+
 
 
     @Override
@@ -381,6 +423,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     private void setSelectorColor(TextView enable, TextView disable1, TextView disable2, TextView disable3, TextView disable4) {
         enable.setBackgroundColor(0x30ffffff);
         disable1.setBackgroundColor(0x00000000);
@@ -388,6 +432,8 @@ public class MainActivity extends AppCompatActivity {
         disable3.setBackgroundColor(0x00000000);
         disable4.setBackgroundColor(0x00000000);
     }
+
+
 
 
     private void showAlertDialog(String message, boolean exit) {
@@ -422,11 +468,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
         getAllOnlineOrderCount();
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -441,6 +492,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     public static void onResumeAppFrags(){
         appSearchBar.setQuery("",false);
         if (Integer.parseInt(SharedPref.read("CartCount","0")) > 0){
@@ -450,6 +503,8 @@ public class MainActivity extends AppCompatActivity {
             appCartBadge.setVisibility(View.GONE);
         }
     }
+
+
 
 
     public static void appBarDefault(){

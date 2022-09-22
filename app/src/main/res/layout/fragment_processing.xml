@@ -1,57 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
+    android:animationCache="true"
+    android:orientation="vertical"
     tools:context=".fragments.ProcessingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/processingRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <androidx.cardview.widget.CardView
-            android:visibility="gone"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/design_pending_order_item" />
+
+    <LinearLayout
+        android:id="@+id/emptyLay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/_111sdp"
+            android:layout_height="@dimen/_111sdp"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp">
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/processingRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="6dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/design_pending_order_item" />
-
-        <LinearLayout
-            android:id="@+id/emptyLay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="No Processing Order Available"
-                android:textColor="@color/colorRed"
-                android:textSize="@dimen/_15sdp" />
-        </LinearLayout>
+            android:text="No Processing order available"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/_13sdp" />
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
