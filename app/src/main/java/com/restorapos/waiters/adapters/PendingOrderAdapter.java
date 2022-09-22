@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.activities.FoodCartActivity;
+import com.restorapos.waiters.activities.CartActivity;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.pendingOrderModel.DataItem;
 import com.restorapos.waiters.offlineDb.DatabaseClient;
@@ -85,7 +85,7 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    Intent intent = new Intent(context, FoodCartActivity.class);
+                    Intent intent = new Intent(context, CartActivity.class);
                     SharedPref.write("ORDERID", items.get(pos).getOrderId());
                     intent.putExtra("ORDERID", items.get(pos).getOrderId());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

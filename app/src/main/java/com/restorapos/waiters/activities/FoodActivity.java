@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,11 +25,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.adapters.AddOnsItemAdapter;
-import com.restorapos.waiters.databinding.ActivityFoodItemBinding;
+import com.restorapos.waiters.databinding.ActivityFoodBinding;
 import com.restorapos.waiters.databinding.DesignFoodsItemBinding;
 import com.restorapos.waiters.databinding.DesignSubCategoryItemBinding;
 import com.restorapos.waiters.databinding.FoodCartDialogBinding;
@@ -64,14 +62,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FoodItemActivity extends AppCompatActivity {
-    private ActivityFoodItemBinding binding;
+public class FoodActivity extends AppCompatActivity {
+    private ActivityFoodBinding binding;
     private int orderQuantity = 0;
     private String pCategoryId;
     private String userId;
     private WaitersService waitersService;
     private List<Foodinfo> foodtasks;
-    private final String TAG = "FoodItemActivity";
+    private final String TAG = "FoodActivity";
     private SpotsDialog progressDialog;
     private List<Foodinfo> itemss;
     private List<Foodinfo2> itemss2;
@@ -90,9 +88,8 @@ public class FoodItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityFoodItemBinding.inflate(getLayoutInflater());
+        binding = ActivityFoodBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
 
 
@@ -108,11 +105,10 @@ public class FoodItemActivity extends AppCompatActivity {
 
 
 
-
         binding.viewCartTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FoodItemActivity.this, FoodCartActivity.class));
+                startActivity(new Intent(FoodActivity.this, CartActivity.class));
             }
         });
 
@@ -164,9 +160,9 @@ public class FoodItemActivity extends AppCompatActivity {
                     newList.add(itemss.get(i));
                 }
             }
-            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodItemActivity.this, newList, null));
+            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, newList, null));
         } else {
-            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodItemActivity.this, itemss, null));
+            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, itemss, null));
         }
     }
 
@@ -225,7 +221,7 @@ public class FoodItemActivity extends AppCompatActivity {
                 try {
                     List<Categoryinfo> items = response.body().getData().getCategoryinfo();
                     SharedPref.write("RESTAURANT_VAT", response.body().getData().getRestaurantvat());
-                    binding.subCategoryRecycler.setAdapter(new FoodSubCategoryAdapter(FoodItemActivity.this, items));
+                    binding.subCategoryRecycler.setAdapter(new FoodSubCategoryAdapter(FoodActivity.this, items));
                 } catch (Exception e) {
                     Log.d("qqq", "Exc: " + e.getLocalizedMessage());
                 }
@@ -253,7 +249,7 @@ public class FoodItemActivity extends AppCompatActivity {
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        foodssAdapter = new FoodssAdapter(FoodItemActivity.this, itemss, null);
+                        foodssAdapter = new FoodssAdapter(FoodActivity.this, itemss, null);
                         binding.foodRecycler.setAdapter(foodssAdapter);
                         progressDialog.dismiss();
                     } else {
@@ -303,7 +299,7 @@ public class FoodItemActivity extends AppCompatActivity {
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        binding.foodRecycler.setAdapter(new FoodssAdapter(FoodItemActivity.this, itemss, null));
+                        binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, itemss, null));
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
@@ -1020,7 +1016,7 @@ public class FoodItemActivity extends AppCompatActivity {
 
                 insertFood(this.items.get(pos));
                 dialog.dismiss();
-                Toasty.success(FoodItemActivity.this,"Item added to cart").show();
+                Toasty.success(FoodActivity.this,"Item added to cart").show();
                 getAllFoodItem();
             });
 
@@ -1099,7 +1095,7 @@ public class FoodItemActivity extends AppCompatActivity {
 
                 insertFood(this.items.get(pos));
 
-                Toasty.success(FoodItemActivity.this,"Item added to cart").show();
+                Toasty.success(FoodActivity.this,"Item added to cart").show();
                 getAllFoodItem();
             });
 

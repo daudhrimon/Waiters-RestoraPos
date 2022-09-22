@@ -3,14 +3,12 @@ package com.restorapos.waiters.fragments;
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.btmNav;
 import static com.restorapos.waiters.MainActivity.rootMenu;
-
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Handler;
 import android.text.InputType;
@@ -19,21 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.LinearLayout;
-
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
 import com.restorapos.waiters.adapters.CompleteCancelOrderAdapter;
-import com.restorapos.waiters.databinding.FragmentCompleteOrderBinding;
+import com.restorapos.waiters.databinding.FragmentCompleteBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.completeCancelOrder.CompleteCancelResponse;
 import com.restorapos.waiters.model.completeCancelOrder.OrderinfoItem;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.restorapos.waiters.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CompleteOrderFragment extends Fragment implements ViewInterface {
-    private FragmentCompleteOrderBinding binding;
+public class CompleteFragment extends Fragment implements ViewInterface {
+    private FragmentCompleteBinding binding;
     private boolean search = false;
     private WaitersService waitersService;
     private String id;
@@ -55,7 +49,7 @@ public class CompleteOrderFragment extends Fragment implements ViewInterface {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentCompleteOrderBinding.inflate(inflater, container, false);
+        binding = FragmentCompleteBinding.inflate(inflater, container, false);
 
 
 
@@ -150,11 +144,11 @@ public class CompleteOrderFragment extends Fragment implements ViewInterface {
                         newList.add(items.get(i));
                     }
                 }
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CompleteOrderFragment.this::viewOrder);
+                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CompleteFragment.this::viewOrder);
                 binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
 
             } else {
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteOrderFragment.this::viewOrder);
+                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
                 binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
             }
         }
@@ -179,7 +173,7 @@ public class CompleteOrderFragment extends Fragment implements ViewInterface {
                         if (items.size() > 0){
                             binding.emptyLay.setVisibility(View.GONE);
                             binding.processingRecycler.setVisibility(View.VISIBLE);
-                            completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteOrderFragment.this::viewOrder);
+                            completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
                             binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
                         } else {
                             progressDialog.dismiss();

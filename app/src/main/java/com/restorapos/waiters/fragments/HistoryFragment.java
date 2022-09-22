@@ -17,7 +17,6 @@ import com.restorapos.waiters.model.orderHistoryModel.OrderHistoryResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.restorapos.waiters.utils.Utils;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -31,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrderHistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment {
     private double Overallorder, Overallamount, lastweekorder, lastweekamount;
     private String id;
     private WaitersService waitersService;
@@ -39,7 +38,7 @@ public class OrderHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_order_history, container, false);
+        final View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         btmNav.setVisibility(View.GONE);
         SharedPref.init(getActivity());

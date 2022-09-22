@@ -4,18 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.activities.FoodCartActivity;
+import com.restorapos.waiters.activities.CartActivity;
 import com.restorapos.waiters.databinding.DesignTablelistItemBinding;
 import com.restorapos.waiters.databinding.PersonSelectLayoutBinding;
 import com.restorapos.waiters.model.tableModel.TableInfo;
@@ -28,11 +25,11 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.View
     private Context context;
     int counter = 0;
     int row_index = -1;
-    private FoodCartActivity activity;
+    private CartActivity activity;
     private String tableId = "";
 
     public
-    TableListAdapter(Context applicationContext, List<TableInfo> itemArrayList, FoodCartActivity activity) {
+    TableListAdapter(Context applicationContext, List<TableInfo> itemArrayList, CartActivity activity) {
         this.context = applicationContext;
         this.items = itemArrayList;
         this.activity = activity;
@@ -61,7 +58,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.View
                     viewHolder.binding.categoryName.setTextColor(Color.parseColor("#FFFFFF"));
                     viewHolder.binding.personAvailable.setTextColor(Color.parseColor("#FFFFFF"));
                     viewHolder.binding.categoryImage.setColorFilter(Color.argb(255, 255, 255, 255));
-                    FoodCartActivity.tableID = items.get(i).getTableId();
+                    CartActivity.tableID = items.get(i).getTableId();
                 }
             }
 
@@ -88,7 +85,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.View
                         activity.setTableData(items.get(i).getTableId(),"0");
                     }
                     SharedPref.write("TABLE", items.get(i).getTableId());
-                    FoodCartActivity.tableID = items.get(i).getTableId();
+                    CartActivity.tableID = items.get(i).getTableId();
                     viewHolder.binding.tableLay.setBackgroundColor(0xFFFF213B);
                     viewHolder.binding.categoryName.setTextColor(Color.parseColor("#FFFFFF"));
                     viewHolder.binding.personAvailable.setTextColor(Color.parseColor("#FFFFFF"));
@@ -136,7 +133,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.View
             if (counter < availableSeat1) {
                 counter++;
                 dBinding.personTxt.setText("" + counter);
-                FoodCartActivity.countedPerson = dBinding.personTxt.getText().toString();
+                CartActivity.countedPerson = dBinding.personTxt.getText().toString();
             } else {
                 Toasty.normal(context, "Only " + items.get(i).getAvailable() + " person availabe in table").show();
             }
@@ -147,7 +144,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.View
             if (counter > 0) {
                 counter--;
                 dBinding.personTxt.setText("" + counter);
-                FoodCartActivity.countedPerson = dBinding.personTxt.getText().toString();
+                CartActivity.countedPerson = dBinding.personTxt.getText().toString();
             }
         });
 

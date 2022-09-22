@@ -14,9 +14,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import com.restorapos.waiters.activities.FoodCartActivity;
+
+import com.restorapos.waiters.activities.CartActivity;
 import com.restorapos.waiters.activities.LoginActivity;
-import com.restorapos.waiters.fragments.CompleteOrderFragment;
+import com.restorapos.waiters.fragments.CompleteFragment;
 import com.restorapos.waiters.utils.Utils;
 import com.bumptech.glide.Glide;
 import com.google.android.material.badge.BadgeDrawable;
@@ -32,8 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.restorapos.waiters.fragments.DashboardFragment;
 import com.restorapos.waiters.fragments.NotificationFragment;
-import com.restorapos.waiters.fragments.OrderHistoryFragment;
-import com.restorapos.waiters.fragments.OrderListFragment;
+import com.restorapos.waiters.fragments.HistoryFragment;
+import com.restorapos.waiters.fragments.OrderFragment;
 import com.restorapos.waiters.model.loginModel.LoginResponse;
 import com.restorapos.waiters.model.notificationModel.NotificationResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         appCart.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this.getApplicationContext(), FoodCartActivity.class));
+            startActivity(new Intent(MainActivity.this.getApplicationContext(), CartActivity.class));
         });
 
 
@@ -134,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                         case R.id.bOrders: {
-                            OrderListFragment orderListFragment = new OrderListFragment();
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, orderListFragment, orderListFragment.getTag())
+                            OrderFragment orderFragment = new OrderFragment();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, orderFragment, orderFragment.getTag())
                                     .commit();
                             setSelectorColor(orderList, menu, completeOrder, orderHistory, logout);
                             drawer.closeDrawer(GravityCompat.START);
@@ -149,14 +150,14 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 SharedPref.write("RED", "2");
                             }
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderListFragment(), "ovi").commit();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderFragment(), "ovi").commit();
                             appSearch.setVisibility(View.VISIBLE);
                         }
                         break;
 
                         case R.id.bCmplt: {
-                            CompleteOrderFragment completeOrderFragment = new CompleteOrderFragment();
-                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, completeOrderFragment, completeOrderFragment.getTag())
+                            CompleteFragment completeFragment = new CompleteFragment();
+                            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, completeFragment, completeFragment.getTag())
                                     .commit();
                             setSelectorColor(completeOrder, menu, orderList, orderHistory, logout);
                             drawer.closeDrawer(GravityCompat.START);
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 appBarDefault();
                 appHeader.setText("Customer Orders");
             } else if (getIntent().getStringExtra("OVI").equals("admin")) {
-                getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.content_main, new OrderListFragment(), "ovi")
+                getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.content_main, new OrderFragment(), "ovi")
                         .commit();
                 appBarDefault();
             } else {
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             try {
                 if (getIntent().getStringExtra("PENDING").equals("1")) {
-                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderListFragment(), "ovi")
+                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, new OrderFragment(), "ovi")
                             .commit();
                     appBarDefault();
                 } else {
@@ -242,8 +243,8 @@ public class MainActivity extends AppCompatActivity {
 
         orderHistory.setOnClickListener(v -> {
             if (go){
-                OrderHistoryFragment orderHistoryFragment = new OrderHistoryFragment();
-                getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, orderHistoryFragment, orderHistoryFragment.getTag())
+                HistoryFragment historyFragment = new HistoryFragment();
+                getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, historyFragment, historyFragment.getTag())
                         .commit();
                 setSelectorColor(orderHistory, menu, orderList, completeOrder, logout);
                 drawer.closeDrawer(GravityCompat.START);
@@ -356,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new NotificationFragment(), "ovi").commit();
                 appHeader.setText("Customer Orders");
             } else if (SharedPref.read("OVI", "").equals("admin")) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new OrderListFragment(), "ovi")
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new OrderFragment(), "ovi")
                         .commit();
             } else if (SharedPref.read("OVI", "").equals("")) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, dashboardFragment, dashboardFragment.getTag())

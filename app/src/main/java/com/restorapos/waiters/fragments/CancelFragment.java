@@ -2,8 +2,7 @@ package com.restorapos.waiters.fragments;
 
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.rootMenu;
-import static com.restorapos.waiters.fragments.OrderListFragment.orderSwipe;
-
+import static com.restorapos.waiters.fragments.OrderFragment.orderSwipe;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,19 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
 import com.restorapos.waiters.adapters.CompleteCancelOrderAdapter;
-import com.restorapos.waiters.databinding.FragmentCancelOrderBinding;
+import com.restorapos.waiters.databinding.FragmentCancelBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.completeCancelOrder.CompleteCancelResponse;
 import com.restorapos.waiters.model.completeCancelOrder.OrderinfoItem;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.restorapos.waiters.utils.Utils;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CancelOrderFragment extends Fragment implements ViewInterface {
-    private FragmentCancelOrderBinding binding;
+public class CancelFragment extends Fragment implements ViewInterface {
+    private FragmentCancelBinding binding;
     private boolean search = false;
     private List<OrderinfoItem> items = new ArrayList<>();
     private CompleteCancelOrderAdapter completeCancelOrderAdapter ;
@@ -53,7 +50,7 @@ public class CancelOrderFragment extends Fragment implements ViewInterface {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentCancelOrderBinding.inflate(inflater, container, false);
+        binding = FragmentCancelBinding.inflate(inflater, container, false);
 
 
         initial();
@@ -131,11 +128,11 @@ public class CancelOrderFragment extends Fragment implements ViewInterface {
                         newList.add(items.get(i));
                     }
                 }
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList,CancelOrderFragment.this::viewOrder);
+                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CancelFragment.this::viewOrder);
                 binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
 
             }else {
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items,CancelOrderFragment.this::viewOrder);
+                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CancelFragment.this::viewOrder);
                 binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
             }
         }
@@ -161,7 +158,7 @@ public class CancelOrderFragment extends Fragment implements ViewInterface {
                         if (items.size() > 0){
                             binding.emptyLay.setVisibility(View.GONE);
                             binding.processingRecycler.setVisibility(View.VISIBLE);
-                            completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items,CancelOrderFragment.this::viewOrder);
+                            completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CancelFragment.this::viewOrder);
                             binding.processingRecycler.setAdapter(completeCancelOrderAdapter);
                             binding.nextBtn.setVisibility(View.VISIBLE);
                         } else {

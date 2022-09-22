@@ -22,7 +22,7 @@ import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.utils.SharedPref;
 
-public class OrderListFragment extends Fragment implements View.OnClickListener {
+public class OrderFragment extends Fragment implements View.OnClickListener {
     private TextView pending, processing, complete, cancel;
     private Intent intent;
     @SuppressLint("StaticFieldLeak")
@@ -32,13 +32,14 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_order_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+
 
         initial(view);
 
         try{
             if (SharedPref.read("RED","").equals("2")){
-                getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, new ProcessingOrderFragment(), "ovi")
+                getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, new ProcessingFragment(), "ovi")
                         .commit();
                 processing.setBackgroundColor(getResources().getColor(R.color.colorRed));
                 btmNav.setSelectedItemId(R.id.bProcess);
@@ -47,8 +48,8 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
                 go = 2;
             }
             else{
-                PendingOrderFragment pendingOrderFragment = new PendingOrderFragment();
-                getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, pendingOrderFragment, pendingOrderFragment.getTag())
+                PendingFragment pendingFragment = new PendingFragment();
+                getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, pendingFragment, pendingFragment.getTag())
                         .commit();
                 pending.setBackgroundColor(getResources().getColor(R.color.colorRed));
                 btmNav.setSelectedItemId(R.id.bOrders);
@@ -86,8 +87,8 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.pendingId:
                 if (go != 1) {
-                    PendingOrderFragment pendingOrderFragment = new PendingOrderFragment();
-                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, pendingOrderFragment, pendingOrderFragment.getTag())
+                    PendingFragment pendingFragment = new PendingFragment();
+                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, pendingFragment, pendingFragment.getTag())
                             .commit();
                     processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
                     pending.setBackgroundColor(getResources().getColor(R.color.colorRed));
@@ -100,8 +101,8 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.processingId:
                 if (go != 2) {
-                    ProcessingOrderFragment processingOrderFragment = new ProcessingOrderFragment();
-                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, processingOrderFragment, processingOrderFragment.getTag())
+                    ProcessingFragment processingFragment = new ProcessingFragment();
+                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, processingFragment, processingFragment.getTag())
                             .commit();
                     processing.setBackgroundColor(getResources().getColor(R.color.colorRed));
                     pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));
@@ -114,8 +115,8 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.readyId:
                 if (go != 3) {
-                    ReadyListFragment readyListFragment = new ReadyListFragment();
-                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, readyListFragment, readyListFragment.getTag())
+                    ReadyFragment readyFragment = new ReadyFragment();
+                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, readyFragment, readyFragment.getTag())
                             .commit();
                     processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
                     pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));
@@ -128,8 +129,8 @@ public class OrderListFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.cancelId:
                 if (go != 4) {
-                    CancelOrderFragment cancelOrderFragment = new CancelOrderFragment();
-                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, cancelOrderFragment, cancelOrderFragment.getTag())
+                    CancelFragment cancelFragment = new CancelFragment();
+                    getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, cancelFragment, cancelFragment.getTag())
                             .commit();
                     processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
                     pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));

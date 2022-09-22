@@ -2,17 +2,14 @@ package com.restorapos.waiters.fragments;
 
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.rootMenu;
-import static com.restorapos.waiters.fragments.OrderListFragment.orderSwipe;
-
+import static com.restorapos.waiters.fragments.OrderFragment.orderSwipe;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
@@ -20,22 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.LinearLayout;
-
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
 import com.restorapos.waiters.adapters.ReadyOrderAdapter;
-import com.restorapos.waiters.databinding.FragmentReadyListBinding;
+import com.restorapos.waiters.databinding.FragmentReadyBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.Readyorder.ReadyOrderResponse;
 import com.restorapos.waiters.model.Readyorder.ReadyorderData;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.restorapos.waiters.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
@@ -43,8 +35,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReadyListFragment extends Fragment implements ViewInterface {
-    private FragmentReadyListBinding binding;
+public class ReadyFragment extends Fragment implements ViewInterface {
+    private FragmentReadyBinding binding;
     private boolean search = false;
     private WaitersService waitersService;
     private String id;
@@ -56,7 +48,7 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentReadyListBinding.inflate(inflater, container, false);
+        binding = FragmentReadyBinding.inflate(inflater, container, false);
 
         initial();
 
@@ -130,11 +122,11 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
                         newList.add(items.get(i));
                     }
                 }
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), newList,ReadyListFragment.this::viewOrder);
+                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), newList, ReadyFragment.this::viewOrder);
                 binding.readyRecycler.setAdapter(readyOrderAdapter);
 
             }else {
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::viewOrder);
+                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyFragment.this::viewOrder);
                 binding.readyRecycler.setAdapter(readyOrderAdapter);
             }
         }
@@ -159,7 +151,7 @@ public class ReadyListFragment extends Fragment implements ViewInterface {
                     if (items.size() > 0){
                         binding.emptyLay.setVisibility(View.GONE);
                         binding.readyRecycler.setVisibility(View.VISIBLE);
-                        readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyListFragment.this::viewOrder);
+                        readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyFragment.this::viewOrder);
                         binding.readyRecycler.setAdapter(readyOrderAdapter);
                     } else {
                         binding.readyRecycler.setVisibility(View.GONE);

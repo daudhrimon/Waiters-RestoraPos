@@ -7,22 +7,18 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.widget.TextView;
-
 import com.restorapos.waiters.MainActivity;
-import com.restorapos.waiters.R;
-import com.restorapos.waiters.databinding.ActivitySplashScreenBinding;
+import com.restorapos.waiters.databinding.ActivitySplashBinding;
 import com.restorapos.waiters.utils.SharedPref;
 
-public class SplashScreenActivity extends AppCompatActivity {
-    private ActivitySplashScreenBinding binding;
+public class SplashActivity extends AppCompatActivity {
+    private ActivitySplashBinding binding;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         SharedPref.init(this);
@@ -59,7 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(SplashScreenActivity.this).getAppDatabase()
+                DatabaseClient.getInstance(SplashActivity.this).getAppDatabase()
                         .taskDao()
                         .deleteFoodTable();
                 return null;
@@ -78,18 +74,18 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void navigateToLoginActivity() {
         new Handler().postDelayed(() -> {
-            Intent mainIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-            SplashScreenActivity.this.startActivity(mainIntent);
-            SplashScreenActivity.this.finish();
+            Intent mainIntent = new Intent(SplashActivity.this, LoginActivity.class);
+            SplashActivity.this.startActivity(mainIntent);
+            SplashActivity.this.finish();
         }, 3000);
     }
 
     private void navigateToMainActivity() {
         new Handler().postDelayed(() -> {
-            Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+            Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
            // SharedPref.write("PP", "ppp");
-            SplashScreenActivity.this.startActivity(mainIntent);
-            SplashScreenActivity.this.finish();
+            SplashActivity.this.startActivity(mainIntent);
+            SplashActivity.this.finish();
         }, 3000);
 
     }

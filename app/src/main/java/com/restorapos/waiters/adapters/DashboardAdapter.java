@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.activities.FoodItemActivity;
+import com.restorapos.waiters.activities.FoodActivity;
 import com.restorapos.waiters.model.dashboardModel.DashboardDatum;
 import com.bumptech.glide.Glide;
 import java.util.List;
@@ -60,7 +60,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    Intent intent = new Intent(context, FoodItemActivity.class);
+                    Intent intent = new Intent(context, FoodActivity.class);
                     intent.putExtra("CATEGORYID", items.get(pos).getCategoryID());
                     intent.putExtra("CATEGORYNAME", items.get(pos).getName());
                     intent.putExtra("CATEGORYIMAGE", items.get(pos).getCategoryimage());

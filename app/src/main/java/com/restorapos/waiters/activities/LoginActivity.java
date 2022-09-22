@@ -1,9 +1,7 @@
 package com.restorapos.waiters.activities;
 
 import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +11,9 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.databinding.ActivityFoodCartBinding;
 import com.restorapos.waiters.databinding.ActivityLoginBinding;
 import com.restorapos.waiters.model.loginModel.LoginResponse;
 import com.restorapos.waiters.retrofit.AppConfig;

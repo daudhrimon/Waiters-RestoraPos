@@ -17,7 +17,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="m">
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
             android:exported="true"
@@ -36,13 +36,13 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
-            android:name=".activities.FoodCartActivity"
+            android:name=".activities.CartActivity"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
-            android:name=".activities.FoodItemActivity"
+            android:name=".activities.FoodActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 

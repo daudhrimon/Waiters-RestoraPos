@@ -1,13 +1,11 @@
 package com.restorapos.waiters.activities;
 
 import static com.restorapos.waiters.offlineDb.DatabaseClient.getInstance;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,7 +17,7 @@ import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.adapters.FoodCartsAdapter;
 import com.restorapos.waiters.adapters.TableListAdapter;
-import com.restorapos.waiters.databinding.ActivityFoodCartBinding;
+import com.restorapos.waiters.databinding.ActivityCartBinding;
 import com.restorapos.waiters.interfaces.SumInterface;
 import com.restorapos.waiters.model.PlaceOrderResponse;
 import com.restorapos.waiters.model.customerModel.CustomerFullList;
@@ -34,7 +32,6 @@ import com.restorapos.waiters.model.tableModel.TableResponse;
 import com.restorapos.waiters.model.updateOrderModel.IteminfoItem;
 import com.restorapos.waiters.model.updateOrderModel.UpdateOrderResponse;
 import com.restorapos.waiters.offlineDb.AppDatabase;
-import com.restorapos.waiters.offlineDb.DatabaseClient;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
@@ -51,8 +48,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FoodCartActivity extends AppCompatActivity implements SumInterface {
-    private ActivityFoodCartBinding binding;
+public class CartActivity extends AppCompatActivity implements SumInterface {
+    private ActivityCartBinding binding;
     private int all_members = 0;
     private WaitersService waitersService;
     private String id,orderId,typeId;
@@ -77,7 +74,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityFoodCartBinding.inflate(getLayoutInflater());
+        binding = ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         initial();
@@ -140,7 +137,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 }
                 SharedPref.write("CartCount",String.valueOf(foodTasks.size()));
                 SharedPref.write("CartTotal",String.valueOf(Double.valueOf(new DecimalFormat("##.##").format(Total))));
-                startActivity(new Intent(FoodCartActivity.this, MainActivity.class));
+                startActivity(new Intent(CartActivity.this, MainActivity.class));
             }
         });
 
@@ -171,10 +168,10 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             @Override
             public void onClick(View v) {
                 if (tableID.equals("")) {
-                    Toasty.error(FoodCartActivity.this, "Please Select table ", Toast.LENGTH_SHORT, true).show();
+                    Toasty.error(CartActivity.this, "Please Select table ", Toast.LENGTH_SHORT, true).show();
                 } else if (TextUtils.isEmpty(binding.customerNameTv.getText())) {
                     binding.customerTypeTv.requestFocus();
-                    Toasty.error(FoodCartActivity.this, "Please Insert valid Member id", Toast.LENGTH_SHORT, true).show();
+                    Toasty.error(CartActivity.this, "Please Insert valid Member id", Toast.LENGTH_SHORT, true).show();
                 } else {
                     progressDialog.show();
                     placeOrder();
@@ -221,7 +218,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        Toasty.error(FoodCartActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(CartActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {/**/}
             }
@@ -235,7 +232,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
             @Override
             protected Void doInBackground(Void... voids) {
-                getInstance(FoodCartActivity.this).getAppDatabase()
+                getInstance(CartActivity.this).getAppDatabase()
                         .taskDao()
                         .deleteFoodTable();
                 return null;
@@ -360,13 +357,13 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     List<TableInfo> items = response.body().getData().getTableinfo();
                     progressDialog.dismiss();
                     if (items.size() > 0){
-                        binding.tableRecyclerview.setAdapter(new TableListAdapter(FoodCartActivity.this, items,
-                                FoodCartActivity.this));
+                        binding.tableRecyclerview.setAdapter(new TableListAdapter(CartActivity.this, items,
+                                CartActivity.this));
                     } else {
-                        Toasty.warning(FoodCartActivity.this,"Something went Wrong",Toast.LENGTH_SHORT).show();
+                        Toasty.warning(CartActivity.this,"Something went Wrong",Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toasty.warning(FoodCartActivity.this,"Something went Wrong",Toast.LENGTH_SHORT).show();
+                    Toasty.warning(CartActivity.this,"Something went Wrong",Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
@@ -376,7 +373,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Toasty.warning(FoodCartActivity.this,"Please check your internet connection",Toast.LENGTH_SHORT).show();
+                        Toasty.warning(CartActivity.this,"Please check your internet connection",Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 }, 269);
@@ -417,7 +414,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
             setResults();
 
-            binding.recyclerView.setAdapter(new FoodCartsAdapter(FoodCartActivity.this, foodTasks, this));
+            binding.recyclerView.setAdapter(new FoodCartsAdapter(CartActivity.this, foodTasks, this));
 
         } catch (Exception ignored) {/**/}
 
@@ -475,7 +472,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     if (response.body().getStatusCode() == 1) {
                         binding.customerNameTv.setText(response.body().getData().getCustomerName());
                     } else {
-                        Toasty.error(FoodCartActivity.this, response.body().getMessage(), Toasty.LENGTH_SHORT).show();
+                        Toasty.error(CartActivity.this, response.body().getMessage(), Toasty.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -506,7 +503,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
             }
         } catch (Exception e) {
-            Toasty.error(FoodCartActivity.this, "No items add", Toasty.LENGTH_SHORT).show();
+            Toasty.error(CartActivity.this, "No items add", Toasty.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
         String totalsperson;
@@ -533,7 +530,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
 
         Log.e("CheckMulti", new Gson().toJson(foodTasks));
         if (datas.length() < 3) {
-            Toasty.error(FoodCartActivity.this, "No Item Added", Toasty.LENGTH_SHORT).show();
+            Toasty.error(CartActivity.this, "No Item Added", Toasty.LENGTH_SHORT).show();
             progressDialog.dismiss();
         } else {
             if (SharedPref.read("ORDERID", "").isEmpty()) {
@@ -547,8 +544,8 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     public void onResponse(Call<PlaceOrderResponse> call, Response<PlaceOrderResponse> response) {
                         try {
                             progressDialog.dismiss();
-                            Toasty.success(FoodCartActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT, true).show();
-                            startActivity(new Intent(FoodCartActivity.this, MainActivity.class));
+                            Toasty.success(CartActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT, true).show();
+                            startActivity(new Intent(CartActivity.this, MainActivity.class));
                             tableID = "";
                             finishAffinity();
                         } catch (Exception e) {/**/}
@@ -563,9 +560,9 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                     @Override
                     public void onResponse(Call<PlaceOrderResponse> call, Response<PlaceOrderResponse> response) {
                         try {
-                            Toasty.success(FoodCartActivity.this, "Update Order Successfully", Toast.LENGTH_SHORT, true).show();
+                            Toasty.success(CartActivity.this, "Update Order Successfully", Toast.LENGTH_SHORT, true).show();
                             tableID = "";
-                            startActivity(new Intent(FoodCartActivity.this, MainActivity.class));
+                            startActivity(new Intent(CartActivity.this, MainActivity.class));
                             finishAffinity();
                         } catch (Exception e) {/**/}
                     }
@@ -717,7 +714,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         tablenum = Integer.parseInt(tableno);
 
         available_person = Integer.valueOf(availableperson);
-        AlertDialog.Builder builder = new AlertDialog.Builder(FoodCartActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view2 = inflater.inflate(R.layout.customdialogforperson, null);
@@ -731,7 +728,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         plusbuttonInperson.setOnClickListener(view -> {
             if ((available_person <= totalPerson)) {
-                Toasty.error(FoodCartActivity.this, "No More Seat Available", Toast.LENGTH_SHORT, true).show();
+                Toasty.error(CartActivity.this, "No More Seat Available", Toast.LENGTH_SHORT, true).show();
 
             } else {
                 totalPerson += 1;
@@ -743,7 +740,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
                 totalPerson -= 1;
                 personsetupinTV.setText(String.valueOf(totalPerson));
             } else {
-                Toast.makeText(FoodCartActivity.this, "0 Seat Can't be Booked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartActivity.this, "0 Seat Can't be Booked", Toast.LENGTH_SHORT).show();
             }
         });
         personsetupinTV.setText(String.valueOf(totalPerson));
@@ -805,7 +802,7 @@ public class FoodCartActivity extends AppCompatActivity implements SumInterface 
             binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
             currency = SharedPref.read("CURRENCY", "");
         } catch (Exception e) {/**/}
-        appDatabase = getInstance(FoodCartActivity.this).getAppDatabase();
+        appDatabase = getInstance(CartActivity.this).getAppDatabase();
         progressDialog = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
     }

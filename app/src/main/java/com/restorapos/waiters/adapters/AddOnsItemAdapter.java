@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.restorapos.waiters.R;
-import com.restorapos.waiters.activities.FoodItemActivity;
+import com.restorapos.waiters.activities.FoodActivity;
 import com.restorapos.waiters.databinding.DesignFoodCartItemAddonsBinding;
 import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.restorapos.waiters.utils.SharedPref;
@@ -64,7 +63,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
         if (!items.get(i).getAddonsprice().equals("")) {
             total = Double.parseDouble(items.get(i).getAddonsprice()) * count;
         }
-        FoodItemActivity.addOnsChecker = addOnsChecker;
+        FoodActivity.addOnsChecker = addOnsChecker;
         holder.binding.totalPriceTv.setText(String.valueOf(total));
 
         holder.binding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,7 +93,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
                         SharedPref.write("addOnslist", new Gson().toJson(items2));
                     }
                     addOnsChecker = 1;
-                    FoodItemActivity.addOnsChecker = addOnsChecker;
+                    FoodActivity.addOnsChecker = addOnsChecker;
                 }
                 if (!holder.binding.checkBox.isChecked()) {
                     checker--;
@@ -115,7 +114,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
                     }
                     if (items2.size()==0){
                         addOnsChecker =0;
-                        FoodItemActivity.addOnsChecker = addOnsChecker;
+                        FoodActivity.addOnsChecker = addOnsChecker;
                     }
                 }
             }
