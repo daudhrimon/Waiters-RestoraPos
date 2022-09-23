@@ -78,7 +78,6 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
         setContentView(binding.getRoot());
 
 
-
         SharedPref.init(this);
         SharedPref.write("TABLE", "");
         //tableBookDetails = new ArrayList<>();
@@ -805,6 +804,6 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
         if (orderId != null){
             cancelButtonAction();
         }
-        //finish();
+        finish();
     }
 }

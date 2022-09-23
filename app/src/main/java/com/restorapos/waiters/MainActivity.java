@@ -120,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         appCart.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this.getApplicationContext(), CartActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this.getApplicationContext(), CartActivity.class));
         });
 
 
