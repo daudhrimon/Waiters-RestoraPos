@@ -77,7 +77,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        initial();
+        SharedPref.init(this);
+        SharedPref.write("FOOD", "");
+        SharedPref.write("OVI", "");
+        //btmNav
+        btmNav = findViewById(R.id.btmNav);
+        notifyBadge = btmNav.getOrCreateBadge(R.id.bNotify);
+        notifyBadge.setVisible(false);
+        drawer = findViewById(R.id.drawer_layout);
+        //appBar initial
+        appMenu = findViewById(R.id.appMenu);
+        appHeader = findViewById(R.id.appHeader);
+        appSearchBar = findViewById(R.id.appSearchBar);
+        appCart = findViewById(R.id.appCart);
+        appBtnLay = findViewById(R.id.appBtnLay);
+        appSearchLay = findViewById(R.id.appSearchLay);
+        appSearch = findViewById(R.id.appSearch);
+        appCross = findViewById(R.id.appCross);
+        appCartBadge = findViewById(R.id.appCartBadge);
+        //Drawer initial
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+        menu = headerView.findViewById(R.id.menuId);
+        menu.setBackgroundColor(0x30ffffff);
+        logout = headerView.findViewById(R.id.logoutId);
+        orderList = headerView.findViewById(R.id.orderlistId);
+        completeOrder = headerView.findViewById(R.id.completeOrderlistid);
+        orderHistory = headerView.findViewById(R.id.orderhistoryId);
+        rootMenu = false;
 
 
         // AppBars OnClicks
@@ -93,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         appCart.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this.getApplicationContext(), CartActivity.class));
+            Intent intent = new Intent(MainActivity.this.getApplicationContext(), CartActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         });
 
 
@@ -314,41 +343,6 @@ public class MainActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(MessageReceiver,
                 new IntentFilter("REALDATA"));
-    }
-
-
-
-
-
-    private void initial() {
-        SharedPref.init(this);
-        SharedPref.write("FOOD", "");
-        SharedPref.write("OVI", "");
-        //btmNav
-        btmNav = findViewById(R.id.btmNav);
-        notifyBadge = btmNav.getOrCreateBadge(R.id.bNotify);
-        notifyBadge.setVisible(false);
-        drawer = findViewById(R.id.drawer_layout);
-        //appBar initial
-        appMenu = findViewById(R.id.appMenu);
-        appHeader = findViewById(R.id.appHeader);
-        appSearchBar = findViewById(R.id.appSearchBar);
-        appCart = findViewById(R.id.appCart);
-        appBtnLay = findViewById(R.id.appBtnLay);
-        appSearchLay = findViewById(R.id.appSearchLay);
-        appSearch = findViewById(R.id.appSearch);
-        appCross = findViewById(R.id.appCross);
-        appCartBadge = findViewById(R.id.appCartBadge);
-        //Drawer initial
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
-        menu = headerView.findViewById(R.id.menuId);
-        menu.setBackgroundColor(0x30ffffff);
-        logout = headerView.findViewById(R.id.logoutId);
-        orderList = headerView.findViewById(R.id.orderlistId);
-        completeOrder = headerView.findViewById(R.id.completeOrderlistid);
-        orderHistory = headerView.findViewById(R.id.orderhistoryId);
-        rootMenu = false;
     }
 
 

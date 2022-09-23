@@ -48,7 +48,17 @@ public class ProcessingFragment extends Fragment implements ViewInterface {
                              Bundle savedInstanceState) {
         binding = FragmentProcessingBinding.inflate(inflater, container, false);
 
-        initial();
+
+        SharedPref.init(getContext());
+        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        id = SharedPref.read("ID", "");
+        //SharedPref.write("ORDERSTATUS", "2");
+        rootMenu = true;
+        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
+        appSearchBar.setQueryHint("Search Here");
+        progressDialog.show();
+
 
         getProcessingOrder();
 
@@ -161,21 +171,6 @@ public class ProcessingFragment extends Fragment implements ViewInterface {
         int height = getResources().getDisplayMetrics().heightPixels;
         win.setLayout((14*width)/15,(19*height)/20);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
-
-
-
-
-    private void initial() {
-        SharedPref.init(getContext());
-        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        //SharedPref.write("ORDERSTATUS", "2");
-        rootMenu = true;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
-        appSearchBar.setQueryHint("Search Here");
-        progressDialog.show();
     }
 
 

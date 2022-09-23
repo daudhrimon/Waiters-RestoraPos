@@ -41,7 +41,6 @@ public class QrCodeActivity extends AppCompatActivity implements ZXingScannerVie
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.parseColor("#0d8f83"));
-
         SharedPref.init(QrCodeActivity.this);
 
 

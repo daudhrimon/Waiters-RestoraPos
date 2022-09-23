@@ -77,7 +77,29 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
         binding = ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initial();
+
+
+        SharedPref.init(this);
+        SharedPref.write("TABLE", "");
+        //tableBookDetails = new ArrayList<>();
+        selectedTables = new ArrayList<>();
+        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
+        id = SharedPref.read("ID", "");
+        orderId = getIntent().getStringExtra("ORDERID");
+        try {
+            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
+            serviceType = SharedPref.read("SCT", "0");
+            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
+            //binding.tableEt.setText(SharedPref.read("UPDATETABLE", ""));
+            binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
+            currency = SharedPref.read("CURRENCY", "");
+        } catch (Exception e) {/**/}
+        appDatabase = getInstance(CartActivity.this).getAppDatabase();
+        progressDialog = new SpotsDialog(this, R.style.Custom);
+        progressDialog.show();
+
+
+
 
         String OREDER_ID = SharedPref.read("ORDERID", "");
         if (!OREDER_ID.isEmpty()){
@@ -783,27 +805,6 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
         if (orderId != null){
             cancelButtonAction();
         }
-        finish();
-    }
-
-    private void initial() {
-        SharedPref.init(this);
-        SharedPref.write("TABLE", "");
-        //tableBookDetails = new ArrayList<>();
-        selectedTables = new ArrayList<>();
-        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        orderId = getIntent().getStringExtra("ORDERID");
-        try {
-            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
-            serviceType = SharedPref.read("SCT", "0");
-            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
-            //binding.tableEt.setText(SharedPref.read("UPDATETABLE", ""));
-            binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
-            currency = SharedPref.read("CURRENCY", "");
-        } catch (Exception e) {/**/}
-        appDatabase = getInstance(CartActivity.this).getAppDatabase();
-        progressDialog = new SpotsDialog(this, R.style.Custom);
-        progressDialog.show();
+        //finish();
     }
 }

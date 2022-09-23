@@ -93,7 +93,17 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-        initial();
+        SharedPref.init(this);
+        itemss2 = new ArrayList<>();
+        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
+        pCategoryId = getIntent().getStringExtra("CATEGORYID");
+        userId = SharedPref.read("ID", "");
+        progressDialog = new SpotsDialog(this, R.style.Custom);
+        progressDialog.show();
+        MainActivity.appBarDefault();
+        appDatabase = DatabaseClient.getInstance(this).getAppDatabase();
+
+
 
         getAllFoodItemWithMultipleVariant();
 
@@ -164,25 +174,6 @@ public class FoodActivity extends AppCompatActivity {
         } else {
             binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, itemss, null));
         }
-    }
-
-
-
-
-
-    private void initial() {
-        SharedPref.init(this);
-
-        itemss2 = new ArrayList<>();
-        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        pCategoryId = getIntent().getStringExtra("CATEGORYID");
-        userId = SharedPref.read("ID", "");
-
-        progressDialog = new SpotsDialog(this, R.style.Custom);
-        progressDialog.show();
-
-        MainActivity.appBarDefault();
-        appDatabase = DatabaseClient.getInstance(this).getAppDatabase();
     }
 
 
@@ -1142,6 +1133,6 @@ public class FoodActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        //finish();
     }
 }

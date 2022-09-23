@@ -52,8 +52,19 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         binding = FragmentCompleteBinding.inflate(inflater, container, false);
 
 
+        btmNav.setVisibility(View.VISIBLE);
+        SharedPref.init(getContext());
+        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
+        progressDialog.show();
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        id = SharedPref.read("ID", "");
+        //SharedPref.write("ORDERSTATUS", "4");
+        rootMenu = true;
+        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
+        appSearchBar.setQueryHint("Search Here");
+        progressDialog.show();
 
-        initial();
+
 
         getCompleteOrder(start);
 
@@ -120,19 +131,8 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         return binding.getRoot();
     }
 
-    private void initial() {
-        btmNav.setVisibility(View.VISIBLE);
-        SharedPref.init(getContext());
-        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
-        progressDialog.show();
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        //SharedPref.write("ORDERSTATUS", "4");
-        rootMenu = true;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
-        appSearchBar.setQueryHint("Search Here");
-        progressDialog.show();
-    }
+
+
 
     private void customFilterList(String value) {
         List<OrderinfoItem> newList = new ArrayList<>();

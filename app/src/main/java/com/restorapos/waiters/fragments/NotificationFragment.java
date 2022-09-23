@@ -55,8 +55,17 @@ public class NotificationFragment extends Fragment implements NotificationInterf
         binding = FragmentNotificationBinding.inflate(inflater, container, false);
 
 
+        btmNav.setVisibility(View.VISIBLE);
+        SharedPref.init(getContext());
+        setHasOptionsMenu(true);
+        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        notificationInterface = this;
+        waiterId = SharedPref.read("ID", "");
+        rootMenu = true;
+        progressDialog.show();
 
-        initial();
+
 
         getAllOnlineOrder();
 
@@ -156,25 +165,6 @@ public class NotificationFragment extends Fragment implements NotificationInterf
         super.onDestroyView();
         unbinder.unbind();
     }*/
-
-
-
-    private void initial() {
-        btmNav.setVisibility(View.VISIBLE);
-       /* menu.setBackgroundColor(0x00000000);
-        orderList.setBackgroundColor(0x00000000);
-        completeOrder.setBackgroundColor(0x00000000);
-        orderHistory.setBackgroundColor(0x00000000);
-        logout.setBackgroundColor(0x00000000);*/
-        SharedPref.init(getContext());
-        setHasOptionsMenu(true);
-        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        notificationInterface = this;
-        waiterId = SharedPref.read("ID", "");
-        rootMenu = true;
-        progressDialog.show();
-    }
 
 
 

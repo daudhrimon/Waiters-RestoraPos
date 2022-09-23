@@ -62,11 +62,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                     int pos = getAdapterPosition();
                     Intent intent = new Intent(context, FoodActivity.class);
                     intent.putExtra("CATEGORYID", items.get(pos).getCategoryID());
-                    intent.putExtra("CATEGORYNAME", items.get(pos).getName());
-                    intent.putExtra("CATEGORYIMAGE", items.get(pos).getCategoryimage());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
-                    //Toast.makeText(context, items.get(pos).getName(), Toast.LENGTH_SHORT).show();
                 }
             });
 

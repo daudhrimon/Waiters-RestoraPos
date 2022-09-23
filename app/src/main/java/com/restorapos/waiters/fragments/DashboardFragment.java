@@ -47,8 +47,18 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
 
 
+        btmNav.setVisibility(View.VISIBLE);
+        btmNav.setSelectedItemId(R.id.bMenu);
+        SharedPref.init(getActivity());
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        dbItems = new ArrayList<>();
+        id = SharedPref.read("ID", "");
+        rootMenu = false;
+        appSearchBar.setInputType(InputType.TYPE_CLASS_TEXT);
+        appSearchBar.setQueryHint("Search Food Category");
+        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
+        progressDialog.show();
 
-        initial();
 
         getDashboardItem();
 
@@ -83,23 +93,6 @@ public class DashboardFragment extends Fragment {
 
 
         return binding.getRoot();
-    }
-
-
-
-
-    private void initial() {
-        btmNav.setVisibility(View.VISIBLE);
-        btmNav.setSelectedItemId(R.id.bMenu);
-        SharedPref.init(getActivity());
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        dbItems = new ArrayList<>();
-        id = SharedPref.read("ID", "");
-        rootMenu = false;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_TEXT);
-        appSearchBar.setQueryHint("Search Food Category");
-        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
-        progressDialog.show();
     }
 
 

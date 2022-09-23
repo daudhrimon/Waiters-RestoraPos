@@ -53,7 +53,17 @@ public class CancelFragment extends Fragment implements ViewInterface {
         binding = FragmentCancelBinding.inflate(inflater, container, false);
 
 
-        initial();
+        SharedPref.init(getContext());
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        id = SharedPref.read("ID", "");
+        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
+        //SharedPref.write("ORDERSTATUS", "5");
+        rootMenu = true;
+        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
+        appSearchBar.setQueryHint("Search Here");
+        progressDialog.show();
+
+
 
         getCancelOrder(start);
 
@@ -210,21 +220,6 @@ public class CancelFragment extends Fragment implements ViewInterface {
         int height = getResources().getDisplayMetrics().heightPixels;
         win.setLayout((14*width)/15,(19*height)/20);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
-
-
-
-
-    private void initial() {
-        SharedPref.init(getContext());
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
-        //SharedPref.write("ORDERSTATUS", "5");
-        rootMenu = true;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
-        appSearchBar.setQueryHint("Search Here");
-        progressDialog.show();
     }
 
 

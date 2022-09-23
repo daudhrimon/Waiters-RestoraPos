@@ -35,7 +35,21 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
 
-        initial(view);
+        btmNav.setVisibility(View.VISIBLE);
+        MainActivity.appBarDefault();
+        pending = view.findViewById(R.id.pendingId);
+        processing = view.findViewById(R.id.processingId);
+        complete = view.findViewById(R.id.readyId);
+        cancel = view.findViewById(R.id.cancelId);
+        orderList.setBackgroundColor(0x30ffffff);
+        menu.setBackgroundColor(0x00000000);
+        completeOrder.setBackgroundColor(0x00000000);
+        orderHistory.setBackgroundColor(0x00000000);
+        logout.setBackgroundColor(0x00000000);
+        orderSwipe = view.findViewById(R.id.orderSwipe);
+        rootMenu = true;
+
+
 
         try{
             if (SharedPref.read("RED","").equals("2")){
@@ -66,21 +80,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private void initial(View view) {
-        btmNav.setVisibility(View.VISIBLE);
-        MainActivity.appBarDefault();
-        pending = view.findViewById(R.id.pendingId);
-        processing = view.findViewById(R.id.processingId);
-        complete = view.findViewById(R.id.readyId);
-        cancel = view.findViewById(R.id.cancelId);
-        orderList.setBackgroundColor(0x30ffffff);
-        menu.setBackgroundColor(0x00000000);
-        completeOrder.setBackgroundColor(0x00000000);
-        orderHistory.setBackgroundColor(0x00000000);
-        logout.setBackgroundColor(0x00000000);
-        orderSwipe = view.findViewById(R.id.orderSwipe);
-        rootMenu = true;
-    }
+
 
     @Override
     public void onClick(View v) {

@@ -52,7 +52,17 @@ public class PendingFragment extends Fragment implements ViewInterface {
         binding = FragmentPendingBinding.inflate(inflater, container, false);
 
 
-        initial();
+        btmNav.setVisibility(View.VISIBLE);
+        SharedPref.init(getContext());
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
+        id = SharedPref.read("ID", "");
+        //SharedPref.write("ORDERSTATUS", "1");
+        rootMenu = true;
+        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
+        appSearchBar.setQueryHint("Search Here");
+        progressDialog.show();
+
 
         getPendingOrder();
 
@@ -176,20 +186,6 @@ public class PendingFragment extends Fragment implements ViewInterface {
         }
 
     }
-
-    private void initial() {
-        btmNav.setVisibility(View.VISIBLE);
-        SharedPref.init(getContext());
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
-        id = SharedPref.read("ID", "");
-        //SharedPref.write("ORDERSTATUS", "1");
-        rootMenu = true;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_PHONE);
-        appSearchBar.setQueryHint("Search Here");
-        progressDialog.show();
-    }
-
 
 
 

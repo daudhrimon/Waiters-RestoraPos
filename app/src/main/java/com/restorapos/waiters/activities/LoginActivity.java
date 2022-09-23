@@ -42,7 +42,11 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initial();
+
+        SharedPref.init(this);
+        progressDialog = new SpotsDialog(this, R.style.Custom);
+
+
 
         if (SharedPref.read("BASEURL", "").isEmpty()) {
             SharedPref.write("BASEURL", getString(R.string.BASE_URL));
@@ -149,10 +153,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void initial() {
-        SharedPref.init(this);
-        progressDialog = new SpotsDialog(this, R.style.Custom);
-    }
+
+
 
     private void warning() {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
