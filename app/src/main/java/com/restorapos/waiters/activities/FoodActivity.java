@@ -1,6 +1,7 @@
 package com.restorapos.waiters.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -44,11 +45,13 @@ import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
+import com.restorapos.waiters.utils.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -1217,20 +1220,23 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
         dBinding.plusBtn.setOnClickListener(view1 -> {
+            //countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
+            countNow ++;
+            dBinding.quantityFromUser.setText(String.valueOf(countNow));
             double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
             dBinding.variantPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
         });
 
 
+
         dBinding.minusBtn.setOnClickListener(view1 ->{
-            countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
+            //countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
             if (countNow>1){
                 countNow --;
-                dBinding.quantityFromUser.setText(countNow);
+                dBinding.quantityFromUser.setText(String.valueOf(countNow));
                 double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
                 dBinding.variantPriceTV.setText(String.valueOf(oldPrice-Double.parseDouble(variantPrice)));
             }
-
         });
 
 
