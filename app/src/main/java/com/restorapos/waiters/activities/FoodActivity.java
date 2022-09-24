@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,44 +24,36 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.adapters.AddOnsItemAdapter;
+import com.restorapos.waiters.adapters.FoodAdapter;
 import com.restorapos.waiters.databinding.ActivityFoodBinding;
-import com.restorapos.waiters.databinding.DesignFoodsItemBinding;
 import com.restorapos.waiters.databinding.DesignSubCategoryItemBinding;
 import com.restorapos.waiters.databinding.FoodCartDialogBinding;
-import com.restorapos.waiters.model.appModel.AppFoodInfo;
-import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
+import com.restorapos.waiters.interfaces.FoodDialogInterface;
 import com.restorapos.waiters.model.foodlistModel.Categoryinfo;
-import com.restorapos.waiters.model.foodlistModel.Data;
 import com.restorapos.waiters.model.foodlistModel.Foodinfo;
 import com.restorapos.waiters.model.foodlistModel.FoodlistResponse;
 import com.restorapos.waiters.model.foodlistModel.Varientlist;
 import com.restorapos.waiters.model.foodlistModel2.Foodinfo2;
-import com.restorapos.waiters.model.foodlistModel2.FoodlistResponse2;
 import com.restorapos.waiters.offlineDb.AppDatabase;
 import com.restorapos.waiters.offlineDb.DatabaseClient;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
+
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
-import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FoodActivity extends AppCompatActivity {
+public class FoodActivity extends AppCompatActivity implements FoodDialogInterface {
     private ActivityFoodBinding binding;
     private int orderQuantity = 0;
     private String pCategoryId;
@@ -71,17 +62,21 @@ public class FoodActivity extends AppCompatActivity {
     private List<Foodinfo> foodtasks;
     private final String TAG = "FoodActivity";
     private SpotsDialog progressDialog;
-    private List<Foodinfo> itemss;
-    private List<Foodinfo2> itemss2;
+    private List<Foodinfo> foodItems;
+    //private List<Foodinfo2> itemss2;
+
     public static int addOnsChecker = 0;
-    private String selecTedVariants;
-    private String variantPric = "";
+    //private String selecTedVariants;
+    private List<Varientlist> varientlist;
+    private String variantPrice = "";
     private String variantid = "";
-    private String variantname = "";
+    private String variantName = "";
     private final List<Foodinfo> orderedItems = new ArrayList<>();
-    private String quantity = "";
+    private int quantity = 0;
     private int countNow= 1;
-    private FoodssAdapter foodssAdapter;
+
+    private FoodDialogInterface foodDialogInterface;
+    private FoodAdapter foodAdapter;
     private AppDatabase appDatabase;
 
     @SuppressLint("NewApi")
@@ -92,20 +87,21 @@ public class FoodActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-
         SharedPref.init(this);
-        itemss2 = new ArrayList<>();
-        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        pCategoryId = getIntent().getStringExtra("CATEGORYID");
-        userId = SharedPref.read("ID", "");
-        progressDialog = new SpotsDialog(this, R.style.Custom);
+
+
+        //itemss2                             = new ArrayList<>();
+        waitersService                      = AppConfig.getRetrofit(this).create(WaitersService.class);
+        pCategoryId                         = getIntent().getStringExtra("CATEGORYID");
+        userId                              = SharedPref.read("ID", "");
+        appDatabase                         = DatabaseClient.getInstance(this).getAppDatabase();
+        foodDialogInterface                 = this;
+        progressDialog                      = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
         MainActivity.appBarDefault();
-        appDatabase = DatabaseClient.getInstance(this).getAppDatabase();
 
 
-
-        getAllFoodItemWithMultipleVariant();
+        //getAllFoodItemWithMultipleVariant();
 
         getUnit();
 
@@ -124,7 +120,6 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +127,6 @@ public class FoodActivity extends AppCompatActivity {
                 finish();
             }
         });
-
 
 
 
@@ -152,7 +146,6 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-
     private void setFoodCartHeaders() {
         binding.countTv.setText(SharedPref.read("CartCount","0"));
         binding.totalTv.setText(SharedPref.read("CURRENCY", "")+" "+SharedPref.read("CartTotal","0.0"));
@@ -165,14 +158,14 @@ public class FoodActivity extends AppCompatActivity {
         List<Foodinfo> newList = new ArrayList<>();
         if (value != null && !value.isEmpty()) {
             newList.clear();
-            for (int i = 0; i < itemss.size(); i++) {
-                if (itemss.get(i).getProductName().toLowerCase().contains(value.toLowerCase())) {
-                    newList.add(itemss.get(i));
+            for (int i = 0; i < foodItems.size(); i++) {
+                if (foodItems.get(i).getProductName().toLowerCase().contains(value.toLowerCase())) {
+                    newList.add(foodItems.get(i));
                 }
             }
-            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, newList, null));
+            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, newList,foodDialogInterface));
         } else {
-            binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, itemss, null));
+            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface));
         }
     }
 
@@ -180,7 +173,7 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-    private void getAllFoodItemWithMultipleVariant() {
+    /*private void getAllFoodItemWithMultipleVariant() {
         waitersService.getallfoodwithMultipleVariants(userId, pCategoryId).enqueue(new Callback<FoodlistResponse2>() {
             @Override
             public void onResponse(Call<FoodlistResponse2> call, Response<FoodlistResponse2> response) {
@@ -199,7 +192,7 @@ public class FoodActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
 
 
@@ -235,13 +228,13 @@ public class FoodActivity extends AppCompatActivity {
                 try {
                     if (response.body().getStatus().equals("success")) {
                         Log.d("TAG2", "onResponse: " + response.body().getData().getFoodinfo());
-                        itemss = response.body().getData().getFoodinfo();
+                        foodItems = response.body().getData().getFoodinfo();
                         if (binding.foodRecycler.getVisibility() == View.GONE) {
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        foodssAdapter = new FoodssAdapter(FoodActivity.this, itemss, null);
-                        binding.foodRecycler.setAdapter(foodssAdapter);
+                        foodAdapter = new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface);
+                        binding.foodRecycler.setAdapter(foodAdapter);
                         progressDialog.dismiss();
                     } else {
                         binding.foodRecycler.setVisibility(View.GONE);
@@ -283,14 +276,14 @@ public class FoodActivity extends AppCompatActivity {
                         Log.d(TAG, "onResponse: " + response.body().getData().getFoodinfo());
 
                         Log.d("qqq33", "onResponse: " + userId + " " + categoryId + " " + pCategoryId);
-                        itemss = response.body().getData().getFoodinfo();
+                        foodItems = response.body().getData().getFoodinfo();
 
-                        Log.d("ppp33", "onResponse: ppp" + new Gson().toJson(itemss));
+                        Log.d("ppp33", "onResponse: ppp" + new Gson().toJson(foodItems));
                         if (binding.foodRecycler.getVisibility() == View.GONE) {
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        binding.foodRecycler.setAdapter(new FoodssAdapter(FoodActivity.this, itemss, null));
+                        binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface));
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
@@ -345,12 +338,6 @@ public class FoodActivity extends AppCompatActivity {
 
         } catch (Exception ignored) {/**/}
     }
-
-
-
-
-
-
 
 
     public class FoodSubCategoryAdapter extends RecyclerView.Adapter<FoodSubCategoryAdapter.ViewHolder> implements Filterable {
@@ -457,7 +444,7 @@ public class FoodActivity extends AppCompatActivity {
                         unitListItem.setAddonsinfo(foodinfo.getAddonsinfo());
                     }
                 }
-                unitListItem.quantitys = Integer.parseInt(quantity);
+                unitListItem.quantitys = quantity;
 
 
                 appDatabase.taskDao().insertFood(unitListItem);
@@ -509,6 +496,7 @@ public class FoodActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
                 getUnit();
             }
         }
@@ -563,18 +551,29 @@ public class FoodActivity extends AppCompatActivity {
         }
     }
 
-    public class FoodssAdapter extends RecyclerView.Adapter<FoodssAdapter.ViewHolder> {
+
+
+
+
+
+
+
+
+
+    /*public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         private List<Foodinfo> items;
         private Context context;
         List<Addonsinfo> addOnsitems;
 
-        public FoodssAdapter(Context applicationContext, List<Foodinfo> itemArrayList, List<AppFoodInfo> itemss) {
+
+        public FoodAdapter(Context applicationContext, List<Foodinfo> itemArrayList, List<AppFoodInfo> itemss) {
             SharedPref.init(context);
             this.context = applicationContext;
             this.items = itemArrayList;
             addOnsitems = new ArrayList<>();
             Log.d("checklistfood",new Gson().toJson(itemArrayList));
         }
+
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -584,52 +583,58 @@ public class FoodActivity extends AppCompatActivity {
 
         @SuppressLint("RecyclerView")
         @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-            Log.d("sdasasd222",items.get(i).getProductName());
-            viewHolder.fBinding.categoryName.setText(items.get(i).getProductName());
-            viewHolder.fBinding.price.setText(SharedPref.read("CURRENCY", "") + " " + items.get(i).getPrice());
-            viewHolder.fBinding.notes.setText(items.get(i).getDestcription());
-            viewHolder.fBinding.varient.setText(items.get(i).getVariantName());
+        public void onBindViewHolder(final ViewHolder holder, int i) {
+
+            String url = items.get(i).getProductImage();
+            if (url != null) {
+                Glide.with(context).load(url).into(holder.fBinding.categoryImage);
+            }
+
+            holder.fBinding.categoryName.setText(items.get(i).getProductName());
+            holder.fBinding.price.setText(SharedPref.read("CURRENCY", "") + " " + items.get(i).getPrice());
+            holder.fBinding.notes.setText(items.get(i).getDestcription());
+            holder.fBinding.varient.setText(items.get(i).getVariantName());
+
 
             if (items.get(i).getOfferIsavailable() != null) {
                 if (items.get(i).getOfferIsavailable().equals("1") && isOfferAvailable2(items.get(i).getOfferstartdate(), items.get(i).getOfferendate())) {
-                    viewHolder.fBinding.offerLay.setVisibility(View.VISIBLE);
-                    viewHolder.fBinding.offerRate.setText(items.get(i).getOffersRate());
+                    holder.fBinding.offerLay.setVisibility(View.VISIBLE);
+                    holder.fBinding.offerRate.setText(items.get(i).getOffersRate());
                 }
             }
 
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+           *//* holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toasty.success(context,items.get(i).getProductId(),Toasty.LENGTH_SHORT).show();
                 }
-            });
-            String url = items.get(i).getProductImage();
-            if (url != null) {
-                Glide.with(context).load(url).into(viewHolder.fBinding.categoryImage);
-            }
+            });*//*
 
-            viewHolder.fBinding.layoutDesignFoodItem.setOnClickListener(v -> {
-                if (viewHolder.fBinding.qtyShowTv.getVisibility()==View.VISIBLE){
-                    viewHolder.fBinding.qtyShowTv.setVisibility(View.GONE);
+
+
+
+            holder.itemView.setOnClickListener(v -> {
+
+                if (holder.fBinding.qtyShowTv.getVisibility()==View.VISIBLE){
+                    holder.fBinding.qtyShowTv.setVisibility(View.GONE);
                 }else{
-                    viewHolder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
-                    Log.d("foodtasks_size",""+itemss2.size());
+                    holder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
+
                     if (foodtasks.size() == 0) {
                         if (items.get(i).getAddons().equals(1) || itemss2.size() > 0) {
                             List<Addonsinfo> addons = items.get(i).getAddonsinfo();
 
-                            Log.d("pppppawaw", new Gson().toJson(items));
-                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(i).getVariantName(),viewHolder.fBinding.qtyShowTv,items);
+                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(i).getVariantName(),holder.fBinding.qtyShowTv,items);
+
                         } else {
-                            Log.d("pppppawaw", "onBindViewHolder: " + new Gson().toJson(items.get(i)));
+
                             insertFood(items.get(i));
                             Gson g = new Gson();
                             int count = items.get(i).quantity;
                             count++;
                             items.get(i).quantity = count;
-                            Log.d("qqqquentity", "" + count);
-                            //viewHolder.qtyShowTv.setText(String.valueOf(items.get(i).quantity));
+
+                            //holder.qtyShowTv.setText(String.valueOf(items.get(i).quantity));
                             List<Foodinfo> orderedItems = new ArrayList<>();
                             for (Foodinfo food : items) {
                                 if (food.quantity > 0) {
@@ -640,7 +645,7 @@ public class FoodActivity extends AppCompatActivity {
                             Data data = new Data();
                             data.setFoodinfo(orderedItems);
                             String foods = g.toJson(data);
-                            Log.d("pok", "ArrayMAde: " + foods);
+
                             items.get(i).quantity = 0;
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -652,14 +657,16 @@ public class FoodActivity extends AppCompatActivity {
                         }
                     }
                     else if (foodtasks.size() > 0 && itemss2.size() > 0) {
+
                         if (items.get(i).getAddons().equals(1) || itemss2.size() > 0) {
                             List<Addonsinfo> addons = items.get(i).getAddonsinfo();
-                            Gson gson = new Gson();
-                            String string = gson.toJson(addons);
-                            Log.d("ppppp", "onClick: " + string);
-                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), viewHolder.fBinding.qtyShowTv, items);
+                            *//*Gson gson = new Gson();
+                            String string = gson.toJson(addons);*//*
+
+                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), holder.fBinding.qtyShowTv, items);
+
                         } else {
-                            Log.d("fsdfdsf", "onBindViewHolder: " + new Gson().toJson(items.get(i)));
+
                             insertFood(items.get(i));
                             Gson g = new Gson();
                             int count = items.get(i).quantity;
@@ -675,7 +682,7 @@ public class FoodActivity extends AppCompatActivity {
                             Data data = new Data();
                             data.setFoodinfo(orderedItems);
                             String foods = g.toJson(data);
-                            Log.d("pok", "ArrayMAde: " + foods);
+
                             items.get(i).quantity = 0;
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -687,14 +694,13 @@ public class FoodActivity extends AppCompatActivity {
                         }
                     }
                     try {
-                        if (viewHolder.fBinding.qtyShowTv.getVisibility() == View.VISIBLE) {
+                        if (holder.fBinding.qtyShowTv.getVisibility() == View.VISIBLE) {
                             String list = items.get(i).getProductId() + items.get(i).getVariantid();
                             for (int t = 0; t < foodtasks.size(); t++) {
                                 String list1 = foodtasks.get(t).getProductId() + foodtasks.get(t).getVariantid();
-                                Log.d("pasodasd", "onBindViewHolder: " + list + " " + list1);
+
                                 if (list.equals(list1)) {
-                                    Log.d("000", "onBindViewHolder: " + list + " " + list1);
-                                    Log.d("ooo", "onBind: " + t);
+
                                     deleteFood(foodtasks.get(t));
                                 }
                             }
@@ -704,12 +710,12 @@ public class FoodActivity extends AppCompatActivity {
                                 List<Addonsinfo> addons = items.get(i).getAddonsinfo();
                                 Gson gson = new Gson();
                                 String string = gson.toJson(addons);
-                                Log.d("ppppp", "onClick: " + string);
-                                FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), viewHolder.fBinding.qtyShowTv, items);
+
+                                FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), holder.fBinding.qtyShowTv, items);
                             } else {
-                                Log.d("fsdfdsf", "onBindViewHolder: " + new Gson().toJson(items.get(i)));
+
                                 insertFood(items.get(i));
-                                viewHolder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
+                                holder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
                                 Gson g = new Gson();
                                 int count = items.get(i).quantity;
                                 count++;
@@ -724,7 +730,7 @@ public class FoodActivity extends AppCompatActivity {
                                 Data data = new Data();
                                 data.setFoodinfo(orderedItems);
                                 String foods = g.toJson(data);
-                                Log.d("pok", "ArrayMAde: " + foods);
+
 
                                 items.get(i).quantity = 0;
                                 new Handler().postDelayed(new Runnable() {
@@ -737,7 +743,7 @@ public class FoodActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    catch (Exception ignored) {/**/}
+                    catch (Exception ignored) {*//**//*}
                 }
             });
         }
@@ -791,7 +797,7 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
-        public void FoodCartDialog(List<Addonsinfo> addonsinfoList, final int pos, String variantId, String variantName,
+        *//*public void FoodCartDialog(List<Addonsinfo> addonsinfoList, final int pos, String variantId, String variantName,
                                    ImageView qtyShowTv, List<Foodinfo> list) {
             SharedPref.init(context);
 
@@ -805,12 +811,12 @@ public class FoodActivity extends AppCompatActivity {
             dBinding.addonsHeader.setVisibility(View.GONE);
             dialog.setContentView(view);
 
-            String productName, variantddd;
+            String productName = "",productId = "";
             List<Varientlist> varientlists = new ArrayList<>();
             List<String> variantnames = new ArrayList<>();
 
-            quantity = dBinding.quantityFromUser.getText().toString();
-            countNow = Integer.parseInt(quantity);
+
+
 
             Log.d("checkItemss2",new Gson().toJson(itemss2));
             Log.d("checkItemss3",new Gson().toJson(list));
@@ -820,11 +826,13 @@ public class FoodActivity extends AppCompatActivity {
                 variantname = list.get(pos).getVariantName();
                 variantid = list.get(pos).getVariantid();
                 productName = list.get(pos).getProductName();
+                productId = list.get(pos).getProductId();
                 variantPric = list.get(pos).getPrice();
                 varientlists = list.get(pos).getVarientlist();
                 Log.d("detailsCheck", "pname: " + productName + "pPrice " + variantPric + "list " + new Gson().toJson(varientlists));
                 dBinding.variantPriceTV.setText(variantPric);
                 dBinding.variantNameTV.setText(productName);
+
                 for (int j = 0; j < varientlists.size(); j++) {
                     variantnames.add(varientlists.get(j).getMultivariantName());
 
@@ -848,6 +856,8 @@ public class FoodActivity extends AppCompatActivity {
                 Log.d("detailsCheck", "pname: " + productName + "pPrice " + variantPric + "list " + new Gson().toJson(varientlists));
             }
 
+
+
             dBinding.plusBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -858,6 +868,8 @@ public class FoodActivity extends AppCompatActivity {
                     dBinding.variantPriceTV.setText(""+price);
                 }
             });
+
+
 
             dBinding.minusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -875,8 +887,11 @@ public class FoodActivity extends AppCompatActivity {
                 }
             });
 
+
             List<Varientlist> finalVarientlists = varientlists;
             Log.d("checkvarientId",new Gson().toJson(finalVarientlists));
+
+
 
             dBinding.variantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -918,6 +933,7 @@ public class FoodActivity extends AppCompatActivity {
 
 
 
+
             dBinding.recyclerDialog.setLayoutManager(new LinearLayoutManager(context));
 
 
@@ -943,6 +959,10 @@ public class FoodActivity extends AppCompatActivity {
             SharedPref.write("SUM", "");
 
 
+            String finalProductName = productName;
+            String finalProductId = productId;
+
+
 
 
 
@@ -957,10 +977,28 @@ public class FoodActivity extends AppCompatActivity {
                 } else {
                     orderQuantity = Integer.parseInt(quantity) + orderQuantity;
                 }
-
                 Log.d("quantitycheck", "" + quantity);
 
-                this.items.get(pos).setPrice(variantPric);
+
+                if(items.get(pos).getProductName() == finalProductName &&
+                        items.get(pos).getProductId() == finalProductId &&
+                        items.get(pos).getVariantName() == variantName &&
+                        items.get(pos).getVariantid() == variantId){
+
+
+                    this.items.get(pos).setVariantName(variantname);
+                    this.items.get(pos).setVariantid(variantid);
+                    this.items.get(pos).setPrice(String.valueOf(Double.parseDouble(this.items.get(pos).getPrice())+Double.parseDouble(variantPric)));
+                    this.items.get(pos).quantitys += orderQuantity;
+                    this.items.get(pos).quantity += orderQuantity;
+                    this.items.get(pos).setQuantity( this.items.get(pos).getQuantity()+Integer.parseInt(quantity));
+                    this.items.get(pos).setVariantName(selecTedVariants);
+                    this.items.get(pos).setAddons(list.get(pos).getAddons());
+
+                    Log.wtf("ITEMS",items.toString());
+                }
+
+                *//**//*this.items.get(pos).setPrice(variantPric);
                 this.items.get(pos).setVariantName(variantname);
                 this.items.get(pos).setVariantid(variantid);
                 this.items.get(pos).quantitys = orderQuantity;
@@ -968,10 +1006,10 @@ public class FoodActivity extends AppCompatActivity {
                 this.items.get(pos).setQuantity(Integer.parseInt(quantity));
                 this.items.get(pos).setVariantName(selecTedVariants);
                 this.items.get(pos).setAddons(list.get(pos).getAddons());
-                Log.d("addOnsChecker",""+addOnsChecker);
+                Log.d("addOnsChecker",""+addOnsChecker);*//**//*
 
                 if (addOnsChecker==1){
-                    if (list.get(pos).getAddons()==1){
+                    if (list.get(pos).getAddons() == 1){
                         if (!SharedPref.read("addOnslist","").equals("")){
                             Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
                             addonsinfos = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
@@ -979,8 +1017,7 @@ public class FoodActivity extends AppCompatActivity {
                         }
                     }
 
-                }
-                else{
+                } else {
                     this.items.get(pos).setAddons(0);
                 }
 
@@ -1007,20 +1044,17 @@ public class FoodActivity extends AppCompatActivity {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        getFoodCart();
-                    }
+                    public void run() { getFoodCart(); }
                 }, 1000);
 
                 dialog.dismiss();
 
                 qtyShowTv.setVisibility(View.GONE);
-               //getAllFoodItem();
+                //getAllFoodItem();
             });
 
+
             List<Addonsinfo> finalAddonsinfoList1 = addonsinfoList;
-
-
 
 
 
@@ -1111,9 +1145,102 @@ public class FoodActivity extends AppCompatActivity {
             Window win = dialog.getWindow();
             win.setLayout((9*width)/10, WindowManager.LayoutParams.WRAP_CONTENT);
             win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-    }
+        }*//*
+    }*/
 
+
+
+
+
+    @Override
+    public void onFoodItemClick(Context context, Foodinfo food, ImageView selectedMark) {
+
+        varientlist = food.getVarientlist();
+        boolean haveToInsert = false;
+        List<String> variantNameList = new ArrayList<>();
+
+        if (food.getTotalvariant().equals("1")){
+            variantNameList.add(food.getVariantName());
+        } else {
+            for (int i =0; i < varientlist.size(); i++){
+                variantNameList.add(varientlist.get(i).getMultivariantName());
+            }
+        }
+
+
+        final Dialog dialog = new Dialog(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.food_cart_dialog,null);
+        FoodCartDialogBinding dBinding = FoodCartDialogBinding.bind(view);
+        dBinding.addonsHeader.setVisibility(View.GONE);
+        dialog.setContentView(view);
+
+
+        dBinding.productName.setText(food.getProductName());
+
+
+        dBinding.variantSpinner.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, variantNameList));
+
+
+        Log.wtf("VARIENTNAME",new Gson().toJson(food));
+
+
+        dBinding.variantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+
+                variantName = dBinding.variantSpinner.getSelectedItem().toString();
+
+                if (food.getTotalvariant().equals("1")){
+                    variantid = food.getVariantid();
+                    variantPrice = food.getPrice();
+                } else {
+                    variantid = varientlist.get(pos).getMultivariantid();
+                    variantPrice = varientlist.get(pos).getMultivariantPrice();
+                }
+                dBinding.variantPriceTV.setText(variantPrice);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {/**/}
+        });
+
+
+
+        dBinding.closeBtn.setOnClickListener(view1 -> {
+            dialog.dismiss();
+        });
+
+
+        if (food.getAddons() == 1){
+            dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.variantPriceTV));
+        }
+
+
+
+        dBinding.plusBtn.setOnClickListener(view1 -> {
+            double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
+            dBinding.variantPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
+        });
+
+
+        dBinding.minusBtn.setOnClickListener(view1 ->{
+            countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
+            if (countNow>1){
+                countNow --;
+                dBinding.quantityFromUser.setText(countNow);
+                double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
+                dBinding.variantPriceTV.setText(String.valueOf(oldPrice-Double.parseDouble(variantPrice)));
+            }
+
+        });
+
+
+
+        dialog.show();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        Window win = dialog.getWindow();
+        win.setLayout((9*width)/10, WindowManager.LayoutParams.WRAP_CONTENT);
+        win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
 
 
 
@@ -1129,6 +1256,10 @@ public class FoodActivity extends AppCompatActivity {
         //binding.searchEt.setFocusable(true);
         //binding.searchEt.setFocusableInTouchMode(true);
     }
+
+
+
+
 
     @Override
     public void onBackPressed() {

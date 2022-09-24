@@ -58,7 +58,7 @@
                 android:weightSum="4">
 
                 <TextView
-                    android:id="@+id/variantNameTV"
+                    android:id="@+id/productName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -205,16 +205,17 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerDialog"
+            android:id="@+id/dialogAddonsRv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_220sdp"
-            android:layout_below="@+id/addonsHeader" />
+            android:layout_below="@+id/addonsHeader"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <LinearLayout
             android:id="@+id/btnLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recyclerDialog"
+            android:layout_below="@+id/dialogAddonsRv"
             android:layout_marginTop="9dp"
             android:gravity="end"
             android:orientation="horizontal">

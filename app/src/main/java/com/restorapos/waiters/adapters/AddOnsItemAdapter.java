@@ -58,7 +58,7 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
 
         holder.binding.productName.setText(items.get(i).getAddOnName());
         holder.binding.unitPriceTv.setText(items.get(i).getAddonsprice());
-        holder.binding.quantityTv.setText("" + addOnsCounter);
+        holder.binding.quantityTv.setText(String.valueOf(addOnsCounter));
         final int count = Integer.parseInt(String.valueOf(holder.binding.quantityTv.getText()));
         if (!items.get(i).getAddonsprice().equals("")) {
             total = Double.parseDouble(items.get(i).getAddonsprice()) * count;
@@ -66,41 +66,47 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
         FoodActivity.addOnsChecker = addOnsChecker;
         holder.binding.totalPriceTv.setText(String.valueOf(total));
 
+
         holder.binding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (holder.binding.checkBox.isChecked()) {
                     checker++;
+
                     SharedPref.write("AddOnsCheck", "" + checker);
+
                     foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
-                    double itemPice = foodPrice + Double.parseDouble(holder.binding.unitPriceTv.getText().toString());
-                    variantPriceTV.setText("" + itemPice);
+                    double addonPrice = Double.parseDouble(holder.binding.totalPriceTv.getText().toString());
+                    variantPriceTV.setText(String.valueOf(foodPrice+addonPrice));
                     items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
 
                     Addonsinfo addonsinfo = new Addonsinfo(items.get(i).getAddonsid(),
                             items.get(i).getAddOnName(), holder.binding.totalPriceTv.getText().toString(),
                             Integer.parseInt(holder.binding.quantityTv.getText().toString()));
 
-                    if (items2.size()==0) {
-                        items2.add(addonsinfo);
-                        SharedPref.write("addOnslist", new Gson().toJson(items2));
-                    } else {
+                    if (items2.size() != 0) {
                         Type type = new TypeToken<List<Addonsinfo>>() {
                         }.getType();
                         items2 = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
-                        items2.add(addonsinfo);
-                        SharedPref.write("addOnslist", new Gson().toJson(items2));
                     }
+                    items2.add(addonsinfo);
+
+                    SharedPref.write("addOnslist", new Gson().toJson(items2));
+
                     addOnsChecker = 1;
                     FoodActivity.addOnsChecker = addOnsChecker;
                 }
+
+
                 if (!holder.binding.checkBox.isChecked()) {
                     checker--;
+
                     SharedPref.write("AddOnsCheck", "" + checker);
+
                     foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
-                    Double addsonPrice = Double.valueOf(holder.binding.unitPriceTv.getText().toString());
-                    variantPriceTV.setText("" + (foodPrice - addsonPrice));
+                    double addonPrice = Double.parseDouble(holder.binding.totalPriceTv.getText().toString());
+                    variantPriceTV.setText(String.valueOf(foodPrice-addonPrice));
 
                     Type type = new TypeToken<List<Addonsinfo>>() {
                     }.getType();
@@ -127,13 +133,13 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
             public void onClick(View v) {
                 foodPrice = Double.parseDouble(variantPriceTV.getText().toString());
                 addOnsCounter++;
-                holder.binding.quantityTv.setText("" + addOnsCounter);
+                holder.binding.quantityTv.setText(String.valueOf(addOnsCounter));
 
-                holder.binding.totalPriceTv.setText("" + Double.parseDouble(items.get(i).getAddonsprice()) * addOnsCounter);
+                holder.binding.totalPriceTv.setText(String.valueOf(Double.parseDouble(items.get(i).getAddonsprice()) * addOnsCounter));
 
                 if (holder.binding.checkBox.isChecked()) {
                     double itemPice = foodPrice + Double.parseDouble(items.get(i).getAddonsprice());
-                    variantPriceTV.setText("" + itemPice);
+                    variantPriceTV.setText(String.valueOf(itemPice));
                     items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                     Type type = new TypeToken<List<Addonsinfo>>() {
                     }.getType();
@@ -163,14 +169,14 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
 
                 if (addOnsCounter > 1) {
                     addOnsCounter--;
-                    holder.binding.quantityTv.setText("" + addOnsCounter);
+                    holder.binding.quantityTv.setText(String.valueOf(addOnsCounter));
 
-                    holder.binding.totalPriceTv.setText("" + (price - addOnPrice));
+                    holder.binding.totalPriceTv.setText(String.valueOf(price-addOnPrice));
 
                     if (holder.binding.checkBox.isChecked()) {
 
                         double itemPrice = foodPrice - addOnPrice;
-                        variantPriceTV.setText("" + itemPrice);
+                        variantPriceTV.setText(String.valueOf(itemPrice));
                         items.get(i).setAddonsquantity(Integer.parseInt(holder.binding.quantityTv.getText().toString()));
                         Type type = new TypeToken<List<Addonsinfo>>() {
                         }.getType();
@@ -189,6 +195,8 @@ public class AddOnsItemAdapter extends RecyclerView.Adapter<AddOnsItemAdapter.Vi
         });
 
     }
+
+
 
     @Override
     public int getItemCount() {

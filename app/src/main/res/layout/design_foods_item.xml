@@ -42,12 +42,12 @@
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/qtyShowTv"
+            app:layout_constraintEnd_toStartOf="@+id/selectedMark"
             app:layout_constraintStart_toEndOf="@+id/categoryImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/qtyShowTv"
+            android:id="@+id/selectedMark"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:background="@color/colorRed"

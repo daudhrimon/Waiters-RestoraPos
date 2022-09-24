@@ -80,46 +80,43 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
 
         SharedPref.init(this);
         SharedPref.write("TABLE", "");
-        //tableBookDetails = new ArrayList<>();
-        selectedTables = new ArrayList<>();
-        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        id = SharedPref.read("ID", "");
-        orderId = getIntent().getStringExtra("ORDERID");
-        try {
-            globalVat = Double.parseDouble(SharedPref.read("vat", "0.0"));
-            serviceType = SharedPref.read("SCT", "0");
-            serviceCrg = Double.parseDouble(SharedPref.read("SC", "0.0"));
-            //binding.tableEt.setText(SharedPref.read("UPDATETABLE", ""));
-            binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
-            currency = SharedPref.read("CURRENCY", "");
-        } catch (Exception e) {/**/}
-        appDatabase = getInstance(CartActivity.this).getAppDatabase();
-        progressDialog = new SpotsDialog(this, R.style.Custom);
+
+        //tableBookDetails               = new ArrayList<>();
+        selectedTables                   = new ArrayList<>();
+        waitersService                   = AppConfig.getRetrofit(this).create(WaitersService.class);
+        id                               = SharedPref.read("ID", "");
+        orderId                          = getIntent().getStringExtra("ORDERID");
+        globalVat                        = Double.parseDouble(SharedPref.read("vat", "0.0"));
+        serviceType                      = SharedPref.read("SCT", "0");
+        serviceCrg                       = Double.parseDouble(SharedPref.read("SC", "0.0"));
+        //binding.tableEt.setText(SharedPref.read("UPDATETABLE", ""));
+        currency                         = SharedPref.read("CURRENCY", "");
+        appDatabase                      = getInstance(CartActivity.this).getAppDatabase();
+        String OREDER_ID                 = SharedPref.read("ORDERID", "");
+        progressDialog                   = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
+        binding.customerNameTv.setText(SharedPref.read("MEMBERNAME", ""));
 
 
 
-
-        String OREDER_ID = SharedPref.read("ORDERID", "");
         if (!OREDER_ID.isEmpty()){
-
             binding.cartHeader.setText("Cart ( Order Id : " + OREDER_ID + " )");
-
             binding.placeOrderBtn.setText("Update Order");
         }
-
         if (orderId != null) {
-
             binding.addNewItem.setVisibility(View.VISIBLE);
-
             updateOrder();
         }
+
+
 
         getUnit();
 
         getCustomerList();
 
         getTableList();
+
+
 
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

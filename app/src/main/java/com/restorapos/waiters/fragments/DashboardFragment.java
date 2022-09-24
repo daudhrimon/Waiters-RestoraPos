@@ -49,21 +49,23 @@ public class DashboardFragment extends Fragment {
 
         btmNav.setVisibility(View.VISIBLE);
         btmNav.setSelectedItemId(R.id.bMenu);
-        SharedPref.init(getActivity());
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        dbItems = new ArrayList<>();
-        id = SharedPref.read("ID", "");
-        rootMenu = false;
-        appSearchBar.setInputType(InputType.TYPE_CLASS_TEXT);
-        appSearchBar.setQueryHint("Search Food Category");
-        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
+        SharedPref.init(getContext());
+
+
+        waitersService                      = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        dbItems                             = new ArrayList<>();
+        id                                  = SharedPref.read("ID", "");
+        rootMenu                            = false;
+        progressDialog                      = new SpotsDialog(getContext(), R.style.Custom);
         progressDialog.show();
+
 
 
         getDashboardItem();
 
 
-
+        appSearchBar.setInputType(InputType.TYPE_CLASS_TEXT);
+        appSearchBar.setQueryHint("Search Food Category");
         appSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -82,6 +84,8 @@ public class DashboardFragment extends Fragment {
                 return false;
             }
         });
+
+
 
         binding.dashSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

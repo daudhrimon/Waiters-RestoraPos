@@ -80,31 +80,34 @@ public class MainActivity extends AppCompatActivity {
         SharedPref.init(this);
         SharedPref.write("FOOD", "");
         SharedPref.write("OVI", "");
+
+
         //btmNav
-        btmNav = findViewById(R.id.btmNav);
-        notifyBadge = btmNav.getOrCreateBadge(R.id.bNotify);
-        notifyBadge.setVisible(false);
-        drawer = findViewById(R.id.drawer_layout);
+        btmNav                          = findViewById(R.id.btmNav);
+        notifyBadge                     = btmNav.getOrCreateBadge(R.id.bNotify);
+        drawer                          = findViewById(R.id.drawer_layout);
         //appBar initial
-        appMenu = findViewById(R.id.appMenu);
-        appHeader = findViewById(R.id.appHeader);
-        appSearchBar = findViewById(R.id.appSearchBar);
-        appCart = findViewById(R.id.appCart);
-        appBtnLay = findViewById(R.id.appBtnLay);
-        appSearchLay = findViewById(R.id.appSearchLay);
-        appSearch = findViewById(R.id.appSearch);
-        appCross = findViewById(R.id.appCross);
-        appCartBadge = findViewById(R.id.appCartBadge);
+        appMenu                         = findViewById(R.id.appMenu);
+        appHeader                       = findViewById(R.id.appHeader);
+        appSearchBar                    = findViewById(R.id.appSearchBar);
+        appCart                         = findViewById(R.id.appCart);
+        appBtnLay                       = findViewById(R.id.appBtnLay);
+        appSearchLay                    = findViewById(R.id.appSearchLay);
+        appSearch                       = findViewById(R.id.appSearch);
+        appCross                        = findViewById(R.id.appCross);
+        appCartBadge                    = findViewById(R.id.appCartBadge);
         //Drawer initial
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
-        menu = headerView.findViewById(R.id.menuId);
+        NavigationView navigationView   = findViewById(R.id.nav_view);
+        headerView                      = navigationView.getHeaderView(0);
+        menu                            = headerView.findViewById(R.id.menuId);
         menu.setBackgroundColor(0x30ffffff);
-        logout = headerView.findViewById(R.id.logoutId);
-        orderList = headerView.findViewById(R.id.orderlistId);
-        completeOrder = headerView.findViewById(R.id.completeOrderlistid);
-        orderHistory = headerView.findViewById(R.id.orderhistoryId);
-        rootMenu = false;
+        logout                          = headerView.findViewById(R.id.logoutId);
+        orderList                       = headerView.findViewById(R.id.orderlistId);
+        completeOrder                   = headerView.findViewById(R.id.completeOrderlistid);
+        orderHistory                    = headerView.findViewById(R.id.orderhistoryId);
+        rootMenu                        = false;
+
+        notifyBadge.setVisible(false);
 
 
         // AppBars OnClicks
