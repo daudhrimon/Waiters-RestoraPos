@@ -1,9 +1,9 @@
 package com.restorapos.waiters.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -26,6 +26,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 
+import com.google.gson.reflect.TypeToken;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.adapters.AddOnsItemAdapter;
@@ -34,24 +35,24 @@ import com.restorapos.waiters.databinding.ActivityFoodBinding;
 import com.restorapos.waiters.databinding.DesignSubCategoryItemBinding;
 import com.restorapos.waiters.databinding.FoodCartDialogBinding;
 import com.restorapos.waiters.interfaces.FoodDialogInterface;
+import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.restorapos.waiters.model.foodlistModel.Categoryinfo;
 import com.restorapos.waiters.model.foodlistModel.Foodinfo;
 import com.restorapos.waiters.model.foodlistModel.FoodlistResponse;
 import com.restorapos.waiters.model.foodlistModel.Varientlist;
-import com.restorapos.waiters.model.foodlistModel2.Foodinfo2;
 import com.restorapos.waiters.offlineDb.AppDatabase;
 import com.restorapos.waiters.offlineDb.DatabaseClient;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
-import com.restorapos.waiters.utils.Utils;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,6 +82,8 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     private FoodDialogInterface foodDialogInterface;
     private FoodAdapter foodAdapter;
     private AppDatabase appDatabase;
+    private double addonsTotal = 0.0;
+    private Foodinfo food;
 
     @SuppressLint("NewApi")
     @Override
@@ -99,6 +102,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         userId                              = SharedPref.read("ID", "");
         appDatabase                         = DatabaseClient.getInstance(this).getAppDatabase();
         foodDialogInterface                 = this;
+        food                                = new Foodinfo();
         progressDialog                      = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
         MainActivity.appBarDefault();
@@ -336,6 +340,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
             SharedPref.write("CartCount", String.valueOf(foodtasks.size()));
             SharedPref.write("CartTotal",cartTotal);
+            SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
 
             setFoodCartHeaders();
 
@@ -424,33 +429,8 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         class AddProduct extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-                Foodinfo unitListItem = new Foodinfo();
-                unitListItem.setProductName(foodinfo.getProductName());
-                unitListItem.setProductId(foodinfo.getProductId());
 
-                unitListItem.setOfferIsavailable(foodinfo.getOfferIsavailable());
-                unitListItem.setOfferstartdate(foodinfo.getOfferstartdate());
-                unitListItem.setOfferendate(foodinfo.getOfferendate());
-                unitListItem.setOffersRate(foodinfo.getOffersRate());
-
-                unitListItem.setVariantid(foodinfo.getVariantid());
-                unitListItem.setVariantName(foodinfo.getVariantName());
-                unitListItem.setAddOnsTotal(foodinfo.getAddOnsTotal());
-                unitListItem.setPrice(foodinfo.getPrice());
-
-                unitListItem.setProductvat(foodinfo.getProductvat());
-                unitListItem.setAddOnsName(foodinfo.getAddOnsName());
-                unitListItem.setAddons(foodinfo.getAddons());
-
-                if (addOnsChecker==1){
-                    if (foodinfo.getAddons()==1) {
-                        unitListItem.setAddonsinfo(foodinfo.getAddonsinfo());
-                    }
-                }
-                unitListItem.quantitys = quantity;
-
-
-                appDatabase.taskDao().insertFood(unitListItem);
+                appDatabase.taskDao().insertFood(foodinfo);
 
                 return null;
             }
@@ -467,31 +447,12 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
     }
 
-    private void UpdateFood(Foodinfo foodinfo, int quantity) {
+    private void updateFood(Foodinfo foodinfo) {
         class AddProduct extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-                Foodinfo unitListItem = new Foodinfo();
-                unitListItem.setAddonsinfo(foodinfo.getAddonsinfo());
-                unitListItem.setProductName(foodinfo.getProductName());
-                unitListItem.setProductId(foodinfo.getProductId());
-                unitListItem.setVariantid(foodinfo.getVariantid());
-                unitListItem.setAddOnsTotal(foodinfo.getAddOnsTotal());
-                unitListItem.setPrice(foodinfo.getPrice());
-                unitListItem.setProductvat(foodinfo.getProductvat());
-                unitListItem.setAddOnsName(foodinfo.getAddOnsName());
-                unitListItem.setId(foodinfo.getId());
 
-                unitListItem.setOfferIsavailable(foodinfo.getOfferIsavailable());
-                unitListItem.setOfferstartdate(foodinfo.getOfferstartdate());
-                unitListItem.setOfferendate(foodinfo.getOfferendate());
-                unitListItem.setOffersRate(foodinfo.getOffersRate());
-
-                unitListItem.setAddons(foodinfo.getAddons());
-                unitListItem.quantitys = quantity;
-
-
-                appDatabase.taskDao().updateFood(unitListItem);
+                appDatabase.taskDao().updateFood(foodinfo);
 
                 return null;
             }
@@ -1156,11 +1117,14 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
     @Override
-    public void onFoodItemClick(Context context, Foodinfo food, ImageView selectedMark) {
+    public void onFoodItemClick(Context context, Foodinfo foodItem, ImageView selectedMark) {
+        //foodtasks = appDatabase.taskDao().getAllUnit();
+        food = foodItem;
+        addonsTotal = 0.0;
 
         varientlist = food.getVarientlist();
-        boolean haveToInsert = false;
         List<String> variantNameList = new ArrayList<>();
+
 
         if (food.getTotalvariant().equals("1")){
             variantNameList.add(food.getVariantName());
@@ -1184,7 +1148,15 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         dBinding.variantSpinner.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, variantNameList));
 
 
-        Log.wtf("VARIENTNAME",new Gson().toJson(food));
+        /*if (food.getAddons().equals(1)){
+            dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
+        }*/
+
+
+        dBinding.closeBtn.setOnClickListener(view1 -> {
+            dialog.dismiss();
+        });
+
 
 
         dBinding.variantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1200,7 +1172,14 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                     variantid = varientlist.get(pos).getMultivariantid();
                     variantPrice = varientlist.get(pos).getMultivariantPrice();
                 }
-                dBinding.variantPriceTV.setText(variantPrice);
+
+                dBinding.totalPriceTV.setText(variantPrice);
+
+                //Setting addon Adapter
+                if (food.getAddons().equals(1)){
+                    //SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
+                    dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {/**/}
@@ -1208,34 +1187,153 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
 
-        dBinding.closeBtn.setOnClickListener(view1 -> {
-            dialog.dismiss();
-        });
-
-
-        if (food.getAddons() == 1){
-            dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.variantPriceTV));
-        }
-
-
-
         dBinding.plusBtn.setOnClickListener(view1 -> {
-            //countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
-            countNow ++;
-            dBinding.quantityFromUser.setText(String.valueOf(countNow));
-            double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
-            dBinding.variantPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
+            if (dBinding.quantityEt.getText().toString().isEmpty()){
+
+                dBinding.quantityEt.setText("1");
+                dBinding.totalPriceTV.setText(variantPrice);
+
+            } else {
+
+                countNow = Integer.parseInt(dBinding.quantityEt.getText().toString());
+                countNow ++;
+                dBinding.quantityEt.setText(String.valueOf(countNow));
+                double oldPrice = Double.parseDouble(dBinding.totalPriceTV.getText().toString());
+                dBinding.totalPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
+            }
         });
 
 
 
         dBinding.minusBtn.setOnClickListener(view1 ->{
-            //countNow = Integer.parseInt(dBinding.quantityFromUser.getText().toString());
-            if (countNow>1){
-                countNow --;
-                dBinding.quantityFromUser.setText(String.valueOf(countNow));
-                double oldPrice = Double.parseDouble(dBinding.variantPriceTV.getText().toString());
-                dBinding.variantPriceTV.setText(String.valueOf(oldPrice-Double.parseDouble(variantPrice)));
+            if (dBinding.quantityEt.getText().toString().isEmpty()){
+
+                dBinding.quantityEt.setText("1");
+                dBinding.totalPriceTV.setText(variantPrice);
+
+            } else {
+
+                countNow = Integer.parseInt(dBinding.quantityEt.getText().toString());
+                if (countNow>1){
+                    countNow --;
+                    dBinding.quantityEt.setText(String.valueOf(countNow));
+                    double oldPrice = Double.parseDouble(dBinding.totalPriceTV.getText().toString());
+                    dBinding.totalPriceTV.setText(String.valueOf(oldPrice-Double.parseDouble(variantPrice)));
+                }
+            }
+        });
+
+
+
+        dBinding.quantityEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
+            @Override
+            public void onTextChanged(CharSequence text, int i, int i1, int i2) {
+                if (!text.toString().isEmpty()){
+                    dBinding.totalPriceTV.setText(String.valueOf(Double.parseDouble(dBinding.quantityEt.getText().toString())*Double.parseDouble(variantPrice)));
+                } else {
+                    dBinding.totalPriceTV.setText("0.0");
+                }
+
+                //Setting addon Adapter
+                if (food.getAddons().equals(1)){
+                    //SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
+                    dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {/**/}
+        });
+
+
+
+
+        dBinding.addToCartBtn.setOnClickListener(view1 -> {
+            Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
+            food.setAddonsinfo(new Gson().fromJson(SharedPref.read("addOnslist", ""), type));
+
+            boolean haveToInsert = false;
+
+            if (food.getAddons().equals(1)){
+                addonsTotal = 0.0;
+                for (int i =0; i < food.getAddonsinfo().size(); i++){
+                    addonsTotal += (food.getAddonsinfo().get(i).getAddonsquantity()*Double.parseDouble(food.getAddonsinfo().get(i).getAddonsprice()));
+                }
+                food.setAddOnsTotal(addonsTotal);
+            } else {
+                food.setAddOnsTotal(0.0);
+            }
+
+
+            if (foodtasks.size() > 0){
+
+                for (int l=0; l < foodtasks.size(); l++){
+
+                    if (foodtasks.get(l).getProductId().equals(food.getProductId()) &&
+                            foodtasks.get(l).getVariantName().equals(variantName)) {
+
+                        if (food.getAddonsinfo().size() > 0 && food.getAddonsinfo().size() == foodtasks.get(l).getAddonsinfo().size() &&
+                                new Gson().toJson(food.getAddonsinfo()).contains(new Gson().toJson(foodtasks.get(l).getAddonsinfo()))){
+
+                            for (int a=0; a<foodtasks.get(l).getAddonsinfo().size(); a++){
+
+                                for (int b=0; b<food.getAddonsinfo().size(); b++){
+
+                                    if (foodtasks.get(l).getAddonsinfo().get(a).getAddonsid().equals(food.getAddonsinfo().get(b).getAddonsid())){
+
+                                        foodtasks.get(l).getAddonsinfo().get(a).setAddonsquantity(
+                                                foodtasks.get(l).getAddonsinfo().get(a).getAddonsquantity()
+                                                        + food.getAddonsinfo().get(b).getAddonsquantity());
+                                    }
+                                }
+
+                            }
+
+                            //updating addons Total
+                            for (int c=0; c<food.getAddonsinfo().size(); c++){
+                                foodtasks.get(l).setAddOnsTotal(foodtasks.get(l).getAddOnsTotal()+addonsTotal);
+                            }
+                        }
+
+                        //updating quantity
+                        haveToInsert = false;
+                        foodtasks.get(l).setQuantitys(foodtasks.get(l).getQuantitys()+Integer.parseInt(dBinding.quantityEt.getText().toString()));
+                        updateFood(foodtasks.get(l));
+
+                        break;
+
+                    } else {
+                        haveToInsert = true;
+                    }
+                }
+            } else {
+                haveToInsert = true;
+            }
+
+
+            if (haveToInsert){
+                food.setQuantitys(Integer.parseInt(dBinding.quantityEt.getText().toString()));
+                food.setPrice(variantPrice);
+                food.setVariantName(variantName);
+                food.setVariantid(variantid);
+                insertFood(food);
+            }
+
+
+
+            dialog.dismiss();
+        });
+
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+                getUnit();
+
+                selectedMark.setVisibility(View.GONE);
             }
         });
 
@@ -1255,12 +1353,8 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     @Override
     protected void onResume() {
         super.onResume();
-        //binding.searchEt.setFocusable(false);
-        //parentLay.requestFocus();
-        setFoodCartHeaders();
-        //Utils.hideKeyboard(this);
-        //binding.searchEt.setFocusable(true);
-        //binding.searchEt.setFocusableInTouchMode(true);
+        //setFoodCartHeaders();
+        getUnit();
     }
 
 

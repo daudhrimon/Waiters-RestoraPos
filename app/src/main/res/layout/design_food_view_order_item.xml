@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Total Price:"
-                android:id="@+id/totalPriceTv"
+                android:id="@+id/addon_price_tv"
                 android:textColor="@color/colorRed"
                 android:textSize="13sp"
                 android:textStyle="bold" />

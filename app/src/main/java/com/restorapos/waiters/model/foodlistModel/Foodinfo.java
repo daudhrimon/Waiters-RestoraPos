@@ -3,20 +3,22 @@ package com.restorapos.waiters.model.foodlistModel;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
 import com.restorapos.waiters.offlineDb.Converters;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 public class Foodinfo implements Serializable {
 
-    public int quantitys=0;
+    public int quantitys = 0;
     public String itemNote;
     public String addOnsName;
-    @PrimaryKey (autoGenerate = true)
-    public int id ;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
 
     @SerializedName("ProductsID")
     @Expose
@@ -84,6 +86,22 @@ public class Foodinfo implements Serializable {
     @SerializedName("varientlist")
     @Expose
     private List<Varientlist> varientlist = null;
+
+    public int getQuantitys() {
+        return quantitys;
+    }
+
+    public void setQuantitys(int quantitys) {
+        this.quantitys = quantitys;
+    }
+
+    public String getItemNote() {
+        return itemNote;
+    }
+
+    public void setItemNote(String itemNote) {
+        this.itemNote = itemNote;
+    }
 
     public String getAddOnsName() {
         return addOnsName;

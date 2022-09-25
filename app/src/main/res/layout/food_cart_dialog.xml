@@ -104,7 +104,7 @@
                         android:src="@drawable/ic_minus" />
 
                     <EditText
-                        android:id="@+id/quantityFromUser"
+                        android:id="@+id/quantityEt"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1.4"
@@ -132,7 +132,7 @@
                     android:background="#BCBCBC" />
 
                 <TextView
-                    android:id="@+id/variantPriceTV"
+                    android:id="@+id/totalPriceTV"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -209,7 +209,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_220sdp"
             android:layout_below="@+id/addonsHeader"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <LinearLayout
             android:id="@+id/btnLayout"
@@ -228,9 +228,10 @@
                 android:layout_marginEnd="11dp"
                 android:background="@drawable/border_black"
                 android:backgroundTint="@color/colorRed"
+                android:foreground="?attr/selectableItemBackground"
+                android:maxLines="1"
                 android:paddingHorizontal="10dp"
                 android:text="Add Multiple Variant"
-                android:maxLines="1"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 tools:ignore="TouchTargetSizeCheck" />
@@ -242,8 +243,9 @@
                 android:layout_gravity="right"
                 android:background="@drawable/border_black"
                 android:backgroundTint="@color/colorRed"
-                android:paddingHorizontal="10dp"
+                android:foreground="?attr/selectableItemBackground"
                 android:maxLines="1"
+                android:paddingHorizontal="10dp"
                 android:text="Add To Cart"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"

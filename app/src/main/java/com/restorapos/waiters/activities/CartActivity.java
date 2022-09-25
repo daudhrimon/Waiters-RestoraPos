@@ -457,7 +457,7 @@ public class CartActivity extends AppCompatActivity implements SumInterface {
 
     private void setCartCount() {
         SharedPref.write("CartCount",String.valueOf(foodTasks.size()));
-        SharedPref.write("CartTotal",String.valueOf(grandTotal));
+        SharedPref.write("CartTotal",String.valueOf(sumD));
     }
 
     private boolean isOfferAvailable(String offerstartdate, String offerendate) {

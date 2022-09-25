@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     private List<Foodinfo> foodItems;
     private Context context;
@@ -72,12 +74,18 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
         holder.itemView.setOnClickListener(v -> {
 
-            if (holder.fBinding.selectedMark.getVisibility()==View.VISIBLE){
-                holder.fBinding.selectedMark.setVisibility(View.GONE);
-            }else{
-                holder.fBinding.selectedMark.setVisibility(View.VISIBLE);
+            if (foodItems.get(pos).getPrice().equals("") || foodItems.get(pos).getPrice().equals("0") || foodItems.get(pos).getPrice().equals("0.0")){
 
-                foodDialogInterface.onFoodItemClick(context,foodItems.get(pos),holder.fBinding.selectedMark);
+                Toasty.warning(context,"You can't add this Food to Cart",Toasty.LENGTH_SHORT,true).show();
+            } else {
+                if (holder.fBinding.selectedMark.getVisibility()==View.VISIBLE){
+                    holder.fBinding.selectedMark.setVisibility(View.GONE);
+                }else {
+                    holder.fBinding.selectedMark.setVisibility(View.VISIBLE);
+                    foodDialogInterface.onFoodItemClick(context, foodItems.get(pos), holder.fBinding.selectedMark);
+                }
+            }
+
 
                 /*if (foodtasks.size() == 0) {
                     if (items.get(pos).getAddons().equals(1) || itemss2.size() > 0) {
@@ -203,7 +211,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
                     }
                 }
                 catch (Exception ignored) {*//**//*}*/
-            }
+            //}
         });
     }
 
