@@ -50,7 +50,6 @@ import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
@@ -76,14 +75,12 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     private String variantid = "";
     private String variantName = "";
     private final List<Foodinfo> orderedItems = new ArrayList<>();
-    private int quantity = 0;
     private int countNow= 1;
 
     private FoodDialogInterface foodDialogInterface;
     private FoodAdapter foodAdapter;
     private AppDatabase appDatabase;
     private double addonsTotal = 0.0;
-    private Foodinfo food;
 
     @SuppressLint("NewApi")
     @Override
@@ -102,7 +99,6 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         userId                              = SharedPref.read("ID", "");
         appDatabase                         = DatabaseClient.getInstance(this).getAppDatabase();
         foodDialogInterface                 = this;
-        food                                = new Foodinfo();
         progressDialog                      = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
         MainActivity.appBarDefault();
@@ -340,7 +336,6 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
             SharedPref.write("CartCount", String.valueOf(foodtasks.size()));
             SharedPref.write("CartTotal",cartTotal);
-            SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
 
             setFoodCartHeaders();
 
@@ -425,7 +420,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         }
     }
 
-    private void insertFood(Foodinfo foodinfo) {
+    /*private void insertFood(Foodinfo foodinfo) {
         class AddProduct extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -445,29 +440,9 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         AddProduct st = new AddProduct();
         st.execute();
 
-    }
+    }*/
 
-    private void updateFood(Foodinfo foodinfo) {
-        class AddProduct extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
 
-                appDatabase.taskDao().updateFood(foodinfo);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                getUnit();
-            }
-        }
-        AddProduct st = new AddProduct();
-        st.execute();
-
-    }
 
 
     private void getUnit() {
@@ -1117,11 +1092,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
     @Override
-    public void onFoodItemClick(Context context, Foodinfo foodItem, ImageView selectedMark) {
-        //foodtasks = appDatabase.taskDao().getAllUnit();
-        food = foodItem;
-        addonsTotal = 0.0;
-
+    public void onFoodItemClick(Context context, Foodinfo food, ImageView selectedMark) {
         varientlist = food.getVarientlist();
         List<String> variantNameList = new ArrayList<>();
 
@@ -1148,14 +1119,10 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         dBinding.variantSpinner.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, variantNameList));
 
 
-        /*if (food.getAddons().equals(1)){
-            dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
-        }*/
-
-
         dBinding.closeBtn.setOnClickListener(view1 -> {
             dialog.dismiss();
         });
+
 
 
 
@@ -1177,13 +1144,14 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
                 //Setting addon Adapter
                 if (food.getAddons().equals(1)){
-                    //SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
+                    SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
                     dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {/**/}
         });
+
 
 
 
@@ -1202,6 +1170,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                 dBinding.totalPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
             }
         });
+
 
 
 
@@ -1225,6 +1194,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
 
+
         dBinding.quantityEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
@@ -1238,7 +1208,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
                 //Setting addon Adapter
                 if (food.getAddons().equals(1)){
-                    //SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
+                    SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
                     dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
                 }
             }
@@ -1250,80 +1220,21 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
         dBinding.addToCartBtn.setOnClickListener(view1 -> {
-            Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
-            food.setAddonsinfo(new Gson().fromJson(SharedPref.read("addOnslist", ""), type));
 
-            boolean haveToInsert = false;
-
-            if (food.getAddons().equals(1)){
-                addonsTotal = 0.0;
-                for (int i =0; i < food.getAddonsinfo().size(); i++){
-                    addonsTotal += (food.getAddonsinfo().get(i).getAddonsquantity()*Double.parseDouble(food.getAddonsinfo().get(i).getAddonsprice()));
-                }
-                food.setAddOnsTotal(addonsTotal);
-            } else {
-                food.setAddOnsTotal(0.0);
-            }
-
-
-            if (foodtasks.size() > 0){
-
-                for (int l=0; l < foodtasks.size(); l++){
-
-                    if (foodtasks.get(l).getProductId().equals(food.getProductId()) &&
-                            foodtasks.get(l).getVariantName().equals(variantName)) {
-
-                        if (food.getAddonsinfo().size() > 0 && food.getAddonsinfo().size() == foodtasks.get(l).getAddonsinfo().size() &&
-                                new Gson().toJson(food.getAddonsinfo()).contains(new Gson().toJson(foodtasks.get(l).getAddonsinfo()))){
-
-                            for (int a=0; a<foodtasks.get(l).getAddonsinfo().size(); a++){
-
-                                for (int b=0; b<food.getAddonsinfo().size(); b++){
-
-                                    if (foodtasks.get(l).getAddonsinfo().get(a).getAddonsid().equals(food.getAddonsinfo().get(b).getAddonsid())){
-
-                                        foodtasks.get(l).getAddonsinfo().get(a).setAddonsquantity(
-                                                foodtasks.get(l).getAddonsinfo().get(a).getAddonsquantity()
-                                                        + food.getAddonsinfo().get(b).getAddonsquantity());
-                                    }
-                                }
-
-                            }
-
-                            //updating addons Total
-                            for (int c=0; c<food.getAddonsinfo().size(); c++){
-                                foodtasks.get(l).setAddOnsTotal(foodtasks.get(l).getAddOnsTotal()+addonsTotal);
-                            }
-                        }
-
-                        //updating quantity
-                        haveToInsert = false;
-                        foodtasks.get(l).setQuantitys(foodtasks.get(l).getQuantitys()+Integer.parseInt(dBinding.quantityEt.getText().toString()));
-                        updateFood(foodtasks.get(l));
-
-                        break;
-
-                    } else {
-                        haveToInsert = true;
-                    }
-                }
-            } else {
-                haveToInsert = true;
-            }
-
-
-            if (haveToInsert){
-                food.setQuantitys(Integer.parseInt(dBinding.quantityEt.getText().toString()));
-                food.setPrice(variantPrice);
-                food.setVariantName(variantName);
-                food.setVariantid(variantid);
-                insertFood(food);
-            }
-
-
+            AddFoodToCartHandler(food,dBinding);
 
             dialog.dismiss();
         });
+
+
+
+
+        dBinding.addMultipleBtn.setOnClickListener(view1 -> {
+
+            AddFoodToCartHandler(food,dBinding);
+
+        });
+
 
 
 
@@ -1331,7 +1242,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
 
-                getUnit();
+                SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
 
                 selectedMark.setVisibility(View.GONE);
             }
@@ -1350,11 +1261,173 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
 
+
+
+    private void AddFoodToCartHandler(Foodinfo food, FoodCartDialogBinding dBinding) {
+        Type type = new TypeToken<List<Addonsinfo>>(){/**/}.getType();
+        List<Addonsinfo> addonsList = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
+
+        boolean haveToInsert = false;
+
+        if (food.getAddons().equals(1) && addonsList.size() > 0) {
+            addonsTotal = 0.0;
+            addOnsChecker = 1;
+            for (int i = 0; i < addonsList.size(); i++) {
+                addonsTotal += (addonsList.get(i).getAddonsquantity() * Double.parseDouble(addonsList.get(i).getAddonsprice()));
+            }
+
+        } else {
+            addonsTotal = 0.0;
+            addOnsChecker = 0;
+        }
+
+        //fake new AddonList for Checking
+        List<Addonsinfo> newAddons = new ArrayList<>();
+        for (int n = 0; n < addonsList.size(); n++) {
+            newAddons.add(new Addonsinfo(addonsList.get(n).getAddonsid(), addonsList.get(n).getAddOnName(), addonsList.get(n).getAddonsprice(), 0));
+        }
+
+        if (foodtasks.size() > 0) {
+
+            for (int l = 0; l < foodtasks.size(); l++) {
+
+                if (foodtasks.get(l).getProductId().equals(food.getProductId()) &&
+                        foodtasks.get(l).getVariantName().equals(variantName)) {
+
+                    //fake old AddonList for Checking
+                    List<Addonsinfo> oldAddons = new ArrayList<>();
+                    for (int o = 0; o < foodtasks.get(l).getAddonsinfo().size(); o++) {
+                        oldAddons.add(new Addonsinfo(foodtasks.get(l).getAddonsinfo().get(o).getAddonsid(),
+                                foodtasks.get(l).getAddonsinfo().get(o).getAddOnName(),
+                                foodtasks.get(l).getAddonsinfo().get(o).getAddonsprice(), 0));
+                    }
+
+
+                    if (new Gson().toJson(newAddons).contains(new Gson().toJson(oldAddons))) {
+
+                        for (int a = 0; a < foodtasks.get(l).getAddonsinfo().size(); a++) {
+
+                            for (int b = 0; b < addonsList.size(); b++) {
+
+                                if (foodtasks.get(l).getAddonsinfo().get(a).getAddonsid().equals(addonsList.get(b).getAddonsid())) {
+
+                                    foodtasks.get(l).getAddonsinfo().get(a).setAddonsquantity(
+                                            foodtasks.get(l).getAddonsinfo().get(a).getAddonsquantity()
+                                                    + addonsList.get(b).getAddonsquantity());
+                                }
+                            }
+
+                        }
+                        //updating quantity
+                        haveToInsert = false;
+
+                        foodtasks.get(l).setQuantitys(foodtasks.get(l).getQuantitys() + Integer.parseInt(dBinding.quantityEt.getText().toString()));
+                        foodtasks.get(l).setAddOnsTotal(foodtasks.get(l).getAddOnsTotal() + addonsTotal);
+
+                        updateFood(foodtasks.get(l));
+
+                        break;
+
+                    } else {
+                        haveToInsert = true;
+                    }
+
+                } else {
+                    haveToInsert = true;
+                }
+            }
+        } else {
+            haveToInsert = true;
+        }
+
+
+        if (haveToInsert) {
+            insertFood(food, Integer.parseInt(dBinding.quantityEt.getText().toString()), addonsList);
+        }
+
+        addOnsChecker = 0;
+
+        getUnit();
+    }
+
+
+
+
+
+
+
+    private void insertFood(Foodinfo food, int quantity, List<Addonsinfo> addonsList) {
+        class AddProduct extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                Foodinfo unitListItem = new Foodinfo();
+
+                unitListItem.setProductId(food.getProductId());
+                unitListItem.setProductName(food.getProductName());
+                unitListItem.setVariantid(variantid);
+                unitListItem.setVariantName(variantName);
+                unitListItem.setPrice(variantPrice);
+                unitListItem.setQuantitys(quantity);
+
+                unitListItem.setProductvat(food.getProductvat());
+                unitListItem.setOfferIsavailable(food.getOfferIsavailable());
+                unitListItem.setOfferstartdate(food.getOfferstartdate());
+                unitListItem.setOfferendate(food.getOfferendate());
+                unitListItem.setOffersRate(food.getOffersRate());
+
+                unitListItem.setAddons(addOnsChecker);
+                unitListItem.setAddOnsTotal(addonsTotal);
+                unitListItem.setAddonsinfo(addonsList);
+
+                appDatabase.taskDao().insertFood(unitListItem);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                getUnit();
+            }
+        }
+        AddProduct st = new AddProduct();
+        st.execute();
+
+    }
+
+
+
+    private void updateFood(Foodinfo foodinfo) {
+        class AddProduct extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                appDatabase.taskDao().updateFood(foodinfo);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                getUnit();
+            }
+        }
+        AddProduct st = new AddProduct();
+        st.execute();
+
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
         //setFoodCartHeaders();
         getUnit();
+        SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
     }
 
 
