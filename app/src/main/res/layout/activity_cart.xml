@@ -9,8 +9,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorRed"
+        android:layout_height="@dimen/_43sdp"
+        android:background="@color/theme_color"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -20,42 +20,38 @@
             android:layout_height="@dimen/_34sdp"
             android:layout_marginStart="8dp"
             android:background="@drawable/selector_back"
-            android:padding="8dp"
+            android:padding="@dimen/_6sdp"
             android:src="@drawable/ic_keyboard_backspace_white_24dp" />
 
         <TextView
             android:id="@+id/cartHeader"
-            android:layout_width="@dimen/_196sdp"
+            android:layout_width="@dimen/_189sdp"
             android:layout_height="wrap_content"
-            android:paddingStart="9dp"
+            android:paddingStart="@dimen/_6sdp"
             android:text="Cart"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backId"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/addNewItem"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/selector_green_button"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:backgroundTint="@color/theme_alpha"
             android:gravity="center"
-            android:paddingLeft="@dimen/_2sdp"
-            android:paddingRight="@dimen/_2sdp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="@dimen/_3sdp"
             android:text="Add New Item"
-            android:textColor="@color/colorWhite"
-            android:textSize="12sp"
+            app:rippleColor="@color/red_alpha"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_9sdp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:cornerRadius="@dimen/_7sdp"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
 
@@ -68,14 +64,13 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:paddingTop="@dimen/_3sdp"
             android:paddingBottom="@dimen/_3sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorWhite"
+                android:background="@color/color_white"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/_3sdp"
@@ -87,6 +82,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="@string/cart_info"
+                    android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -95,6 +91,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/size"
+                    android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -103,6 +100,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="@string/unit_price"
+                    android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -111,6 +109,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="@string/quantity"
+                    android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -119,6 +118,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="@string/total_price"
+                    android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -128,21 +128,29 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8"
+            android:paddingHorizontal="6dp"
+            android:paddingTop="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="@color/bg_color"
+            android:elevation="1dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
+            android:layout_marginHorizontal="10dp"
             android:layout_weight="2"
-            android:background="@color/colorWhite"
+            android:background="@color/color_white"
             android:drawableLeft="@drawable/ic_chair"
             android:gravity="center_vertical"
             android:padding="5dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="\t\tSelect Table"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/color_black"
             android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -155,29 +163,20 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/design_tablelist_item" />
 
-        <androidx.cardview.widget.CardView
+        <EditText
+            android:id="@+id/orderNoteEt"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="2"
-            android:background="@color/colorWhite">
-
-            <EditText
-                android:id="@+id/orderNoteEt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="top"
-                android:hint="Order Notes"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:padding="@dimen/_5sdp"
-                android:textSize="15sp"
-                tools:ignore="TouchTargetSizeCheck" />
-        </androidx.cardview.widget.CardView>
+            android:layout_margin="10dp"
+            android:layout_weight="1.9"
+            android:background="@drawable/button_ash_border_background"
+            android:gravity="top"
+            android:hint="Order Notes"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:padding="@dimen/_5sdp"
+            android:textSize="@dimen/_11sdp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -223,7 +222,7 @@
                                 android:id="@+id/customerTypeTv"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/colorWhite"
+                                android:background="@color/color_white"
                                 android:gravity="center"
                                 android:inputType="number"
                                 android:padding="5dp"
@@ -259,7 +258,7 @@
                                 android:id="@+id/tableIds"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/colorWhite"
+                                android:background="@color/color_white"
                                 android:gravity="center"
                                 android:inputType="number"
                                 android:padding="5dp"
@@ -272,14 +271,16 @@
                 <TextView
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/colorBlack" />
+                    android:background="@color/color_black" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
+                    android:animateLayoutChanges="true"
+                    android:animationCache="true"
                     android:orientation="vertical"
-                    android:paddingRight="20dp">
+                    android:paddingHorizontal="@dimen/_3sdp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -302,7 +303,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:padding="5dp"
                             android:text="1"
@@ -324,17 +325,17 @@
                             android:layout_weight="1"
                             android:text="Customer Name"
                             android:textColor="@android:color/black"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/_12sdp" />
 
                         <TextView
                             android:id="@+id/customerNameTv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -352,17 +353,17 @@
                             android:layout_weight="1"
                             android:text="Vat/Tax"
                             android:textColor="@android:color/black"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <TextView
                             android:id="@+id/vatTv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/_11sdp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -380,18 +381,18 @@
                             android:layout_weight="1"
                             android:text="Service Charge"
                             android:textColor="@android:color/black"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <TextView
                             android:id="@+id/serviceChargeTv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:inputType="number"
                             android:padding="5dp"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/_11sdp"
                             android:textStyle="bold"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
@@ -412,7 +413,7 @@
                             android:layout_weight="1"
                             android:text="Discount"
                             android:textColor="@android:color/black"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <!--<EditText
                             android:id="@+id/discountId"
@@ -432,11 +433,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:inputType="number"
                             android:padding="5dp"
-                            android:textSize="14sp"
+                            android:text="0.0"
+                            android:textSize="@dimen/_11sdp"
                             android:textStyle="bold"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -456,7 +458,7 @@
                             android:layout_weight="1"
                             android:text="Grand Total"
                             android:textColor="@android:color/black"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -464,10 +466,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@color/colorWhite"
+                            android:background="@color/color_white"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -479,42 +481,48 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="#303030"
+            android:layout_height="@dimen/_43sdp"
+            android:background="@color/color_dark"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp">
+            android:paddingHorizontal="@dimen/_7sdp"
+            android:paddingVertical="@dimen/_4sdp">
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelBtn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="@dimen/_3sdp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_red_button"
-                android:foreground="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
+                android:backgroundTint="@color/color_red"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetRight="0dp"
+                android:insetLeft="0dp"
+                app:cornerRadius="@dimen/_7sdp"
                 android:gravity="center"
                 android:text="@string/cancel"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/color_white"
+                app:rippleColor="@color/red_alpha"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="ButtonStyle,TouchTargetSizeCheck" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/placeOrderBtn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/_3sdp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_green_button"
-                android:foreground="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
+                android:backgroundTint="@color/color_green"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetRight="0dp"
+                android:insetLeft="0dp"
+                app:cornerRadius="@dimen/_7sdp"
                 android:gravity="center"
                 android:text="@string/place_order"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/color_white"
+                app:rippleColor="@color/green_alpha"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="ButtonStyle,NestedWeights,TouchTargetSizeCheck" />
 

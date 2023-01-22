@@ -13,8 +13,7 @@ import java.util.List;
 
 @Entity
 public class Foodinfo implements Serializable {
-
-    public int quantitys = 0;
+    public float quantitys = 0;
     public String itemNote;
     public String addOnsName;
     @PrimaryKey(autoGenerate = true)
@@ -62,7 +61,15 @@ public class Foodinfo implements Serializable {
     @SerializedName("price")
     @Expose
     private String price;
+    @SerializedName("totalvariant")
+    @Expose
     private String totalvariant;
+    @SerializedName("iscustqty")
+    @Expose
+    private String iscustqty;
+    @SerializedName("iscustomeprice")
+    @Expose
+    private String iscustomeprice;
     @SerializedName("addons")
     @Expose
     private Integer addons;
@@ -79,7 +86,7 @@ public class Foodinfo implements Serializable {
     @SerializedName("addonsinfo")
     @Expose
     private List<Addonsinfo> addonsinfo = null;
-    public int quantity = 0;
+    public float quantity = 0;
     public double addOnsTotal = 0;
 
     @TypeConverters(Converters.class)
@@ -87,11 +94,11 @@ public class Foodinfo implements Serializable {
     @Expose
     private List<Varientlist> varientlist = null;
 
-    public int getQuantitys() {
+    public float getQuantitys() {
         return quantitys;
     }
 
-    public void setQuantitys(int quantitys) {
+    public void setQuantitys(float quantitys) {
         this.quantitys = quantitys;
     }
 
@@ -111,11 +118,11 @@ public class Foodinfo implements Serializable {
         this.addOnsName = addOnsName;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
@@ -269,5 +276,21 @@ public class Foodinfo implements Serializable {
 
     public void setVarientlist(List<Varientlist> varientlist) {
         this.varientlist = varientlist;
+    }
+
+    public String getIscustqty() {
+        return iscustqty;
+    }
+
+    public void setIscustqty(String iscustqty) {
+        this.iscustqty = iscustqty;
+    }
+
+    public String getIscustomeprice() {
+        return iscustomeprice;
+    }
+
+    public void setIscustomeprice(String iscustomeprice) {
+        this.iscustomeprice = iscustomeprice;
     }
 }

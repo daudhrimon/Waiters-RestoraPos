@@ -1,142 +1,144 @@
 package com.restorapos.waiters.model;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Data{
+public class Data {
 
-	@SerializedName("foodinfo")
-	private List<FoodinfoItem> foodinfo;
-	@SerializedName("VAT")
-	@Expose
-	private String vat;
-	@SerializedName("id")
-	@Expose
-	private String id;
+    @SerializedName("foodinfo")
+    private List<FoodinfoItem> foodinfo;
+    @SerializedName("VAT")
+    @Expose
+    private String vat;
+    @SerializedName("id")
+    @Expose
+    private String id;
 
-	@SerializedName("TableId")
-	@Expose
-	private String TableId;
-	@SerializedName("Total")
-	@Expose
-	private double Total;
+    @SerializedName("TableId")
+    @Expose
+    private String TableId;
+    @SerializedName("Total")
+    @Expose
+    private double Total;
 
-	@SerializedName("CustomerID")
-	@Expose
-	private String CustomerID;
+    @SerializedName("CustomerID")
+    @Expose
+    private String CustomerID;
 
-	@SerializedName("TypeID")
-	@Expose
-	private String TypeID;
+    @SerializedName("TypeID")
+    @Expose
+    private String TypeID;
 
-	@SerializedName("ServiceCharge")
-	@Expose
-	private String ServiceCharge;
+    @SerializedName("ServiceCharge")
+    @Expose
+    private String ServiceCharge;
 
-	@SerializedName("Discount")
-	@Expose
-	private String Discount;
-	@SerializedName("CustomerNote")
-	@Expose
-	private String CustomerNote;
+    @SerializedName("Discount")
+    @Expose
+    private String Discount;
+    @SerializedName("CustomerNote")
+    @Expose
+    private String CustomerNote;
 
-	@SerializedName("Grandtotal")
-	@Expose
-	private double Grandtotal;
-	public void setFoodinfo(List<FoodinfoItem> foodinfo){
-		this.foodinfo = foodinfo;
-	}
+    @SerializedName("Grandtotal")
+    @Expose
+    private double Grandtotal;
 
-	public List<FoodinfoItem> getFoodinfo(){
-		return foodinfo;
-	}
+    public void setFoodinfo(List<FoodinfoItem> foodinfo) {
+        this.foodinfo = foodinfo;
+    }
 
-	public String getVat() {
-		return vat;
-	}
+    public List<FoodinfoItem> getFoodinfo() {
+        return foodinfo;
+    }
 
-	public void setVat(String vat) {
-		this.vat = vat;
-	}
+    public String getVat() {
+        return vat;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public void setVat(String vat) {
+        this.vat = vat;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getTableId() {
-		return TableId;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setTableId(String tableId) {
-		TableId = tableId;
-	}
+    public String getTableId() {
+        return TableId;
+    }
 
-	public double getTotal() {
-		return Total;
-	}
+    public void setTableId(String tableId) {
+        TableId = tableId;
+    }
 
-	public void setTotal(double total) {
-		Total = total;
-	}
+    public double getTotal() {
+        return Total;
+    }
 
-	public String getCustomerID() {
-		return CustomerID;
-	}
+    public void setTotal(double total) {
+        Total = total;
+    }
 
-	public void setCustomerID(String customerID) {
-		CustomerID = customerID;
-	}
+    public String getCustomerID() {
+        return CustomerID;
+    }
 
-	public String getTypeID() {
-		return TypeID;
-	}
+    public void setCustomerID(String customerID) {
+        CustomerID = customerID;
+    }
 
-	public void setTypeID(String typeID) {
-		TypeID = typeID;
-	}
+    public String getTypeID() {
+        return TypeID;
+    }
 
-	public String getServiceCharge() {
-		return ServiceCharge;
-	}
+    public void setTypeID(String typeID) {
+        TypeID = typeID;
+    }
 
-	public void setServiceCharge(String serviceCharge) {
-		ServiceCharge = serviceCharge;
-	}
+    public String getServiceCharge() {
+        return ServiceCharge;
+    }
 
-	public String getDiscount() {
-		return Discount;
-	}
+    public void setServiceCharge(String serviceCharge) {
+        ServiceCharge = serviceCharge;
+    }
 
-	public void setDiscount(String discount) {
-		Discount = discount;
-	}
+    public String getDiscount() {
+        return Discount;
+    }
 
-	public String getCustomerNote() {
-		return CustomerNote;
-	}
+    public void setDiscount(String discount) {
+        Discount = discount;
+    }
 
-	public void setCustomerNote(String customerNote) {
-		CustomerNote = customerNote;
-	}
+    public String getCustomerNote() {
+        return CustomerNote;
+    }
 
-	public double getGrandtotal() {
-		return Grandtotal;
-	}
+    public void setCustomerNote(String customerNote) {
+        CustomerNote = customerNote;
+    }
 
-	public void setGrandtotal(double grandtotal) {
-		Grandtotal = grandtotal;
-	}
+    public double getGrandtotal() {
+        return Grandtotal;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"Data{" + 
-			"foodinfo = '" + foodinfo + '\'' + 
-			"}";
-		}
+    public void setGrandtotal(double grandtotal) {
+        Grandtotal = grandtotal;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "Data{" +
+                        "foodinfo = '" + foodinfo + '\'' +
+                        "}";
+    }
 }

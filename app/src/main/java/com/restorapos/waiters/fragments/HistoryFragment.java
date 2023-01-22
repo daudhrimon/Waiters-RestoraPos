@@ -2,15 +2,19 @@ package com.restorapos.waiters.fragments;
 
 import static com.restorapos.waiters.MainActivity.btmNav;
 import static com.restorapos.waiters.MainActivity.rootMenu;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.model.orderHistoryModel.OrderHistoryResponse;
@@ -24,7 +28,9 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
 import java.util.ArrayList;
+
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +48,7 @@ public class HistoryFragment extends Fragment {
 
         btmNav.setVisibility(View.GONE);
         SharedPref.init(getActivity());
-        final SpotsDialog progressDialog=new SpotsDialog(getActivity(),R.style.Custom);
+        final SpotsDialog progressDialog = new SpotsDialog(getActivity(), R.style.Custom);
         progressDialog.show();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -179,7 +185,7 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
-                Log.d("ppp", "onFailure: "+t.getLocalizedMessage());
+                Log.d("ppp", "onFailure: " + t.getLocalizedMessage());
             }
         });
     }
@@ -187,8 +193,6 @@ public class HistoryFragment extends Fragment {
 
     public static final int[] VORDIPLOM_COLORS = {
             Color.rgb(255, 33, 59), Color.rgb(0, 0, 0)};
-
-
 
 
     @Override

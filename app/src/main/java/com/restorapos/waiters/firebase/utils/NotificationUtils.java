@@ -12,11 +12,15 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
+
 import android.text.Html;
+
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.firebase.vo.NotificationVO;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -33,6 +37,7 @@ public class NotificationUtils {
     private static final String ACTIVITY = "activity";
     Map<String, Class> activityMap = new HashMap<>();
     private Context mContext;
+
     public NotificationUtils(Context mContext) {
         this.mContext = mContext;
         //Populate activity map
@@ -65,7 +70,7 @@ public class NotificationUtils {
             if (URL.equals(action)) {
                 Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(destination));
 
-                resultPendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+                resultPendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
             } else if (ACTIVITY.equals(action) && activityMap.containsKey(destination)) {
                 resultIntent = new Intent(mContext, activityMap.get(destination));
 
@@ -74,7 +79,7 @@ public class NotificationUtils {
                                 mContext,
                                 0,
                                 resultIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT
+                                PendingIntent.FLAG_IMMUTABLE
                         );
             } else {
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -83,7 +88,7 @@ public class NotificationUtils {
                                 mContext,
                                 0,
                                 resultIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT
+                                PendingIntent.FLAG_IMMUTABLE
                         );
             }
 
@@ -166,7 +171,7 @@ public class NotificationUtils {
 
     public void playNotificationSound() {
         try {
-           Uri alarmSound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(mContext, alarmSound);
             r.play();
         } catch (Exception e) {

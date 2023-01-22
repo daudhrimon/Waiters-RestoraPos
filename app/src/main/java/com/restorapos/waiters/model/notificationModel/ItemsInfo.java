@@ -3,6 +3,7 @@ package com.restorapos.waiters.model.notificationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.restorapos.waiters.model.viewOrderModel.Addonsinfo;
+
 import java.util.List;
 
 public class ItemsInfo {

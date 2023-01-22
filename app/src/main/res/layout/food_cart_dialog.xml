@@ -23,7 +23,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_1sdp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -31,19 +32,18 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="Variants"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_15sdp" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/closeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_31sdp"
+                    android:layout_height="@dimen/_31sdp"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/selector_search_cross"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_close"
                     android:focusable="true"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="6dp"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_close"
                     android:textSize="21sp"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
@@ -65,7 +65,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Item information" />
+                    android:text="Item information"
+                    android:textSize="@dimen/_11sdp" />
 
                 <View
                     android:layout_width="1dp"
@@ -77,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.1"
                     android:prompt="@string/app_name"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
@@ -90,10 +91,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:gravity="center"
                     android:padding="1dp"
-                    android:weightSum="3">
+                    android:weightSum="3.1">
 
                     <ImageView
                         android:id="@+id/minusBtn"
@@ -101,20 +102,24 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="0.8"
+                        android:foreground="?attr/selectableItemBackground"
                         android:src="@drawable/ic_minus" />
 
                     <EditText
                         android:id="@+id/quantityEt"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4"
+                        android:layout_weight="1.5"
                         android:background="@android:color/transparent"
-                        android:inputType="number"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:focusedByDefault="false"
+                        android:inputType="numberDecimal"
                         android:padding="5dp"
-                        android:text="1"
                         android:textAlignment="center"
                         android:textColor="#000"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="TouchTargetSizeCheck,UnusedAttribute,SpeakableTextPresentCheck" />
 
                     <ImageView
                         android:id="@+id/plusBtn"
@@ -122,6 +127,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="0.8"
+                        android:foreground="?attr/selectableItemBackground"
                         android:src="@drawable/ic_add" />
 
                 </LinearLayout>
@@ -132,14 +138,63 @@
                     android:background="#BCBCBC" />
 
                 <TextView
-                    android:id="@+id/totalPriceTV"
+                    android:id="@+id/totalPriceTv"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.8"
+                    android:layout_weight=".8"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:background="@android:color/transparent"
+                    android:text="0.0"
+                    android:textColor="#000"
+                    android:textSize="@dimen/_11sdp"
+                    tools:ignore="TouchTargetSizeCheck,UnusedAttribute" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customPriceLay"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_31sdp"
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:animationCache="true"
+                android:animateLayoutChanges="true"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/customPriceEt"
+                    android:layout_width="@dimen/_96sdp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:layout_gravity="end"
+                    android:background="@drawable/rounded_border_black"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
                     android:padding="5dp"
-                    android:text="Price" />
+                    android:text="0.0"
+                    android:hint="Enter Price"
+                    android:textColor="#000"
+                    android:textSize="@dimen/_11sdp"
+                    tools:ignore="TouchTargetSizeCheck,UnusedAttribute"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/customPriceBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@drawable/rounded_border_black"
+                    android:drawableStart="@drawable/ic_baseline_arrow_left_24"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="Custom Price"
+                    android:textColor="@color/color_black"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:textSize="@dimen/_11sdp"/>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -156,42 +211,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="12dp"
-                android:text="Add Ons"
-                android:textSize="20sp" />
+                android:text="Add-ons"
+                android:textSize="@dimen/_15sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="AddOns Name"
-                    android:textColor="@color/colorBlack" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="AddOns Price"
-                    android:textColor="@color/colorBlack" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Qty"
-                    android:textColor="@color/colorBlack" />
+                    android:text="Name"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -199,7 +241,26 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Price"
-                    android:textColor="@color/colorBlack" />
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_10sdp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Qty"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_10sdp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Total"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -207,8 +268,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dialogAddonsRv"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_220sdp"
+            android:layout_height="@dimen/_169sdp"
             android:layout_below="@+id/addonsHeader"
+            android:overScrollMode="never"
+            android:visibility="invisible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <LinearLayout
@@ -220,35 +283,36 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <Button
+            <TextView
                 android:id="@+id/addMultipleBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_34sdp"
-                android:layout_gravity="right"
-                android:layout_marginEnd="11dp"
-                android:background="@drawable/border_black"
-                android:backgroundTint="@color/colorRed"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/button_theme"
                 android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
-                android:text="Add Multiple Variant"
-                android:textColor="@color/colorWhite"
-                android:textSize="12sp"
+                android:text="ADD MULTIPLE VARIANT"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/_9sdp"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <Button
+            <TextView
                 android:id="@+id/addToCartBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_34sdp"
-                android:layout_gravity="right"
-                android:background="@drawable/border_black"
-                android:backgroundTint="@color/colorRed"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_gravity="end"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_theme"
                 android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
-                android:text="Add To Cart"
-                android:textColor="@color/colorWhite"
-                android:textSize="12sp"
+                android:text="ADD TO CART"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/_9sdp"
                 tools:ignore="TouchTargetSizeCheck" />
 
         </LinearLayout>

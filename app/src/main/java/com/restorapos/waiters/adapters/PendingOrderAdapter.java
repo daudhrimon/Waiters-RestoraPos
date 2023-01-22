@@ -2,56 +2,79 @@ package com.restorapos.waiters.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.CartActivity;
+import com.restorapos.waiters.databinding.DesignEditViewOrderBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.pendingOrderModel.DataItem;
 import com.restorapos.waiters.offlineDb.DatabaseClient;
 import com.restorapos.waiters.utils.SharedPref;
+
 import java.util.List;
 
-public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapter.ViewHolder> {
-    private List<DataItem> items;
-    private Context context;
+public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapter.OrderViewHolder> {
+    private final List<DataItem> items;
+    private final Context context;
     ViewInterface viewInterface;
 
-    public PendingOrderAdapter(Context applicationContext, List<DataItem> itemArrayList,ViewInterface viewInterface) {
-        this.context = applicationContext;
+    public PendingOrderAdapter(Context context, List<DataItem> itemArrayList, ViewInterface viewInterface) {
+        this.context = context;
         this.items = itemArrayList;
         this.viewInterface = viewInterface;
         SharedPref.init(context);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_pending_order_item, viewGroup, false);
-        return new ViewHolder(view);
+    public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_edit_view_order, parent, false);
+        return new OrderViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.orderId.setText(items.get(i).getOrderId());
-        if (items.get(i).getCustomerName().length() == 1) {
-            viewHolder.customerName.setText("0000" + items.get(i).getCustomerName());
-        } else if (items.get(i).getCustomerName().length() == 2) {
-            viewHolder.customerName.setText("000" + items.get(i).getCustomerName());
-        } else if (items.get(i).getCustomerName().length() == 3) {
-            viewHolder.customerName.setText("00" + items.get(i).getCustomerName());
-        } else if (items.get(i).getCustomerName().length() == 4) {
-            viewHolder.customerName.setText("0" + items.get(i).getCustomerName());
-        } else {
-            viewHolder.customerName.setText(items.get(i).getCustomerName());
+    public void onBindViewHolder(OrderViewHolder holder, int pos) {
+        holder.binding.orderId.setText("Order Id: " + items.get(pos).getOrderId());
+        if (items.get(pos).getTokenno() != null) {
+            holder.binding.token.setText("Token No: " + items.get(pos).getTokenno());
         }
-        viewHolder.table.setText(items.get(i).getTableName());
-        viewHolder.date.setText(items.get(i).getOrderDate());
-        viewHolder.amount.setText(SharedPref.read("CURRENCY", "") + items.get(i).getTotalAmount());
+        if (items.get(pos).getCustomerName().length() == 1) {
+            holder.binding.customerName.setText("0000" + items.get(pos).getCustomerName());
+        } else if (items.get(pos).getCustomerName().length() == 2) {
+            holder.binding.customerName.setText("000" + items.get(pos).getCustomerName());
+        } else if (items.get(pos).getCustomerName().length() == 3) {
+            holder.binding.customerName.setText("00" + items.get(pos).getCustomerName());
+        } else if (items.get(pos).getCustomerName().length() == 4) {
+            holder.binding.customerName.setText("0" + items.get(pos).getCustomerName());
+        } else {
+            holder.binding.customerName.setText(items.get(pos).getCustomerName());
+        }
+        holder.binding.tableTv.setText(items.get(pos).getTableName());
+        holder.binding.dateTv.setText(items.get(pos).getOrderDate());
+        holder.binding.amountTv.setText(SharedPref.read("CURRENCY", "") + items.get(pos).getTotalAmount());
+
+
+        holder.binding.view.setOnClickListener(view -> {
+            viewInterface.viewOrder(items.get(pos).getOrderId());
+        });
+
+
+        holder.binding.edit.setOnClickListener(view -> {
+            Intent intent = new Intent(context, CartActivity.class);
+            SharedPref.write("ORDERID", items.get(pos).getOrderId());
+            intent.putExtra("ORDERID", items.get(pos).getOrderId());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            deleteTable();
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -59,41 +82,11 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView orderId, customerName, table, date, amount;
-        LinearLayout action,edit;
-
-        public ViewHolder(View view) {
+    public class OrderViewHolder extends RecyclerView.ViewHolder {
+        private final DesignEditViewOrderBinding binding;
+        public OrderViewHolder(View view) {
             super(view);
-            orderId = view.findViewById(R.id.orderId);
-            customerName = view.findViewById(R.id.customerId);
-            table = view.findViewById(R.id.tableTv);
-            date = view.findViewById(R.id.dateId);
-            amount = view.findViewById(R.id.amountId);
-            action = view.findViewById(R.id.actionId);
-            edit = view.findViewById(R.id.editId);
-            action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    viewInterface.viewOrder(items.get(pos).getOrderId());
-                    //Toast.makeText(context, items.get(pos).getName(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    Intent intent = new Intent(context, CartActivity.class);
-                    SharedPref.write("ORDERID", items.get(pos).getOrderId());
-                    intent.putExtra("ORDERID", items.get(pos).getOrderId());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    deleteTable();
-                    context.startActivity(intent);
-                    //Toast.makeText(context, items.get(pos).getName(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            binding = DesignEditViewOrderBinding.bind(view);
         }
     }
 

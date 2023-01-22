@@ -29,14 +29,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/poweredId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorRed"
+                android:background="@color/theme_color"
                 android:gravity="center"
-                android:id="@+id/poweredId"
-                android:textColor="@color/colorWhite"
-                android:textSize="16sp"
-                android:paddingTop="@dimen/_10sdp"/>
+                android:paddingTop="@dimen/_10sdp"
+                android:textColor="@color/color_white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

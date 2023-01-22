@@ -1,6 +1,7 @@
 package com.restorapos.waiters.offlineDb;
 
 import android.content.Context;
+
 import androidx.room.Room;
 
 public class DatabaseClient {
@@ -13,7 +14,7 @@ public class DatabaseClient {
     public DatabaseClient(Context mCtx) {
         this.mCtx = mCtx;
 
-        appDatabase= Room.databaseBuilder(mCtx, AppDatabase.class, "restora_cart.db")
+        appDatabase = Room.databaseBuilder(mCtx, AppDatabase.class, "restora_cart.db")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration().build();
     }

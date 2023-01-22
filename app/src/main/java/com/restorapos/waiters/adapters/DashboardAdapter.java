@@ -1,44 +1,62 @@
 package com.restorapos.waiters.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.FoodActivity;
+import com.restorapos.waiters.databinding.DesignDashboardItemBinding;
 import com.restorapos.waiters.model.dashboardModel.DashboardDatum;
 import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.ViewHolder> {
-    private List<DashboardDatum> items;
-    private Context context;
+    private final List<DashboardDatum> items;
+    private final Context context;
 
     //SpotsDialog progressDialog;
-    public DashboardAdapter(Context applicationContext, List<DashboardDatum> itemArrayList) {
-        this.context = applicationContext;
+    public DashboardAdapter(Context context, List<DashboardDatum> itemArrayList) {
+        this.context = context;
         this.items = itemArrayList;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_dashboard_item, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_dashboard_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.categoryName.setText(items.get(i).getName());
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int pos) {
+        holder.binding.categoryName.setText(items.get(pos).getName());
 
-        String url = items.get(i).getCategoryimage();
+        String url = items.get(pos).getCategoryimage();
         if (url != null) {
-            Glide.with(context).load(url).into(viewHolder.categoryImage);
+            Glide.with(context).load(url).into(holder.binding.categoryImage);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FoodActivity.class);
+                intent.putExtra("CATEGORYID", items.get(pos).getCategoryID());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -47,27 +65,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryName;
-        ImageView categoryImage;
-        LinearLayout categoryLay;
-
+        private final DesignDashboardItemBinding binding;
         public ViewHolder(View view) {
             super(view);
-            categoryImage = view.findViewById(R.id.categoryImage);
-            categoryName = view.findViewById(R.id.categoryName);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    Intent intent = new Intent(context, FoodActivity.class);
-                    intent.putExtra("CATEGORYID", items.get(pos).getCategoryID());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            });
-
-
+            binding = DesignDashboardItemBinding.bind(view);
         }
     }
 }

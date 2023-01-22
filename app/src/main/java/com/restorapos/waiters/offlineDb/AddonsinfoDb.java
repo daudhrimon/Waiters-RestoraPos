@@ -2,8 +2,10 @@ package com.restorapos.waiters.offlineDb;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 @Entity
@@ -20,7 +22,8 @@ public class AddonsinfoDb implements Serializable {
     @Expose
     private String addonsprice;
 
-    public int addonsquantity =0;
+    public int addonsquantity = 0;
+
     public String getAddonsid() {
         return addonsid;
     }

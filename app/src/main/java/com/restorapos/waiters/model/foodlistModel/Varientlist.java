@@ -2,6 +2,7 @@ package com.restorapos.waiters.model.foodlistModel;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

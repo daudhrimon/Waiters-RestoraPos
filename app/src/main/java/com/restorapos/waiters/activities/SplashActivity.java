@@ -5,32 +5,29 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.databinding.ActivitySplashBinding;
 import com.restorapos.waiters.utils.SharedPref;
 
 public class SplashActivity extends AppCompatActivity {
-    private ActivitySplashBinding binding;
-
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySplashBinding.inflate(getLayoutInflater());
+        ActivitySplashBinding binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         SharedPref.init(this);
 
         try {
-            PackageInfo pInfo =   this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            String verName = pInfo.versionName;
-            int verCode = pInfo.versionCode;
-            binding.version.setText(String.valueOf("Version : "+verName+"."+verCode));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+            String versionName  = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+            binding.version.setText("Version : " + versionName);
+        } catch (PackageManager.NameNotFoundException e) {/**/}
 
         try {
             SharedPref.write("FOOD", "");
@@ -83,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
     private void navigateToMainActivity() {
         new Handler().postDelayed(() -> {
             Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
-           // SharedPref.write("PP", "ppp");
+            // SharedPref.write("PP", "ppp");
             SplashActivity.this.startActivity(mainIntent);
             SplashActivity.this.finish();
         }, 3000);

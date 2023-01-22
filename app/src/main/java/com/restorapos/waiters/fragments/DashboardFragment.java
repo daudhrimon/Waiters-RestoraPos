@@ -6,15 +6,14 @@ import static com.restorapos.waiters.MainActivity.rootMenu;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.adapters.DashboardAdapter;
@@ -24,7 +23,6 @@ import com.restorapos.waiters.model.dashboardModel.DashboardResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,13 +50,15 @@ public class DashboardFragment extends Fragment {
         SharedPref.init(getContext());
 
 
-        waitersService                      = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
-        dbItems                             = new ArrayList<>();
-        id                                  = SharedPref.read("ID", "");
-        rootMenu                            = false;
-        progressDialog                      = new SpotsDialog(getContext(), R.style.Custom);
-        progressDialog.show();
+        Log.wtf("ID",SharedPref.read("ID", ""));
 
+
+        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        dbItems = new ArrayList<>();
+        id = SharedPref.read("ID", "");
+        rootMenu = false;
+        progressDialog = new SpotsDialog(getContext(), R.style.Custom);
+        progressDialog.show();
 
 
         getDashboardItem();
@@ -70,21 +70,21 @@ public class DashboardFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 search = true;
-                if (search){
+                if (search) {
                     SearchDashboardItem(query);
                 }
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 search = true;
-                if (search){
+                if (search) {
                     SearchDashboardItem(newText);
                 }
                 return false;
             }
         });
-
 
 
         binding.dashSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -95,11 +95,8 @@ public class DashboardFragment extends Fragment {
         });
 
 
-
         return binding.getRoot();
     }
-
-
 
 
     private void getDashboardItem() {
@@ -110,10 +107,10 @@ public class DashboardFragment extends Fragment {
                 try {
                     dbItems.clear();
                     dbItems = response.body().getData();
-                    if (dbItems.size() > 0){
+                    if (dbItems.size() > 0) {
                         binding.swipeAlert.setVisibility(View.GONE);
                         binding.dashboardRecycler.setVisibility(View.VISIBLE);
-                        binding.dashboardRecycler.setAdapter(new DashboardAdapter(getActivity().getApplicationContext(), dbItems));
+                        binding.dashboardRecycler.setAdapter(new DashboardAdapter(getContext(), dbItems));
                     } else {
                         binding.dashboardRecycler.setVisibility(View.GONE);
                         binding.swipeAlert.setVisibility(View.VISIBLE);
@@ -127,6 +124,7 @@ public class DashboardFragment extends Fragment {
                     progressDialog.dismiss();
                 }
             }
+
             @Override
             public void onFailure(Call<DashboardResponse> call, Throwable t) {
                 new Handler().postDelayed(new Runnable() {
@@ -143,8 +141,6 @@ public class DashboardFragment extends Fragment {
     }
 
 
-
-
     private void SearchDashboardItem(String query) {
         if (query != null && !query.isEmpty()) {
             List<DashboardDatum> tempDbItems = new ArrayList<>();
@@ -154,14 +150,12 @@ public class DashboardFragment extends Fragment {
                 }
             }
             binding.dashboardRecycler.setBackgroundColor(Color.parseColor("#ECF0F1"));
-            binding.dashboardRecycler.setAdapter(new DashboardAdapter(getActivity().getApplicationContext(), tempDbItems));
+            binding.dashboardRecycler.setAdapter(new DashboardAdapter(getContext(), tempDbItems));
         } else {
-            binding.dashboardRecycler.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            binding.dashboardRecycler.setAdapter(new DashboardAdapter(getActivity().getApplicationContext(), dbItems));
+            binding.dashboardRecycler.setBackgroundColor(getResources().getColor(R.color.color_white));
+            binding.dashboardRecycler.setAdapter(new DashboardAdapter(getContext(), dbItems));
         }
     }
-
-
 
 
     @Override

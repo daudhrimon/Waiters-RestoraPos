@@ -16,6 +16,7 @@ import com.restorapos.waiters.model.pendingOrderModel.PendingOrderResponse;
 import com.restorapos.waiters.model.tableModel.TableResponse;
 import com.restorapos.waiters.model.updateOrderModel.UpdateOrderResponse;
 import com.restorapos.waiters.model.viewOrderModel.ViewOrderResponse;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -98,9 +99,14 @@ public interface WaitersService {
                                           @Field("CustomerNote") String CustomerNote,
                                           @Field("tablemulti") String tablemulti,
                                           @Field("multiperson") String multiperson,
-                                          @Field("totalperson") String totalperson
-    );
+                                          @Field("totalperson") String totalperson);
 
+    @FormUrlEncoded
+    @POST("modifyfoodcart")
+    Call<PlaceOrderResponse> modifyFoodCart(@Field("id") String id, @Field("VatAmount") String VAT, @Field("TableId") String TableId,
+                                            @Field("Orderid") String Orderid, @Field("ServiceCharge") String ServiceCharge,
+                                            @Field("Discount") String Discount, @Field("Total") String Total,
+                                            @Field("Grandtotal") String Grandtotal, @Field("foodinfo") String foodinfo);
 
     @FormUrlEncoded
     @POST("orderhistory")
@@ -114,13 +120,6 @@ public interface WaitersService {
     @FormUrlEncoded
     @POST("updateorder")
     Call<UpdateOrderResponse> getUpdateOrder(@Field("Orderid") String Orderid);
-
-    @FormUrlEncoded
-    @POST("modifyfoodcart")
-    Call<PlaceOrderResponse> modifyFoodCart(@Field("id") String id, @Field("VatAmount") String VAT, @Field("TableId") String TableId,
-                                            @Field("Orderid") String Orderid, @Field("ServiceCharge") String ServiceCharge,
-                                            @Field("Discount") String Discount, @Field("Total") String Total,
-                                            @Field("Grandtotal") String Grandtotal, @Field("foodinfo") String foodinfo);
 
     @FormUrlEncoded
     @POST("allonlineorder")

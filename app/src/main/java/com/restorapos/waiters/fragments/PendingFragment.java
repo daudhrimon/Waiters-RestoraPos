@@ -4,13 +4,16 @@ import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.btmNav;
 import static com.restorapos.waiters.MainActivity.rootMenu;
 import static com.restorapos.waiters.fragments.OrderFragment.orderSwipe;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
@@ -30,8 +34,10 @@ import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,28 +73,28 @@ public class PendingFragment extends Fragment implements ViewInterface {
         getPendingOrder();
 
         //orderClear();
-        SharedPref.write("RED","3");
+        SharedPref.write("RED", "3");
 
 
         appSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 search = true;
-                if (search){
+                if (search) {
                     customFilterList(query);
                 }
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 search = true;
-                if (search){
+                if (search) {
                     customFilterList(newText);
                 }
                 return false;
             }
         });
-
 
 
         orderSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -99,10 +105,8 @@ public class PendingFragment extends Fragment implements ViewInterface {
         });
 
 
-
         return binding.getRoot();
     }
-
 
 
     private void getPendingOrder() {
@@ -113,10 +117,10 @@ public class PendingFragment extends Fragment implements ViewInterface {
                     if (response.body().getStatus().equals("success")) {
                         Log.d("ppp", "onResponse: " + new Gson().toJson(response.body()));
                         items = response.body().getData();
-                        if (items.size() > 0){
+                        if (items.size() > 0) {
                             binding.emptyLay.setVisibility(View.GONE);
                             binding.pendingRecycler.setVisibility(View.VISIBLE);
-                            pendingOrderAdapter = new PendingOrderAdapter(getActivity().getApplicationContext(), items, PendingFragment.this::viewOrder);
+                            pendingOrderAdapter = new PendingOrderAdapter(getContext(), items, PendingFragment.this::viewOrder);
                             binding.pendingRecycler.setAdapter(pendingOrderAdapter);
                         } else {
                             binding.pendingRecycler.setVisibility(View.GONE);
@@ -152,20 +156,16 @@ public class PendingFragment extends Fragment implements ViewInterface {
     }
 
 
-
-
     @Override
     public void viewOrder(String orderId) {
-        Dialog dialog = new ViewOrderDialog(getContext(),id,orderId,"1","Pending");
+        Dialog dialog = new ViewOrderDialog(getContext(), id, orderId, "1", "Pending");
         dialog.show();
         Window win = dialog.getWindow();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        win.setLayout((14*width)/15,(19*height)/20);
+        win.setLayout((14 * width) / 15, (19 * height) / 20);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
-
 
 
     private void customFilterList(String value) {
@@ -177,16 +177,15 @@ public class PendingFragment extends Fragment implements ViewInterface {
                     newList.add(items.get(i));
                 }
             }
-            pendingOrderAdapter = new PendingOrderAdapter(getActivity().getApplicationContext(), newList, PendingFragment.this::viewOrder);
+            pendingOrderAdapter = new PendingOrderAdapter(getContext(), newList, PendingFragment.this::viewOrder);
             binding.pendingRecycler.setAdapter(pendingOrderAdapter);
 
-        }else {
-            pendingOrderAdapter = new PendingOrderAdapter(getActivity().getApplicationContext(), items, PendingFragment.this::viewOrder);
+        } else {
+            pendingOrderAdapter = new PendingOrderAdapter(getContext(), items, PendingFragment.this::viewOrder);
             binding.pendingRecycler.setAdapter(pendingOrderAdapter);
         }
 
     }
-
 
 
     @Override

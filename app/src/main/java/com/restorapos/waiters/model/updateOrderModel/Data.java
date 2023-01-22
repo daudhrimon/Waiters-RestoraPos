@@ -1,37 +1,38 @@
 package com.restorapos.waiters.model.updateOrderModel;
 
 import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Data{
+public class Data {
 
-	@SerializedName("orderid")
-	private String orderid;
+    @SerializedName("orderid")
+    private String orderid;
 
-	@SerializedName("vat")
-	private String vat;
+    @SerializedName("vat")
+    private String vat;
 
-	@SerializedName("iteminfo")
-	private List<IteminfoItem> iteminfo;
+    @SerializedName("iteminfo")
+    private List<IteminfoItem> iteminfo;
 
-	@SerializedName("discount")
-	private String discount;
+    @SerializedName("discount")
+    private String discount;
 
-	@SerializedName("Grandtotal")
-	private String grandtotal;
+    @SerializedName("Grandtotal")
+    private String grandtotal;
 
-	@SerializedName("Servicecharge")
-	private String servicecharge;
-	@SerializedName("Table")
-	private String table;
-	@SerializedName("customername")
-	private String customername;
+    @SerializedName("Servicecharge")
+    private String servicecharge;
+    @SerializedName("Table")
+    private String table;
+    @SerializedName("customername")
+    private String customername;
 
-	public String getCustomername() {
-		return customername;
-	}
+    public String getCustomername() {
+        return customername;
+    }
 
-	public String getTable() {
+    public String getTable() {
         return table;
     }
 
@@ -39,64 +40,64 @@ public class Data{
         this.table = table;
     }
 
-    public void setOrderid(String orderid){
-		this.orderid = orderid;
-	}
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
+    }
 
-	public String getOrderid(){
-		return orderid;
-	}
+    public String getOrderid() {
+        return orderid;
+    }
 
-	public void setVat(String vat){
-		this.vat = vat;
-	}
+    public void setVat(String vat) {
+        this.vat = vat;
+    }
 
-	public String getVat(){
-		return vat;
-	}
+    public String getVat() {
+        return vat;
+    }
 
-	public void setIteminfo(List<IteminfoItem> iteminfo){
-		this.iteminfo = iteminfo;
-	}
+    public void setIteminfo(List<IteminfoItem> iteminfo) {
+        this.iteminfo = iteminfo;
+    }
 
-	public List<IteminfoItem> getIteminfo(){
-		return iteminfo;
-	}
+    public List<IteminfoItem> getIteminfo() {
+        return iteminfo;
+    }
 
-	public void setDiscount(String discount){
-		this.discount = discount;
-	}
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
 
-	public String getDiscount(){
-		return discount;
-	}
+    public String getDiscount() {
+        return discount;
+    }
 
-	public void setGrandtotal(String grandtotal){
-		this.grandtotal = grandtotal;
-	}
+    public void setGrandtotal(String grandtotal) {
+        this.grandtotal = grandtotal;
+    }
 
-	public String getGrandtotal(){
-		return grandtotal;
-	}
+    public String getGrandtotal() {
+        return grandtotal;
+    }
 
-	public void setServicecharge(String servicecharge){
-		this.servicecharge = servicecharge;
-	}
+    public void setServicecharge(String servicecharge) {
+        this.servicecharge = servicecharge;
+    }
 
-	public String getServicecharge(){
-		return servicecharge;
-	}
+    public String getServicecharge() {
+        return servicecharge;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"Data{" + 
-			"orderid = '" + orderid + '\'' + 
-			",vat = '" + vat + '\'' + 
-			",iteminfo = '" + iteminfo + '\'' + 
-			",discount = '" + discount + '\'' + 
-			",grandtotal = '" + grandtotal + '\'' + 
-			",servicecharge = '" + servicecharge + '\'' + 
-			"}";
-		}
+    @Override
+    public String toString() {
+        return
+                "Data{" +
+                        "orderid = '" + orderid + '\'' +
+                        ",vat = '" + vat + '\'' +
+                        ",iteminfo = '" + iteminfo + '\'' +
+                        ",discount = '" + discount + '\'' +
+                        ",grandtotal = '" + grandtotal + '\'' +
+                        ",servicecharge = '" + servicecharge + '\'' +
+                        "}";
+    }
 }

@@ -1,220 +1,233 @@
 package com.restorapos.waiters.model.updateOrderModel;
 
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
 import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.google.gson.annotations.SerializedName;
 
-public class IteminfoItem{
+public class IteminfoItem {
 
-	public int quantitys=0;
-	@SerializedName("Varientid")
-	private String varientid;
+    public int quantitys = 0;
+    @SerializedName("Varientid")
+    private String varientid;
 
-	@SerializedName("ProductName")
-	private String productName;
+    @SerializedName("ProductName")
+    private String productName;
 
-	@SerializedName("addons")
-	private int addons;
+    @SerializedName("addons")
+    private int addons;
 
-	@SerializedName("offerstartdate")
-	private String offerstartdate;
+    @SerializedName("offerstartdate")
+    private String offerstartdate;
 
-	@SerializedName("ProductImage")
-	private String productImage;
+    @SerializedName("ProductImage")
+    private String productImage;
 
-	@SerializedName("productvat")
-	private String productvat;
+    @SerializedName("productvat")
+    private String productvat;
 
-	@SerializedName("OffersRate")
-	private String offersRate;
+    @SerializedName("OffersRate")
+    private String offersRate;
 
-	@SerializedName("Varientname")
-	private String varientname;
+    @SerializedName("Varientname")
+    private String varientname;
 
-	@SerializedName("destcription")
-	private String destcription;
+    @SerializedName("destcription")
+    private String destcription;
 
-	@SerializedName("offerIsavailable")
-	private String offerIsavailable;
+    @SerializedName("offerIsavailable")
+    private String offerIsavailable;
 
-	@SerializedName("ProductsID")
-	private String productsID;
+    @SerializedName("ProductsID")
+    private String productsID;
 
-	@SerializedName("component")
-	private String component;
+    @SerializedName("component")
+    private String component;
 
-	@SerializedName("addonsinfo")
-	private List<Addonsinfo> addonsinfo;
+    @SerializedName("addonsinfo")
+    private List<Addonsinfo> addonsinfo;
 
-	@SerializedName("price")
-	private String price;
+    @SerializedName("price")
+    private String price;
 
-	@SerializedName("offerendate")
-	private String offerendate;
+    @SerializedName("offerendate")
+    private String offerendate;
 
-	@SerializedName("Itemqty")
-	private String itemqty;
+    @SerializedName("Itemqty")
+    private String itemqty;
 
-	@SerializedName("itemnotes")
-	private String itemnotes;
+    @SerializedName("itemnotes")
+    private String itemnotes;
 
-	public void setVarientid(String varientid){
-		this.varientid = varientid;
-	}
+    @SerializedName("iscustqty")
+    private String iscustqty;
 
-	public String getVarientid(){
-		return varientid;
-	}
+    public void setVarientid(String varientid) {
+        this.varientid = varientid;
+    }
 
-	public void setProductName(String productName){
-		this.productName = productName;
-	}
+    public String getVarientid() {
+        return varientid;
+    }
 
-	public String getProductName(){
-		return productName;
-	}
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-	public void setAddons(int addons){
-		this.addons = addons;
-	}
+    public String getProductName() {
+        return productName;
+    }
 
-	public int getAddons(){
-		return addons;
-	}
+    public void setAddons(int addons) {
+        this.addons = addons;
+    }
 
-	public void setOfferstartdate(String offerstartdate){
-		this.offerstartdate = offerstartdate;
-	}
+    public int getAddons() {
+        return addons;
+    }
 
-	public String getOfferstartdate(){
-		return offerstartdate;
-	}
+    public void setOfferstartdate(String offerstartdate) {
+        this.offerstartdate = offerstartdate;
+    }
 
-	public void setProductImage(String productImage){
-		this.productImage = productImage;
-	}
+    public String getOfferstartdate() {
+        return offerstartdate;
+    }
 
-	public String getProductImage(){
-		return productImage;
-	}
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
 
-	public void setProductvat(String productvat){
-		this.productvat = productvat;
-	}
+    public String getProductImage() {
+        return productImage;
+    }
 
-	public String getProductvat(){
-		return productvat;
-	}
+    public void setProductvat(String productvat) {
+        this.productvat = productvat;
+    }
 
-	public void setOffersRate(String offersRate){
-		this.offersRate = offersRate;
-	}
+    public String getProductvat() {
+        return productvat;
+    }
 
-	public String getOffersRate(){
-		return offersRate;
-	}
+    public void setOffersRate(String offersRate) {
+        this.offersRate = offersRate;
+    }
 
-	public void setVarientname(String varientname){
-		this.varientname = varientname;
-	}
+    public String getOffersRate() {
+        return offersRate;
+    }
 
-	public String getVarientname(){
-		return varientname;
-	}
+    public void setVarientname(String varientname) {
+        this.varientname = varientname;
+    }
 
-	public void setDestcription(String destcription){
-		this.destcription = destcription;
-	}
+    public String getVarientname() {
+        return varientname;
+    }
 
-	public String getDestcription(){
-		return destcription;
-	}
+    public void setDestcription(String destcription) {
+        this.destcription = destcription;
+    }
 
-	public void setOfferIsavailable(String offerIsavailable){
-		this.offerIsavailable = offerIsavailable;
-	}
+    public String getDestcription() {
+        return destcription;
+    }
 
-	public String getOfferIsavailable(){
-		return offerIsavailable;
-	}
+    public void setOfferIsavailable(String offerIsavailable) {
+        this.offerIsavailable = offerIsavailable;
+    }
 
-	public void setProductsID(String productsID){
-		this.productsID = productsID;
-	}
+    public String getOfferIsavailable() {
+        return offerIsavailable;
+    }
 
-	public String getProductsID(){
-		return productsID;
-	}
+    public void setProductsID(String productsID) {
+        this.productsID = productsID;
+    }
 
-	public void setComponent(String component){
-		this.component = component;
-	}
+    public String getProductsID() {
+        return productsID;
+    }
 
-	public String getComponent(){
-		return component;
-	}
+    public void setComponent(String component) {
+        this.component = component;
+    }
 
-	public void setAddonsinfo(List<Addonsinfo> addonsinfo){
-		this.addonsinfo = addonsinfo;
-	}
+    public String getComponent() {
+        return component;
+    }
 
-	public List<Addonsinfo> getAddonsinfo(){
-		return addonsinfo;
-	}
+    public void setAddonsinfo(List<Addonsinfo> addonsinfo) {
+        this.addonsinfo = addonsinfo;
+    }
 
-	public void setPrice(String price){
-		this.price = price;
-	}
+    public List<Addonsinfo> getAddonsinfo() {
+        return addonsinfo;
+    }
 
-	public String getPrice(){
-		return price;
-	}
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
-	public void setOfferendate(String offerendate){
-		this.offerendate = offerendate;
-	}
+    public String getPrice() {
+        return price;
+    }
 
-	public String getOfferendate(){
-		return offerendate;
-	}
+    public void setOfferendate(String offerendate) {
+        this.offerendate = offerendate;
+    }
 
-	public void setItemqty(String itemqty){
-		this.itemqty = itemqty;
-	}
+    public String getOfferendate() {
+        return offerendate;
+    }
 
-	public String getItemqty(){
-		return itemqty;
-	}
+    public void setItemqty(String itemqty) {
+        this.itemqty = itemqty;
+    }
 
-	public void setItemnotes(String itemnotes){
-		this.itemnotes = itemnotes;
-	}
+    public String getItemqty() {
+        return itemqty;
+    }
 
-	public String getItemnotes(){
-		return itemnotes;
-	}
+    public void setItemnotes(String itemnotes) {
+        this.itemnotes = itemnotes;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"IteminfoItem{" + 
-			"varientid = '" + varientid + '\'' + 
-			",productName = '" + productName + '\'' + 
-			",addons = '" + addons + '\'' + 
-			",offerstartdate = '" + offerstartdate + '\'' + 
-			",productImage = '" + productImage + '\'' + 
-			",productvat = '" + productvat + '\'' + 
-			",offersRate = '" + offersRate + '\'' + 
-			",varientname = '" + varientname + '\'' + 
-			",destcription = '" + destcription + '\'' + 
-			",offerIsavailable = '" + offerIsavailable + '\'' + 
-			",productsID = '" + productsID + '\'' + 
-			",component = '" + component + '\'' + 
-			",addonsinfo = '" + addonsinfo + '\'' + 
-			",price = '" + price + '\'' + 
-			",offerendate = '" + offerendate + '\'' + 
-			",itemqty = '" + itemqty + '\'' + 
-			",itemnotes = '" + itemnotes + '\'' + 
-			"}";
-		}
+    public String getItemnotes() {
+        return itemnotes;
+    }
+
+    public String getIscustqty() {
+        return iscustqty;
+    }
+
+    public void setIscustqty(String iscustqty) {
+        this.iscustqty = iscustqty;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "IteminfoItem{" +
+                        "varientid = '" + varientid + '\'' +
+                        ",productName = '" + productName + '\'' +
+                        ",addons = '" + addons + '\'' +
+                        ",offerstartdate = '" + offerstartdate + '\'' +
+                        ",productImage = '" + productImage + '\'' +
+                        ",productvat = '" + productvat + '\'' +
+                        ",offersRate = '" + offersRate + '\'' +
+                        ",varientname = '" + varientname + '\'' +
+                        ",destcription = '" + destcription + '\'' +
+                        ",offerIsavailable = '" + offerIsavailable + '\'' +
+                        ",productsID = '" + productsID + '\'' +
+                        ",component = '" + component + '\'' +
+                        ",addonsinfo = '" + addonsinfo + '\'' +
+                        ",price = '" + price + '\'' +
+                        ",offerendate = '" + offerendate + '\'' +
+                        ",itemqty = '" + itemqty + '\'' +
+                        ",itemnotes = '" + itemnotes + '\'' +
+                        "}";
+    }
 }

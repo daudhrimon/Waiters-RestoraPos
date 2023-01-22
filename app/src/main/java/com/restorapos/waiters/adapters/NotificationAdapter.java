@@ -2,48 +2,55 @@ package com.restorapos.waiters.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.DesignNotificationBinding;
 import com.restorapos.waiters.model.notificationModel.OrderinfoItem;
-import com.restorapos.waiters.utils.NotificationInterface;
+import com.restorapos.waiters.interfaces.NotificationInterface;
+
 import java.util.List;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
-
-    private List<OrderinfoItem> items;
-    private Context context;
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationVH> {
+    private final List<OrderinfoItem> items;
     NotificationInterface notificationInterface;
 
-    public NotificationAdapter(Context applicationContext, List<OrderinfoItem> itemArrayList, NotificationInterface notificationInterface) {
-        this.context = applicationContext;
+    public NotificationAdapter(List<OrderinfoItem> itemArrayList, NotificationInterface notificationInterface) {
         this.items = itemArrayList;
         this.notificationInterface = notificationInterface;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.design_notification, viewGroup, false);
-        return new ViewHolder(view);
+    public NotificationVH onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_notification, viewGroup, false);
+        return new NotificationVH(view);
     }
 
     @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.orderNo.setText(items.get(i).getOrderid());
-        viewHolder.custName.setText(items.get(i).getCustomer());
-        viewHolder.amount.setText(items.get(i).getAmount());
-        viewHolder.accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notificationInterface.acceptOrder(items.get(i).getOrderid());
-            }
+    public void onBindViewHolder(NotificationVH holder, int pos) {
+
+        holder.binding.orderNo.setText(items.get(pos).getOrderid());
+        holder.binding.cusName.setText(items.get(pos).getCustomer());
+        holder.binding.amount.setText(items.get(pos).getAmount());
+
+
+        holder.binding.acceptBtn.setOnClickListener(view -> {
+
+            notificationInterface.acceptOrder(items.get(pos).getOrderid(), null);
+        });
+
+
+        holder.itemView.setOnClickListener(view -> {
+
+            notificationInterface.viewOrder(items.get(pos));
         });
     }
 
@@ -53,20 +60,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.orderNo)
-        TextView orderNo;
-        @BindView(R.id.custName)
-        TextView custName;
-        @BindView(R.id.amount)
-        TextView amount;
-        @BindView(R.id.accept)
-        TextView accept;
-
-        ViewHolder(View view) {
+    public class NotificationVH extends RecyclerView.ViewHolder {
+        private final DesignNotificationBinding binding;
+        NotificationVH(View view) {
             super(view);
-            ButterKnife.bind(this, view);
+            binding = DesignNotificationBinding.bind(view);
         }
     }
 }

@@ -12,19 +12,19 @@ public class TableInfo {
     private String available;
     private String Booked;
 
-    public void setTableId(String tableId){
+    public void setTableId(String tableId) {
         this.tableId = tableId;
     }
 
-    public String getTableId(){
+    public String getTableId() {
         return tableId;
     }
 
-    public void setTableName(String tableName){
+    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
-    public String getTableName(){
+    public String getTableName() {
         return tableName;
     }
 
@@ -53,7 +53,7 @@ public class TableInfo {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return
                 "DataItem{" +
                         "tableId = '" + tableId + '\'' +

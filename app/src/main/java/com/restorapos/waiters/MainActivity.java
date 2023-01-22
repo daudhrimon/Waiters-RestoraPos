@@ -7,11 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.Log;
 import android.view.View;
 
@@ -24,13 +26,16 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.restorapos.waiters.fragments.DashboardFragment;
 import com.restorapos.waiters.fragments.NotificationFragment;
 import com.restorapos.waiters.fragments.HistoryFragment;
@@ -41,41 +46,36 @@ import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@SuppressLint("StaticFieldLeak")
 public class MainActivity extends AppCompatActivity {
     //btmNav
     public static BottomNavigationView btmNav;
     public static BadgeDrawable notifyBadge;
     //drawer
     private DrawerLayout drawer;
-    private View headerView;
     public static TextView menu;
     public static TextView orderList;
     public static TextView completeOrder;
     public static TextView orderHistory;
     public static TextView logout;
-    //appBar
-    private ImageView appMenu;
     public static TextView appHeader;
     public static SearchView appSearchBar;
     private ImageView appSearch;
-    private ImageView appCart;
     public static TextView appCartBadge;
-    public static LinearLayout appSearchLay,appBtnLay;
-    private ImageView appCross;
+    public static LinearLayout appSearchLay, appBtnLay;
     public static Boolean rootMenu;
     private boolean go = true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         SharedPref.init(this);
         SharedPref.write("FOOD", "");
@@ -83,29 +83,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         //btmNav
-        btmNav                          = findViewById(R.id.btmNav);
-        notifyBadge                     = btmNav.getOrCreateBadge(R.id.bNotify);
-        drawer                          = findViewById(R.id.drawer_layout);
+        btmNav = findViewById(R.id.btmNav);
+        notifyBadge = btmNav.getOrCreateBadge(R.id.bNotify);
+        drawer = findViewById(R.id.drawer_layout);
         //appBar initial
-        appMenu                         = findViewById(R.id.appMenu);
-        appHeader                       = findViewById(R.id.appHeader);
-        appSearchBar                    = findViewById(R.id.appSearchBar);
-        appCart                         = findViewById(R.id.appCart);
-        appBtnLay                       = findViewById(R.id.appBtnLay);
-        appSearchLay                    = findViewById(R.id.appSearchLay);
-        appSearch                       = findViewById(R.id.appSearch);
-        appCross                        = findViewById(R.id.appCross);
-        appCartBadge                    = findViewById(R.id.appCartBadge);
+        //appBar
+        ImageView appMenu = findViewById(R.id.appMenu);
+        appHeader = findViewById(R.id.appHeader);
+        appSearchBar = findViewById(R.id.appSearchBar);
+        ImageView appCart = findViewById(R.id.appCart);
+        appBtnLay = findViewById(R.id.appBtnLay);
+        appSearchLay = findViewById(R.id.appSearchLay);
+        appSearch = findViewById(R.id.appSearch);
+        ImageView appCross = findViewById(R.id.appCross);
+        appCartBadge = findViewById(R.id.appCartBadge);
         //Drawer initial
-        NavigationView navigationView   = findViewById(R.id.nav_view);
-        headerView                      = navigationView.getHeaderView(0);
-        menu                            = headerView.findViewById(R.id.menuId);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        menu = headerView.findViewById(R.id.menuId);
         menu.setBackgroundColor(0x30ffffff);
-        logout                          = headerView.findViewById(R.id.logoutId);
-        orderList                       = headerView.findViewById(R.id.orderlistId);
-        completeOrder                   = headerView.findViewById(R.id.completeOrderlistid);
-        orderHistory                    = headerView.findViewById(R.id.orderhistoryId);
-        rootMenu                        = false;
+        logout = headerView.findViewById(R.id.logoutId);
+        orderList = headerView.findViewById(R.id.orderlistId);
+        completeOrder = headerView.findViewById(R.id.completeOrderlistid);
+        orderHistory = headerView.findViewById(R.id.orderhistoryId);
+        rootMenu = false;
 
         notifyBadge.setVisible(false);
 
@@ -121,15 +122,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         appCart.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this.getApplicationContext(), CartActivity.class));
         });
 
 
-
         appSearch.setOnClickListener(view -> {
-            if (appHeader.getVisibility() == View.VISIBLE){
+            if (appHeader.getVisibility() == View.VISIBLE) {
                 appHeader.setVisibility(View.GONE);
                 appBtnLay.setVisibility(View.GONE);
                 appSearchLay.setVisibility(View.VISIBLE);
@@ -139,14 +138,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         appCross.setOnClickListener(view -> {
             appSearchLay.setVisibility(View.GONE);
             appHeader.setVisibility(View.VISIBLE);
             appBtnLay.setVisibility(View.VISIBLE);
             Utils.hideKeyboard(this);
         });
-
 
 
         // Load Fragments
@@ -161,13 +158,8 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.content_main, new OrderFragment(), "ovi")
                         .commit();
                 appBarDefault();
-            } /*else {
-                SharedPref.write("ORDERSTATUS", "2");
-                Intent intent = new Intent(MainActivity.this, ViewOrderActivity.class);
-                intent.putExtra("ORDERID", getIntent().getStringExtra("OVI"));
-                startActivity(intent);
-                appBarDefault();
-            }*/
+            }
+
         } catch (Exception e) {
             try {
                 if (getIntent().getStringExtra("PENDING").equals("1")) {
@@ -187,11 +179,9 @@ public class MainActivity extends AppCompatActivity {
                             .commit();
                     appBarDefault();
                     appHeader.setText("Menu");
-                } catch (Exception ig) {}
+                } catch (Exception ig) {/**/}
             }
         }
-
-
 
 
         //bottom Nav OnClicks
@@ -201,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                if (item.getItemId() != btmNav.getSelectedItemId() && go){
+                if (item.getItemId() != btmNav.getSelectedItemId() && go) {
 
                     switch (item.getItemId()) {
 
@@ -271,8 +261,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
         // drawer On Clicks
 
         menu.setOnClickListener(v -> {
@@ -281,12 +269,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         orderList.setOnClickListener(v -> {
             go = true;
             btmNav.setSelectedItemId(R.id.bOrders);
         });
-
 
 
         completeOrder.setOnClickListener(v -> {
@@ -295,9 +281,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         orderHistory.setOnClickListener(v -> {
-            if (go){
+            if (go) {
                 HistoryFragment historyFragment = new HistoryFragment();
                 getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_main, historyFragment, historyFragment.getTag())
                         .commit();
@@ -311,14 +296,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         logout.setOnClickListener(v -> {
             drawer.closeDrawer(GravityCompat.START);
-            showAlertDialog("Are you sure to logout ?",false);
+            showAlertDialog("Are you sure to Logout ?", false);
         });
-
-
-
 
 
         //drawer views set
@@ -329,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
         TextView profileEmail = headerView.findViewById(R.id.profile_email);
         TextView poweredBy = findViewById(R.id.poweredId);
         String url = loginResponse.getData().getUserPictureURL();
-        Log.d("getUserPictureURL", url);
         if (url != null && !url.isEmpty()) {
             Glide.with(this).load(url).placeholder(R.drawable.logo).error(R.drawable.logo).into(profilePic);
         }
@@ -338,15 +318,9 @@ public class MainActivity extends AppCompatActivity {
         poweredBy.setText(SharedPref.read("POWERBY", ""));
 
 
-
-
         // broadcast receiver
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(MessageReceiver,
-                new IntentFilter("REALDATA"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(MessageReceiver, new IntentFilter("REALDATA"));
     }
-
-
 
 
     private BroadcastReceiver MessageReceiver = new BroadcastReceiver() {
@@ -355,8 +329,6 @@ public class MainActivity extends AppCompatActivity {
             getAllOnlineOrderCount();
         }
     };
-
-
 
 
     private void getAllOnlineOrderCount() {
@@ -368,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     SharedPref.write("NOTIFICATION", new Gson().toJson(response.body()));
                     int notificationSize = response.body().getData().getOrderinfo().size();
-                    if (notificationSize > 0){
+                    if (notificationSize > 0) {
                         notifyBadge.setVisible(true);
                         notifyBadge.setNumber(notificationSize);
                     } else {
@@ -376,12 +348,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } catch (Exception ignored) {/**/}
             }
+
             @Override
             public void onFailure(Call<NotificationResponse> call, Throwable t) {/**/}
         });
     }
-
-
 
 
     @Override
@@ -399,12 +370,8 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, dashboardFragment, dashboardFragment.getTag())
                         .commit();
                 appHeader.setText("Menu");
-            } else {
-               /* SharedPref.write("ORDERSTATUS", "2");
-                Intent intent = new Intent(MainActivity.this, ViewOrderActivity.class);
-                intent.putExtra("ORDERID", SharedPref.read("OVI", ""));
-                startActivity(intent);*/
             }
+
             SharedPref.write("OVI", "");
         } catch (Exception e) {
             try {
@@ -417,8 +384,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     private void setSelectorColor(TextView enable, TextView disable1, TextView disable2, TextView disable3, TextView disable4) {
         enable.setBackgroundColor(0x30ffffff);
         disable1.setBackgroundColor(0x00000000);
@@ -428,8 +393,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     private void showAlertDialog(String message, boolean exit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage(message);
@@ -437,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (exit) {
-                    finish();
+                    finishAffinity();
                 } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     SharedPref.write("LOGGEDIN", "NO");
@@ -462,8 +425,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
@@ -471,40 +432,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(rootMenu){
+        } else if (rootMenu) {
             go = true;
             btmNav.setSelectedItemId(R.id.bMenu);
         } else {
-            showAlertDialog("Are you sure to Exit ?",true);
+            showAlertDialog("Are you sure to Exit ?", true);
         }
     }
 
 
-
-
-    public static void onResumeAppFrags(){
-        appSearchBar.setQuery("",false);
-        if (Integer.parseInt(SharedPref.read("CartCount","0")) > 0){
+    public static void onResumeAppFrags() {
+        appSearchBar.setQuery("", false);
+        if (Integer.parseInt(SharedPref.read("CartCount", "0")) > 0) {
             appCartBadge.setVisibility(View.VISIBLE);
-            appCartBadge.setText(SharedPref.read("CartCount","0"));
+            appCartBadge.setText(SharedPref.read("CartCount", "0"));
         } else {
             appCartBadge.setVisibility(View.GONE);
         }
     }
 
 
-
-
-    public static void appBarDefault(){
+    public static void appBarDefault() {
         appSearchLay.setVisibility(View.GONE);
         appHeader.setVisibility(View.VISIBLE);
         appBtnLay.setVisibility(View.VISIBLE);
-        appSearchBar.setQuery("",false);
+        appSearchBar.setQuery("", false);
     }
 }

@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.databinding.ActivityQrCodeBinding;
 import com.restorapos.waiters.utils.SharedPref;
@@ -23,10 +26,12 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import java.util.List;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class QrCodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
+public class QrCodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ActivityQrCodeBinding binding;
     ZXingScannerView mScannerView;
 
@@ -50,16 +55,16 @@ public class QrCodeActivity extends AppCompatActivity implements ZXingScannerVie
                             Manifest.permission.INTERNET,
                             Manifest.permission.CAMERA
                     ).withListener(new MultiplePermissionsListener() {
-                @Override
-                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                }
+                        }
 
-                @Override
-                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
-                }
-            }).check();
+                        }
+                    }).check();
         }
 
 
@@ -90,7 +95,7 @@ public class QrCodeActivity extends AppCompatActivity implements ZXingScannerVie
 
     @Override
     public void handleResult(Result rawResult) {
-        SharedPref.write("BASEURL",rawResult.getText());
-        startActivity(new Intent(this,LoginActivity.class));
+        SharedPref.write("BASEURL", rawResult.getText());
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

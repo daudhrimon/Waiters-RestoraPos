@@ -1,7 +1,7 @@
 package com.restorapos.waiters.model;
 
 public class TableBookDetails {
-    private int table_num,person;
+    private int table_num, person;
 
     public TableBookDetails() {
     }

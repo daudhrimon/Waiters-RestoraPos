@@ -1,72 +1,75 @@
 package com.restorapos.waiters.adapters;
 
-import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.DesignFoodViewOrderItemBinding;
 import com.restorapos.waiters.model.viewOrderModel.IteminfoItem;
-import com.restorapos.waiters.utils.SharedPref;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
-public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.ViewHolder> {
-    private List<IteminfoItem> items;
-    private Context context;
-    private String orderTag;
+public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.ViewOrderVH> {
+    private final List<IteminfoItem> items;
+    private final String orderTag;
+    private final String currency;
 
-    public ViewOrderAdapter(Context applicationContext, List<IteminfoItem> itemArrayList,String orderTag) {
-        this.context = applicationContext;
-        this.items = itemArrayList;
+    public ViewOrderAdapter(List<IteminfoItem> items, String orderTag, String currency) {
+        this.items = items;
         this.orderTag = orderTag;
-        SharedPref.init(context);
+        this.currency = currency;
     }
 
-    public ViewOrderAdapter(Context applicationContext, List<IteminfoItem> itemArrayList) {
-        this.context = applicationContext;
-        this.items = itemArrayList;
+    @NonNull
+    @Override
+    public ViewOrderVH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_food_view_order_item, parent, false);
+        return new ViewOrderVH(view);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_food_view_order_item, viewGroup, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        if (items.get(i).getAddons()==1){
-            viewHolder.productName.setText(items.get(i).getProductName());
-
-            double x=0;
-            for (int p=0;p<items.get(i).getAddonsinfo().size();p++){
-                if (Integer.parseInt(items.get(i).getAddonsinfo().get(p).getAddOnQty())>0){
-                    //viewHolder.addOnName.setText(items.get(i).getAddonsinfo().get(p).getAddonsName());
-                    viewHolder.addOnName.append(items.get(i).getAddonsinfo().get(p).getAddonsName()+" X "+items.get(i).getAddonsinfo().get(p).getAddOnQty()+",\n");
-                    x=x+Double.parseDouble(items.get(i).getAddonsinfo().get(p).getPrice())*Double.parseDouble(
-                            items.get(i).getAddonsinfo().get(p).getAddOnQty());}
+    public void onBindViewHolder(@NonNull ViewOrderVH holder, int pos) {
+        double addonsTotal = 0.0;
+        if (items.get(pos).getAddons().equals(1)) {
+            for (int i = 0; i < items.get(pos).getAddonsinfo().size(); i++) {
+                if (Integer.parseInt(items.get(pos).getAddonsinfo().get(i).getAddOnQty()) > 0) {
+                    holder.binding.addOnName.append(items.get(pos).getAddonsinfo().get(i).getAddonsName() + " x" + items.get(pos).getAddonsinfo().get(i).getAddOnQty() + "\n");
+                    addonsTotal += Double.parseDouble(items.get(pos).getAddonsinfo().get(i).getPrice()) * Double.parseDouble(items.get(pos).getAddonsinfo().get(i).getAddOnQty());
+                }
             }
-        }
-        else {
-            viewHolder.productName.setText(items.get(i).getProductName());
-        }
-        if (items.get(i).getStatus().equals("Ready")){
-            viewHolder.status.setBackgroundResource(R.drawable.selector_green_button);
-        }
 
-        viewHolder.status.setText(orderTag);
-        viewHolder.sizeTv.setText("Size: "+items.get(i).getVarientname());
-        viewHolder.qty.setText("Quantity: "+String.valueOf(items.get(i).getItemqty()));
+        }
+        holder.binding.productName.setText(items.get(pos).getProductName());
+        if (orderTag.equals("Ready")) {
+            holder.binding.statusTv.setBackgroundResource(R.drawable.shape_ready);
+        }
         try {
-            double price = Double.parseDouble(items.get(i).getPrice()) ;
-            double total = price * Double.parseDouble(items.get(i).getItemqty());
-            viewHolder.totalPrice.setText("Total Price: " +total+SharedPref.read("CURRENCY", ""));
+            if (items.get(pos).getItemqty() != null && !items.get(pos).getItemqty().isEmpty()) {
+                String [] parts = items.get(pos).getItemqty().split("\\.");
+                if (Integer.parseInt(parts[1]) > 0) {
+                    holder.binding.quantityTv.setText("Quantity: " + items.get(pos).getItemqty());
+                } else {
+                    holder.binding.quantityTv.setText("Quantity: " + parts[0]);
+                }
+            }
+        }catch (Exception e) {
+            holder.binding.quantityTv.setText("Quantity: " + items.get(pos).getItemqty());
         }
-        catch (Exception e){
-            viewHolder.totalPrice.setText("Total Price: "+"0"+SharedPref.read("CURRENCY", ""));
+        try {
+            holder.binding.statusTv.setText(orderTag);
+            holder.binding.sizeTv.setText("Size: " + items.get(pos).getVarientname());
+        } catch (Exception e) {/**/}
+        try {
+            double total = (Double.parseDouble(items.get(pos).getPrice()) * Double.parseDouble(items.get(pos).getItemqty())) + addonsTotal;
+            holder.binding.totalPriceTv.setText("Total Price: " + currency + new DecimalFormat("#.##").format(total));
+        } catch (Exception e) {
+            holder.binding.totalPriceTv.setText("Total Price: " + currency + "0.0");
         }
-
     }
 
     @Override
@@ -74,17 +77,11 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.View
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, qty, totalPrice, sizeTv,status,addOnName;
-        public ViewHolder(View view) {
+    public class ViewOrderVH extends RecyclerView.ViewHolder {
+        private final DesignFoodViewOrderItemBinding binding;
+        public ViewOrderVH(View view) {
             super(view);
-            productName = view.findViewById(R.id.productNameId);
-            qty = view.findViewById(R.id.quantityTv);
-            totalPrice = view.findViewById(R.id.totalPriceTv);
-            sizeTv = view.findViewById(R.id.sizeId);
-            addOnName = view.findViewById(R.id.addOnNameId);
-            status = view.findViewById(R.id.status);
-
+            binding = DesignFoodViewOrderItemBinding.bind(view);
         }
     }
 }

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorBlack">#000</color>
-    <color name="colorWhite">#fff</color>
-    <color name="colorRed">#ff213b</color>
-    <color name="redSelector">#E1ACB3</color>
-    <color name="colorGreen">#79d13e</color>
-    <color name="greenSelector">#D1E3C4</color>
+    <color name="color_black">#000000</color>
+    <color name="color_dark">#303030</color>
+    <color name="color_white">#fff</color>
+    <color name="theme_color">#17973E</color>
+    <color name="food_alpha">#3817973E</color>
+    <color name="theme_alpha">#AECF96</color>
+    <color name="color_red">#ff213b</color>
+    <color name="red_alpha">#E1ACB3</color>
+    <color name="color_green">#17973E</color>
+    <color name="green_alpha">#AECF96</color>
+    <color name="bg_color">#F0F0F0</color>
 </resources>

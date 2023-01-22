@@ -7,6 +7,9 @@ public class ReadyorderData {
     @SerializedName("order_id")
     @Expose
     private String orderId;
+    @SerializedName("tokenno")
+    @Expose
+    private String tokenno;
     @SerializedName("total_people")
     @Expose
     private String totalPeople;
@@ -29,6 +32,14 @@ public class ReadyorderData {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getTokenno() {
+        return tokenno;
+    }
+
+    public void setTokenno(String tokenno) {
+        this.tokenno = tokenno;
     }
 
     public String getTotalPeople() {

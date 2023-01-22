@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +18,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Order No." />
+            android:text="Order No."
+            android:textSize="@dimen/_10sdp"/>
 
         <View
             android:layout_width="1dp"
@@ -26,12 +28,13 @@
 
 
         <TextView
-            android:id="@+id/custName"
+            android:id="@+id/cusName"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
-            android:text="Customer Name" />
+            android:text="Customer Name"
+            android:textSize="@dimen/_10sdp"/>
 
         <View
             android:layout_width="1dp"
@@ -45,7 +48,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Amount" />
+            android:text="Amount"
+            android:textSize="@dimen/_10sdp"/>
 
         <View
             android:layout_width="1dp"
@@ -54,20 +58,20 @@
 
 
         <TextView
-            android:id="@+id/accept"
+            android:id="@+id/acceptBtn"
             android:layout_width="0dp"
             android:layout_height="@dimen/_26sdp"
             android:layout_margin="@dimen/_6sdp"
             android:layout_weight="1"
-            android:background="@drawable/selector_red_button"
+            android:background="@drawable/button_theme"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:text="Accept"
-            android:clickable="true"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_9sdp"
-            tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
-            android:focusable="true" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

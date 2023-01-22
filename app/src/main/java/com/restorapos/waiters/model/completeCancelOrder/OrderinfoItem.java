@@ -2,72 +2,83 @@ package com.restorapos.waiters.model.completeCancelOrder;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OrderinfoItem{
+public class OrderinfoItem {
 
-	@SerializedName("TableName")
-	private String tableName;
+    @SerializedName("TableName")
+    private String tableName;
 
-	@SerializedName("CustomerName")
-	private String customerName;
+    @SerializedName("CustomerName")
+    private String customerName;
 
-	@SerializedName("TotalAmount")
-	private String totalAmount;
+    @SerializedName("TotalAmount")
+    private String totalAmount;
 
-	@SerializedName("order_id")
-	private String orderId;
+    @SerializedName("order_id")
+    private String orderId;
 
-	@SerializedName("OrderDate")
-	private String orderDate;
+    @SerializedName("tokenno")
+    private String tokenno;
 
-	public void setTableName(String tableName){
-		this.tableName = tableName;
-	}
+    @SerializedName("OrderDate")
+    private String orderDate;
 
-	public String getTableName(){
-		return tableName;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public String getCustomerName(){
-		return customerName;
-	}
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-	public void setTotalAmount(String totalAmount){
-		this.totalAmount = totalAmount;
-	}
+    public String getCustomerName() {
+        return customerName;
+    }
 
-	public String getTotalAmount(){
-		return totalAmount;
-	}
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-	public void setOrderId(String orderId){
-		this.orderId = orderId;
-	}
+    public String getTotalAmount() {
+        return totalAmount;
+    }
 
-	public String getOrderId(){
-		return orderId;
-	}
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
-	public void setOrderDate(String orderDate){
-		this.orderDate = orderDate;
-	}
+    public String getOrderId() {
+        return orderId;
+    }
 
-	public String getOrderDate(){
-		return orderDate;
-	}
+    public String getTokenno() {
+        return tokenno;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"OrderinfoItem{" + 
-			"tableName = '" + tableName + '\'' + 
-			",customerName = '" + customerName + '\'' + 
-			",totalAmount = '" + totalAmount + '\'' + 
-			",order_id = '" + orderId + '\'' + 
-			",orderDate = '" + orderDate + '\'' + 
-			"}";
-		}
+    public void setTokenno(String tokenno) {
+        this.tokenno = tokenno;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "OrderinfoItem{" +
+                        "tableName = '" + tableName + '\'' +
+                        ",customerName = '" + customerName + '\'' +
+                        ",totalAmount = '" + totalAmount + '\'' +
+                        ",order_id = '" + orderId + '\'' +
+                        ",orderDate = '" + orderDate + '\'' +
+                        "}";
+    }
 }

@@ -3,13 +3,16 @@ package com.restorapos.waiters.fragments;
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.rootMenu;
 import static com.restorapos.waiters.fragments.OrderFragment.orderSwipe;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
@@ -28,8 +32,10 @@ import com.restorapos.waiters.model.Readyorder.ReadyorderData;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,15 +75,16 @@ public class ReadyFragment extends Fragment implements ViewInterface {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 search = true;
-                if (search){
+                if (search) {
                     customfilterList(query);
                 }
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 search = true;
-                if (search){
+                if (search) {
                     customfilterList(newText);
                 }
                 return false;
@@ -115,8 +122,6 @@ public class ReadyFragment extends Fragment implements ViewInterface {
         });
 
 
-
-
         return binding.getRoot();
     }
 
@@ -125,31 +130,31 @@ public class ReadyFragment extends Fragment implements ViewInterface {
         List<ReadyorderData> newList = new ArrayList<>();
         if (value != null && !value.isEmpty()) {
             newList.clear();
-            if(items.size()!= 0){
+            if (items.size() != 0) {
                 for (int i = 0; i < items.size(); i++) {
                     if (items.get(i).getOrderId().toLowerCase().startsWith(value.toLowerCase())) {
                         newList.add(items.get(i));
                     }
                 }
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), newList, ReadyFragment.this::viewOrder);
+                readyOrderAdapter = new ReadyOrderAdapter(getContext(), newList, ReadyFragment.this::viewOrder);
                 binding.readyRecycler.setAdapter(readyOrderAdapter);
 
-            }else {
-                readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyFragment.this::viewOrder);
+            } else {
+                readyOrderAdapter = new ReadyOrderAdapter(getContext(), items, ReadyFragment.this::viewOrder);
                 binding.readyRecycler.setAdapter(readyOrderAdapter);
             }
         }
 
     }
 
-    private void getAllReadyOrder(final int start){
-        waitersService.getAllReadyOrder(id,start).enqueue(new Callback<ReadyOrderResponse>() {
+
+    private void getAllReadyOrder(final int start) {
+        waitersService.getAllReadyOrder(id, start).enqueue(new Callback<ReadyOrderResponse>() {
             @Override
             public void onResponse(Call<ReadyOrderResponse> call, Response<ReadyOrderResponse> response) {
-//                Log.d("ppp", "onResponse: " + response.body().getReadyOrderOtherInfo().getTotalorder());
-                int starts = start + 10;
-                if (response.body().getStatus().equals("success")){
-                    if(response.body().getReadyOrderOtherInfo().getTotalorder()!=null){
+                if (response.body().getStatus().equals("success")) {
+                    int starts = start + 10;
+                    if (response.body().getReadyOrderOtherInfo().getTotalorder() != null) {
                         if (starts > response.body().getReadyOrderOtherInfo().getTotalorder()) {
                             binding.nextBtn.setVisibility(View.GONE);
                         } else {
@@ -157,10 +162,10 @@ public class ReadyFragment extends Fragment implements ViewInterface {
                         }
                     }
                     items = response.body().getReadyOrderOtherInfo().getReadyOrderData();
-                    if (items.size() > 0){
+                    if (items.size() > 0) {
                         binding.emptyLay.setVisibility(View.GONE);
                         binding.readyRecycler.setVisibility(View.VISIBLE);
-                        readyOrderAdapter = new ReadyOrderAdapter(getActivity().getApplicationContext(), items, ReadyFragment.this::viewOrder);
+                        readyOrderAdapter = new ReadyOrderAdapter(getContext(), items, ReadyFragment.this::viewOrder);
                         binding.readyRecycler.setAdapter(readyOrderAdapter);
                     } else {
                         binding.readyRecycler.setVisibility(View.GONE);
@@ -193,21 +198,16 @@ public class ReadyFragment extends Fragment implements ViewInterface {
     }
 
 
-
-
-
     @Override
     public void viewOrder(String orderId) {
-        Dialog dialog = new ViewOrderDialog(getContext(),id,orderId,"3","Ready");
+        Dialog dialog = new ViewOrderDialog(getContext(), id, orderId, "3", "Ready");
         dialog.show();
         Window win = dialog.getWindow();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        win.setLayout((14*width)/15,(19*height)/20);
+        win.setLayout((14 * width) / 15, (19 * height) / 20);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
-
 
 
     @Override

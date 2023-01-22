@@ -5,28 +5,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
 import com.google.gson.Gson;
 import com.restorapos.waiters.adapters.ViewOrderAdapter;
-import com.restorapos.waiters.databinding.CustomAlertViewBinding;
+import com.restorapos.waiters.databinding.DialogViewOrdersBinding;
 import com.restorapos.waiters.model.viewOrderModel.IteminfoItem;
 import com.restorapos.waiters.model.viewOrderModel.ViewOrderResponse;
 import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
+
+import java.text.DecimalFormat;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ViewOrderDialog extends Dialog {
-    private CustomAlertViewBinding binding;
-    private WaitersService waitersService;
-    private String waiterId;
-    private String orderId;
+    private DialogViewOrdersBinding binding;
+    private final String waiterId;
+    private final String orderId;
     private String currency;
-    private String orderStatus;
-    private String orderTag;
+    private final String orderStatus;
+    private final String orderTag;
 
     public ViewOrderDialog(Context context, String waiterId, String orderId, String orderStatus, String orderTag) {
         super(context);
@@ -39,38 +39,38 @@ public class ViewOrderDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = CustomAlertViewBinding.inflate(getLayoutInflater());
+        binding = DialogViewOrdersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         SharedPref.init(getContext());
 
-        waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
+        WaitersService waitersService = AppConfig.getRetrofit(getContext()).create(WaitersService.class);
         currency = SharedPref.read("CURRENCY", "");
 
         binding.crossBtn.setOnClickListener(view -> dismiss());
 
 
-        Log.wtf("ViewOrder Info: ","WaiterId: "+waiterId+" ,OrderStatus: "+orderStatus+" ,Order Id: "+orderId);
+        Log.wtf("ViewOrder Info: ", "WaiterId: " + waiterId + " ,OrderStatus: " + orderStatus + " ,Order Id: " + orderId + " ,Tag: " + orderTag);
 
 
-        waitersService.viewOrder(waiterId,orderStatus, orderId).enqueue(new Callback<ViewOrderResponse>() {
+        waitersService.viewOrder(waiterId, orderStatus, orderId).enqueue(new Callback<ViewOrderResponse>() {
             @Override
             public void onResponse(Call<ViewOrderResponse> call, Response<ViewOrderResponse> response) {
                 Log.d("TAG", "onResponse: " + new Gson().toJson(response.body()));
                 try {
                     List<IteminfoItem> items = response.body().getData().getIteminfo();
-                    if (items.size() > 0){
+                    if (items.size() > 0) {
                         binding.foodCartRecycler.setVisibility(View.VISIBLE);
-                        binding.foodCartRecycler.setAdapter(new ViewOrderAdapter(getContext(), items,orderTag));
+                        binding.foodCartRecycler.setAdapter(new ViewOrderAdapter(items, orderTag, currency));
                     }
-                    binding.vatTv.setText(response.body().getData().getVAT()+currency);
-                    binding.totalTv.setText(response.body().getData().getSubtotal()+currency);
-                    binding.grandTotalTv.setText(response.body().getData().getOrderTotal()+currency);
-                    binding.discountTv.setText(response.body().getData().getDiscount()+currency);
-                    binding.serviceChargeTv.setText(response.body().getData().getServiceCharge()+currency);
-                    binding.orderDateTv.setText("Date: " + response.body().getData().getOrderdate());
+                    DecimalFormat df = new DecimalFormat("#.##");
                     binding.tableTv.setText("Table No: " + response.body().getData().getTableName());
-                } catch (Exception ignored) {
-                }
+                    binding.orderDateTv.setText("Date: " + response.body().getData().getOrderdate());
+                    binding.totalTv.setText(currency + df.format(Double.parseDouble(response.body().getData().getSubtotal())));
+                    binding.vatTv.setText(currency + df.format(Double.parseDouble(response.body().getData().getVAT())));
+                    binding.serviceChargeTv.setText(currency + df.format(Double.parseDouble(response.body().getData().getServiceCharge())));
+                    binding.discountTv.setText(currency + df.format(Double.parseDouble(response.body().getData().getDiscount())));
+                    binding.grandTotalTv.setText(currency + df.format(Double.parseDouble(response.body().getData().getOrderTotal())));
+                } catch (Exception ignored) {/**/}
             }
 
             @Override

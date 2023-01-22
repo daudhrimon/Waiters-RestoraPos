@@ -2,13 +2,17 @@ package com.restorapos.waiters.firebase.service;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.firebase.utils.NotificationUtils;
 import com.restorapos.waiters.firebase.vo.NotificationVO;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -24,17 +28,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String SHARED_PREF_NAME = "com.restorapos.waiters";
 
-   /*@Override
+    @Override
     public void onNewToken(String Token) {
         super.onNewToken(Token);
-       sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-       editor = sp.edit();
-       editor.putString("keytoken", Token);
-       editor.apply();
-       FirebaseMessaging.getInstance().subscribeToTopic("global");
-       Log.wtf("NEW TOKEN", Token);
-       Log.wtf("NEW TOKEN", sp.getString("keytoken", ""));
-    }*/
+        sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        editor = sp.edit();
+        editor.putString("TOKEN", Token);
+        editor.apply();
+        Log.wtf("NEW TOKEN", sp.getString("TOKEN", ""));
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

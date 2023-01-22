@@ -1,12 +1,9 @@
 <resources>
-    <string name="app_name">Restora POS Waiters</string>
+    <string name="app_name">RestoraPOS Waiters</string>
     <string name="app_dev">Powered by RestoraPos</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="BASE_URL">https://restorapos.com/newrpos/V1/</string>
-
     <string name="cancel">Cancel</string>
     <string name="place_order">Place Order</string>
     <string name="view_your_cart">View Your Cart</string>

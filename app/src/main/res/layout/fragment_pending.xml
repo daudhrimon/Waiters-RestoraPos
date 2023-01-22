@@ -13,10 +13,9 @@
         android:id="@+id/pendingRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="6dp"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/design_pending_order_item" />
+        tools:listitem="@layout/design_edit_view_order" />
 
     <LinearLayout
         android:id="@+id/emptyLay"
@@ -27,8 +26,8 @@
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/_111sdp"
-            android:layout_height="@dimen/_111sdp"
+            android:layout_width="@dimen/_96sdp"
+            android:layout_height="@dimen/_96sdp"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_remove_shopping_cart_black_24dp" />
 
@@ -37,8 +36,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="No Pending order available"
-            android:textColor="@color/colorRed"
-            android:textSize="@dimen/_13sdp" />
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/_12sdp" />
 
     </LinearLayout>
 

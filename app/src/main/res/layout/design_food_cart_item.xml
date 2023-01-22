@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/_4sdp"
-    android:background="@color/colorWhite">
+    android:background="@color/color_white"
+    app:cardBackgroundColor="@color/bg_color"
+    app:cardCornerRadius="@dimen/_6sdp"
+    app:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/_3sdp">
+        android:padding="@dimen/_4sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Product Name" />
+                android:text="Product Name"
+                android:textSize="@dimen/_11sdp"/>
 
 
             <TextView
@@ -34,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Size" />
+                android:text="Size"
+                android:textSize="@dimen/_11sdp"/>
 
             <TextView
                 android:id="@+id/unitPriceTv"
@@ -42,93 +48,103 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Unit Price" />
+                android:text="Unit Price"
+                android:textSize="@dimen/_11sdp"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.1"
                 android:gravity="center">
 
                 <TextView
                     android:id="@+id/minusBtn"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/button_red_border_background"
+                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="-"
-                    android:textColor="@color/colorRed" />
+                    android:textColor="@color/theme_color" />
 
                 <TextView
                     android:id="@+id/quantityTv"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
                     android:gravity="center_horizontal"
-                    android:text="1" />
+                    android:text="1"
+                    android:textSize="@dimen/_11sdp"/>
 
                 <TextView
                     android:id="@+id/plusBtn"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/button_red_border_background"
+                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="+"
-                    android:textColor="@color/colorRed" />
+                    android:textColor="@color/theme_color" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/totalPriceTv"
+                android:id="@+id/totalPriceEt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="00" />
+                android:text="00"
+                android:textSize="@dimen/_11sdp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
+
             <TextView
-                android:layout_weight="1"
+                android:id="@+id/variantTv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginRight="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:paddingLeft="@dimen/_5sdp"
                 android:paddingRight="@dimen/_5sdp"
                 android:text="1:2"
                 android:textAlignment="viewStart"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/colorRed"
-                android:id="@+id/variantTv"
-                android:gravity="center"
-                tools:ignore="RtlCompat" />
+                android:textColor="@color/theme_color"
+                tools:ignore="RtlCompat"
+                android:textSize="@dimen/_11sdp"/>
 
             <TextView
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1.1" />
 
             <TextView
-                android:layout_weight="1"
+                android:id="@+id/noteShowTv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginRight="@dimen/_10sdp"
+                android:layout_weight=".9"
                 android:background="@drawable/rounded_border_black"
+                android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
                 android:paddingLeft="@dimen/_5sdp"
                 android:paddingRight="@dimen/_5sdp"
                 android:text="Notes"
-                android:id="@+id/noteShowTv"
-                android:gravity="center"
-                android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"/>
+                android:textSize="@dimen/_11sdp"/>
 
         </LinearLayout>
+
         <EditText
             android:id="@+id/itemNoteEt"
             android:layout_width="match_parent"
@@ -137,10 +153,13 @@
             android:background="@drawable/button_ash_border_background"
             android:gravity="top"
             android:hint="Notes"
-            android:visibility="gone"
-            android:lines="2"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="2"
             android:padding="@dimen/_5sdp"
-            android:textSize="15sp" />
+            android:textSize="@dimen/_11sdp"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

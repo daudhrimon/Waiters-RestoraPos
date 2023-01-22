@@ -3,6 +3,7 @@ package com.restorapos.waiters.model.appModel;
 import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class AppFoodInfo {
@@ -28,9 +29,9 @@ public class AppFoodInfo {
     @Expose
     private List<Addonsinfo> addonsinfo = null;
 
-    public int quantity =0;
-    public double total=0;
-    public int addonsqty=0;
+    public int quantity = 0;
+    public double total = 0;
+    public int addonsqty = 0;
 
     public String getProductName() {
         return productName;

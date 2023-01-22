@@ -3,13 +3,16 @@ package com.restorapos.waiters.fragments;
 import static com.restorapos.waiters.MainActivity.appSearchBar;
 import static com.restorapos.waiters.MainActivity.btmNav;
 import static com.restorapos.waiters.MainActivity.rootMenu;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
@@ -17,10 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.activities.ViewOrderDialog;
-import com.restorapos.waiters.adapters.CompleteCancelOrderAdapter;
+import com.restorapos.waiters.adapters.ComCanOrderAdapter;
 import com.restorapos.waiters.databinding.FragmentCompleteBinding;
 import com.restorapos.waiters.interfaces.ViewInterface;
 import com.restorapos.waiters.model.completeCancelOrder.CompleteCancelResponse;
@@ -31,6 +35,7 @@ import com.restorapos.waiters.utils.SharedPref;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +48,7 @@ public class CompleteFragment extends Fragment implements ViewInterface {
     private String id;
     private int start = 0;
     private SpotsDialog progressDialog;
-    private CompleteCancelOrderAdapter completeCancelOrderAdapter;
+    private ComCanOrderAdapter comCanOrderAdapter;
     private List<OrderinfoItem> items = new ArrayList<>();
 
     @Override
@@ -65,30 +70,28 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         progressDialog.show();
 
 
-
         getCompleteOrder(start);
-
 
 
         appSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 search = true;
-                if (search){
+                if (search) {
                     customFilterList(query);
                 }
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 search = true;
-                if (search){
+                if (search) {
                     customFilterList(newText);
                 }
                 return false;
             }
         });
-
 
 
         binding.nextBtn.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +107,6 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         });
 
 
-
         binding.prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +119,6 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         });
 
 
-
         binding.cOrderSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -127,11 +128,8 @@ public class CompleteFragment extends Fragment implements ViewInterface {
         });
 
 
-
         return binding.getRoot();
     }
-
-
 
 
     private void customFilterList(String value) {
@@ -144,12 +142,12 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                         newList.add(items.get(i));
                     }
                 }
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), newList, CompleteFragment.this::viewOrder);
-                binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
+                comCanOrderAdapter = new ComCanOrderAdapter(getContext(), newList, CompleteFragment.this::viewOrder);
+                binding.completeRecycler.setAdapter(comCanOrderAdapter);
 
             } else {
-                completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
-                binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
+                comCanOrderAdapter = new ComCanOrderAdapter(getContext(), items, CompleteFragment.this::viewOrder);
+                binding.completeRecycler.setAdapter(comCanOrderAdapter);
             }
         }
 
@@ -161,7 +159,7 @@ public class CompleteFragment extends Fragment implements ViewInterface {
             public void onResponse(Call<CompleteCancelResponse> call, Response<CompleteCancelResponse> response) {
                 try {
                     if (response.body().getStatus().equals("success")) {
-                        Log.d("ppppfdddddd",""+start);
+                        Log.d("ppppfdddddd", "" + start);
                         Log.d("pppffff", "onResponse: " + response.body().getData().getTotalorder());
                         int starts = start + 10;
                         if (starts > response.body().getData().getTotalorder()) {
@@ -170,11 +168,11 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                             binding.nextBtn.setVisibility(View.VISIBLE);
                         }
                         items = response.body().getData().getOrderinfo();
-                        if (items.size() > 0){
+                        if (items.size() > 0) {
                             binding.emptyLay.setVisibility(View.GONE);
                             binding.completeRecycler.setVisibility(View.VISIBLE);
-                            completeCancelOrderAdapter = new CompleteCancelOrderAdapter(getActivity().getApplicationContext(), items, CompleteFragment.this::viewOrder);
-                            binding.completeRecycler.setAdapter(completeCancelOrderAdapter);
+                            comCanOrderAdapter = new ComCanOrderAdapter(getContext(), items, CompleteFragment.this::viewOrder);
+                            binding.completeRecycler.setAdapter(comCanOrderAdapter);
                         } else {
                             progressDialog.dismiss();
                             binding.completeRecycler.setVisibility(View.GONE);
@@ -196,6 +194,7 @@ public class CompleteFragment extends Fragment implements ViewInterface {
                     progressDialog.dismiss();
                 }
             }
+
             @Override
             public void onFailure(Call<CompleteCancelResponse> call, Throwable t) {
                 new Handler().postDelayed(new Runnable() {
@@ -213,20 +212,16 @@ public class CompleteFragment extends Fragment implements ViewInterface {
     }
 
 
-
-
     @Override
     public void viewOrder(String orderId) {
-        Dialog dialog = new ViewOrderDialog(getContext(),id,orderId,"4","Completed");
+        Dialog dialog = new ViewOrderDialog(getContext(), id, orderId, "4", "Completed");
         dialog.show();
         Window win = dialog.getWindow();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        win.setLayout((14*width)/15,(19*height)/20);
+        win.setLayout((14 * width) / 15, (19 * height) / 20);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
-
 
 
     @Override

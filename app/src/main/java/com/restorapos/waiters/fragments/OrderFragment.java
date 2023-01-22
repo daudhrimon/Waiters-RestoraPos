@@ -8,16 +8,20 @@ import static com.restorapos.waiters.MainActivity.menu;
 import static com.restorapos.waiters.MainActivity.orderHistory;
 import static com.restorapos.waiters.MainActivity.orderList;
 import static com.restorapos.waiters.MainActivity.rootMenu;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
 import com.restorapos.waiters.utils.SharedPref;
@@ -50,36 +54,32 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         rootMenu = true;
 
 
-
-        try{
-            if (SharedPref.read("RED","").equals("2")){
+        try {
+            if (SharedPref.read("RED", "").equals("2")) {
                 getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, new ProcessingFragment(), "ovi")
                         .commit();
-                processing.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                processing.setBackgroundColor(getResources().getColor(R.color.theme_color));
                 btmNav.setSelectedItemId(R.id.bProcess);
                 MainActivity.appBarDefault();
                 appHeader.setText("Processing Orders");
                 go = 2;
-            }
-            else{
+            } else {
                 PendingFragment pendingFragment = new PendingFragment();
                 getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).add(R.id.orderContainer, pendingFragment, pendingFragment.getTag())
                         .commit();
-                pending.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                pending.setBackgroundColor(getResources().getColor(R.color.theme_color));
                 btmNav.setSelectedItemId(R.id.bOrders);
                 MainActivity.appBarDefault();
                 appHeader.setText("Pending Orders");
                 go = 1;
             }
-        }
-        catch (Exception ignored){/**/}
+        } catch (Exception ignored) {/**/}
         pending.setOnClickListener(this);
         processing.setOnClickListener(this);
         complete.setOnClickListener(this);
         cancel.setOnClickListener(this);
         return view;
     }
-
 
 
     @Override
@@ -90,10 +90,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                     PendingFragment pendingFragment = new PendingFragment();
                     getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, pendingFragment, pendingFragment.getTag())
                             .commit();
-                    processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    pending.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    complete.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    cancel.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                    processing.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    pending.setBackgroundColor(getResources().getColor(R.color.theme_color));
+                    complete.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    cancel.setBackgroundColor(getResources().getColor(R.color.color_dark));
                     MainActivity.appBarDefault();
                     appHeader.setText("Pending Orders");
                     go = 1;
@@ -104,10 +104,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                     ProcessingFragment processingFragment = new ProcessingFragment();
                     getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, processingFragment, processingFragment.getTag())
                             .commit();
-                    processing.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    complete.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    cancel.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                    processing.setBackgroundColor(getResources().getColor(R.color.theme_color));
+                    pending.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    complete.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    cancel.setBackgroundColor(getResources().getColor(R.color.color_dark));
                     MainActivity.appBarDefault();
                     appHeader.setText("Processing Orders");
                     go = 2;
@@ -118,10 +118,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                     ReadyFragment readyFragment = new ReadyFragment();
                     getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, readyFragment, readyFragment.getTag())
                             .commit();
-                    processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    complete.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    cancel.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                    processing.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    pending.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    complete.setBackgroundColor(getResources().getColor(R.color.theme_color));
+                    cancel.setBackgroundColor(getResources().getColor(R.color.color_dark));
                     MainActivity.appBarDefault();
                     appHeader.setText("Ready Orders");
                     go = 3;
@@ -132,10 +132,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                     CancelFragment cancelFragment = new CancelFragment();
                     getParentFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.orderContainer, cancelFragment, cancelFragment.getTag())
                             .commit();
-                    processing.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    pending.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    complete.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                    cancel.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    processing.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    pending.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    complete.setBackgroundColor(getResources().getColor(R.color.color_dark));
+                    cancel.setBackgroundColor(getResources().getColor(R.color.theme_color));
                     MainActivity.appBarDefault();
                     appHeader.setText("Cancel Orders");
                     go = 4;

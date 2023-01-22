@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp">
+    android:layout_marginTop="40dp"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="Display qr code and scan it here"
-        android:textColor="@color/colorBlack"
-        android:textSize="18sp"
         android:gravity="center"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+        android:text="Display qr code and scan it here"
+        android:textColor="@color/color_black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,17 +29,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription=""
-            android:scaleType="fitXY"
             android:padding="@dimen/_20sdp"
+            android:scaleType="fitXY"
             app:srcCompat="@drawable/qr_code_instraction"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
 
         <LinearLayout
+            android:id="@+id/scanContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/scanContainer">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtBarcodeValue"
@@ -47,11 +47,12 @@
                 android:layout_height="100dp"
                 android:text="No Barcode Detected"
                 android:textSize="20sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <SurfaceView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp" />
 
         </LinearLayout>
 
@@ -59,28 +60,30 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="@dimen/_15sdp"
-        android:gravity="center">
-        <TextView
+        android:gravity="center"
+        android:padding="@dimen/_15sdp">
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/scanBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_red_button"
+            android:layout_height="@dimen/_44sdp"
             android:layout_gravity="center"
+            android:backgroundTint="@color/theme_color"
+            app:rippleColor="@color/theme_alpha"
+            android:gravity="center"
             android:text="Scan"
-            android:paddingLeft="@dimen/_50sdp"
-            android:paddingRight="@dimen/_50sdp"
-            android:paddingTop="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_10sdp"
-            android:textAlignment="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="@dimen/_7sdp"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/_13sdp"
             android:textStyle="bold" />
+
     </LinearLayout>
 
 </LinearLayout>

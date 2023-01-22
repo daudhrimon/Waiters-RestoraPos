@@ -1,8 +1,6 @@
 package com.restorapos.waiters.activities;
 
-import static android.content.ContentValues.TAG;
 import android.content.Intent;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +18,6 @@ import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.restorapos.waiters.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -34,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private SpotsDialog progressDialog;
     private String serviceType;
-    private String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,46 +41,34 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog = new SpotsDialog(this, R.style.Custom);
 
 
-
-        if (SharedPref.read("BASEURL", "").isEmpty()) {
-            SharedPref.write("BASEURL", getString(R.string.BASE_URL));
+        if (SharedPref.read("BASEURL", "") == null ||
+                SharedPref.read("BASEURL", "").isEmpty()) {
+            SharedPref.write("BASEURL","https://restorapos.com/newrpos/V1/");
         }
 
         try {
-            FirebaseMessaging.getInstance().getToken() //get firebase token
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.wtf(TAG, "Fetching FCM registration token failed", task.getException());
-                                return;
-                            }
-                            TOKEN = task.getResult();
-                            FirebaseMessaging.getInstance().subscribeToTopic("global");
-                            Log.wtf("TOKEN",TOKEN);
-                        }
-                    });
-
             binding.loginBtn.setOnClickListener(v -> {
-                if (!Patterns.EMAIL_ADDRESS.matcher(binding.emailEt.getText().toString()).matches()){
+                if (!Patterns.EMAIL_ADDRESS.matcher(binding.emailEt.getText().toString()).matches()) {
                     binding.emailEt.setError("Enter an email address");
                     binding.emailEt.requestFocus();
                     return;
                 }
-                if (binding.passwordEt.getText().toString().length() < 5){
+                if (binding.passwordEt.getText().toString().length() < 5) {
                     binding.passwordEt.setError("Password is too short");
                     binding.passwordEt.requestFocus();
                     return;
                 }
-                if (TOKEN == null){
+
+                if (SharedPref.read("TOKEN","") == null || SharedPref.read("TOKEN","").isEmpty()) {
                     Toasty.warning(this, "Something went wrong, in this case you will not be able to get notifications", Toast.LENGTH_SHORT).show();
                 }
+
                 progressDialog.show();
                 signIN();
             });
 
             binding.resetBtn.setOnClickListener(view -> {
-                SharedPref.write("BASEURL", "");
+                SharedPref.write("BASEURL","https://restorapos.com/newrpos/V1/");
                 startActivity(new Intent(LoginActivity.this, QrCodeActivity.class));
             });
 
@@ -94,13 +76,13 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             warning();
         }
-
-
     }
 
     private void signIN() {
+        Log.wtf("TOKEN", SharedPref.read("TOKEN",""));
+
         WaitersService waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
-        waitersService.doSignIn(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString(), TOKEN).
+        waitersService.doSignIn(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString(), SharedPref.read("TOKEN","")).
                 enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -117,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPref.write("POWERBY", loginResponse.getData().getPowerBy());
                                 SharedPref.write("CURRENCY", loginResponse.getData().getCurrencysign());
                                 SharedPref.write("tableMap", loginResponse.getData().getTablemaping());
-                                SharedPref.write("vat", String.valueOf(Double.parseDouble(loginResponse.getData().getVat())/100));
-                                Log.wtf("VAT",String.valueOf(Double.parseDouble(loginResponse.getData().getVat())/100));
+                                SharedPref.write("vat", String.valueOf(Double.parseDouble(loginResponse.getData().getVat()) / 100));
+                                Log.wtf("VAT", String.valueOf(Double.parseDouble(loginResponse.getData().getVat()) / 100));
                                 serviceType = loginResponse.getData().getServiceChargeType();
                                 String serviceCharge = loginResponse.getData().getServicecharge();
                                 double serviceChargechange = Double.parseDouble(serviceCharge);
@@ -142,9 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             progressDialog.dismiss();
-                            Toasty.error(LoginActivity.this,e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(LoginActivity.this, "Something went wrong, in this case you will not be able to get notifications", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         progressDialog.dismiss();
@@ -152,8 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 
 
     private void warning() {

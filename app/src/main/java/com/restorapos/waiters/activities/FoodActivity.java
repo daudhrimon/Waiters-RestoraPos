@@ -10,6 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -25,15 +27,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-
 import com.google.gson.reflect.TypeToken;
 import com.restorapos.waiters.MainActivity;
 import com.restorapos.waiters.R;
+import com.restorapos.waiters.databinding.DesignSubCategoryItemBinding;
+import com.restorapos.waiters.databinding.FoodCartDialogBinding;
 import com.restorapos.waiters.adapters.AddOnsItemAdapter;
 import com.restorapos.waiters.adapters.FoodAdapter;
 import com.restorapos.waiters.databinding.ActivityFoodBinding;
-import com.restorapos.waiters.databinding.DesignSubCategoryItemBinding;
-import com.restorapos.waiters.databinding.FoodCartDialogBinding;
 import com.restorapos.waiters.interfaces.FoodDialogInterface;
 import com.restorapos.waiters.model.foodlistModel.Addonsinfo;
 import com.restorapos.waiters.model.foodlistModel.Categoryinfo;
@@ -46,40 +47,36 @@ import com.restorapos.waiters.retrofit.AppConfig;
 import com.restorapos.waiters.retrofit.WaitersService;
 import com.restorapos.waiters.utils.SharedPref;
 import com.google.gson.Gson;
-
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FoodActivity extends AppCompatActivity implements FoodDialogInterface {
     private ActivityFoodBinding binding;
-    private int orderQuantity = 0;
     private String pCategoryId;
     private String userId;
     private WaitersService waitersService;
-    private List<Foodinfo> foodtasks;
+    private List<Foodinfo> foodTask;
     private final String TAG = "FoodActivity";
     private SpotsDialog progressDialog;
     private List<Foodinfo> foodItems;
-    //private List<Foodinfo2> itemss2;
-
-    public static int addOnsChecker = 0;
-    //private String selecTedVariants;
-    private List<Varientlist> varientlist;
-    private String variantPrice = "";
-    private String variantid = "";
-    private String variantName = "";
-    private final List<Foodinfo> orderedItems = new ArrayList<>();
-    private int countNow= 1;
-
+    /////////////////////////////////
     private FoodDialogInterface foodDialogInterface;
     private FoodAdapter foodAdapter;
     private AppDatabase appDatabase;
+    ////////////////////////////////
+    public static int addOnsChecker = 0;
+    private List<Varientlist> variantList;
+    private String variantPrice = "";
+    private String variantId = "";
+    private String variantName = "";
+    private float countNow = 1.0F;
     private double addonsTotal = 0.0;
 
     @SuppressLint("NewApi")
@@ -89,20 +86,16 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         binding = ActivityFoodBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         SharedPref.init(this);
 
-
-        //itemss2                             = new ArrayList<>();
-        waitersService                      = AppConfig.getRetrofit(this).create(WaitersService.class);
-        pCategoryId                         = getIntent().getStringExtra("CATEGORYID");
-        userId                              = SharedPref.read("ID", "");
-        appDatabase                         = DatabaseClient.getInstance(this).getAppDatabase();
-        foodDialogInterface                 = this;
-        progressDialog                      = new SpotsDialog(this, R.style.Custom);
+        waitersService = AppConfig.getRetrofit(this).create(WaitersService.class);
+        pCategoryId = getIntent().getStringExtra("CATEGORYID");
+        userId = SharedPref.read("ID", "");
+        appDatabase = DatabaseClient.getInstance(this).getAppDatabase();
+        foodDialogInterface = this;
+        progressDialog = new SpotsDialog(this, R.style.Custom);
         progressDialog.show();
         MainActivity.appBarDefault();
-
 
         //getAllFoodItemWithMultipleVariant();
 
@@ -113,14 +106,12 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         getAllFoodItem();
 
 
-
         binding.viewCartTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(FoodActivity.this, CartActivity.class));
             }
         });
-
 
 
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
@@ -132,14 +123,15 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         });
 
 
-
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 customFilterList(charSequence.toString());
             }
+
             @Override
             public void afterTextChanged(Editable editable) {/**/}
         });
@@ -148,13 +140,10 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     }
 
 
-
     private void setFoodCartHeaders() {
-        binding.countTv.setText(SharedPref.read("CartCount","0"));
-        binding.totalTv.setText(SharedPref.read("CURRENCY", "")+" "+SharedPref.read("CartTotal","0.0"));
+        binding.countTv.setText(SharedPref.read("CartCount", "0"));
+        binding.totalTv.setText(SharedPref.read("CURRENCY", "") + " " + SharedPref.read("CartTotal", "0.0"));
     }
-
-
 
 
     private void customFilterList(String value) {
@@ -166,9 +155,9 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                     newList.add(foodItems.get(i));
                 }
             }
-            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, newList,foodDialogInterface));
+            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, newList, foodDialogInterface));
         } else {
-            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface));
+            binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems, foodDialogInterface));
         }
     }
 
@@ -198,9 +187,6 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     }*/
 
 
-
-
-
     public void getSubCategoryItem() {
         waitersService.foodSubCategory(userId, pCategoryId).enqueue(new Callback<FoodlistResponse>() {
             @Override
@@ -213,13 +199,11 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                     Log.d("qqq", "Exc: " + e.getLocalizedMessage());
                 }
             }
+
             @Override
             public void onFailure(Call<FoodlistResponse> call, Throwable t) {/**/}
         });
     }
-
-
-
 
 
     public void getAllFoodItem() {
@@ -236,7 +220,7 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        foodAdapter = new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface);
+                        foodAdapter = new FoodAdapter(FoodActivity.this, foodItems, foodDialogInterface);
                         binding.foodRecycler.setAdapter(foodAdapter);
                         progressDialog.dismiss();
                     } else {
@@ -266,9 +250,6 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     }
 
 
-
-
-
     private void getFoodItem(final String categoryId) {
         Log.d("ppp455", "getFoodItem: " + categoryId);
         waitersService.foodItem(userId, categoryId, pCategoryId).enqueue(new Callback<FoodlistResponse>() {
@@ -286,12 +267,10 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
                             binding.foodRecycler.setVisibility(View.VISIBLE);
                             binding.emptyLay.setVisibility(View.GONE);
                         }
-                        binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems,foodDialogInterface));
+                        binding.foodRecycler.setAdapter(new FoodAdapter(FoodActivity.this, foodItems, foodDialogInterface));
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-
-
                     } else {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
@@ -322,20 +301,17 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
     }
 
 
-
-
-
     private void getFoodCart() {
         try {
             double Total = 0.0;
-            for (int i = 0; i < foodtasks.size(); i++) {
-                Total += (Double.parseDouble(foodtasks.get(i).getPrice()) * foodtasks.get(i).quantitys) + foodtasks.get(i).getAddOnsTotal();
+            for (int i = 0; i < foodTask.size(); i++) {
+                Total += (Double.parseDouble(foodTask.get(i).getPrice()) * foodTask.get(i).quantitys) + foodTask.get(i).getAddOnsTotal();
             }
 
             String cartTotal = String.valueOf(Double.valueOf(new DecimalFormat("##.##").format(Total)));
 
-            SharedPref.write("CartCount", String.valueOf(foodtasks.size()));
-            SharedPref.write("CartTotal",cartTotal);
+            SharedPref.write("CartCount", String.valueOf(foodTask.size()));
+            SharedPref.write("CartTotal", cartTotal);
 
             setFoodCartHeaders();
 
@@ -344,42 +320,40 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
 
 
     public class FoodSubCategoryAdapter extends RecyclerView.Adapter<FoodSubCategoryAdapter.ViewHolder> implements Filterable {
-
-        private List<Categoryinfo> items;
-        private Context context;
+        private final List<Categoryinfo> items;
         int row_index = 0;
 
         public FoodSubCategoryAdapter(Context applicationContext, List<Categoryinfo> itemArrayList) {
             SharedPref.init(applicationContext);
-            this.context = applicationContext;
             this.items = itemArrayList;
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_sub_category_item, viewGroup, false);
             return new ViewHolder(view);
         }
 
         @SuppressLint("RecyclerView")
         @Override
-        public void onBindViewHolder(ViewHolder holder, int i) {
-            holder.sBinding.subCategory.setText(items.get(i).getName());
+        public void onBindViewHolder(ViewHolder holder, int pos) {
+            holder.sBinding.subCategory.setText(items.get(pos).getName());
             holder.sBinding.subCategory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    row_index = i;
+                    row_index = pos;
                     notifyDataSetChanged();
                     progressDialog.show();
-                    if (items.get(i).getName().equals("All")) {
+                    if (items.get(pos).getName().equals("All")) {
                         getAllFoodItem();
                     } else {
-                        Log.d("hahahaah",items.get(i).getCategoryID());
-                        getFoodItem(items.get(i).getCategoryID());
+                        Log.d("hahahaah", items.get(pos).getCategoryID());
+                        getFoodItem(items.get(pos).getCategoryID());
                     }
                 }
             });
-            if (row_index == i) {
+            if (row_index == pos) {
                 holder.sBinding.selector.setVisibility(View.VISIBLE);
 
             } else {
@@ -399,20 +373,17 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         }
 
         private Filter exampleFilter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+            @Override protected FilterResults performFiltering(CharSequence constraint) {
                 List<Foodinfo> filteredList = new ArrayList<>();
                 FilterResults results = new FilterResults();
                 results.values = filteredList;
                 return results;
             }
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {/**/}
+            @Override protected void publishResults(CharSequence constraint, FilterResults results) {/**/}
         };
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private DesignSubCategoryItemBinding sBinding;
-
+            private final DesignSubCategoryItemBinding sBinding;
             public ViewHolder(View view) {
                 super(view);
                 sBinding = DesignSubCategoryItemBinding.bind(view);
@@ -420,50 +391,17 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         }
     }
 
-    /*private void insertFood(Foodinfo foodinfo) {
-        class AddProduct extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                appDatabase.taskDao().insertFood(foodinfo);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                getUnit();
-            }
-        }
-        AddProduct st = new AddProduct();
-        st.execute();
-
-    }*/
-
-
-
 
     private void getUnit() {
         class GetProduct extends AsyncTask<Void, Void, List<Foodinfo>> {
-
-            @Override
-            protected List<Foodinfo> doInBackground(Void... voids) {
-
+            @Override protected List<Foodinfo> doInBackground(Void... voids) {
                 List<Foodinfo> productList = appDatabase.taskDao().getAllUnit();
-
-                foodtasks = productList;
-
+                foodTask = productList;
                 return productList;
             }
-
-            @Override
-            protected void onPostExecute(List<Foodinfo> tasks) {
+            @Override protected void onPostExecute(List<Foodinfo> tasks) {
                 super.onPostExecute(tasks);
-
-                foodtasks = tasks;
-
+                foodTask = tasks;
                 getFoodCart();
             }
         }
@@ -471,802 +409,206 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         gt.execute();
     }
 
-    private void deleteFood(Foodinfo foodinfo) {
-        class DeleteTask extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                appDatabase.taskDao().delete(foodinfo);
-
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                getUnit();
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-    /*public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
-        private List<Foodinfo> items;
-        private Context context;
-        List<Addonsinfo> addOnsitems;
-
-
-        public FoodAdapter(Context applicationContext, List<Foodinfo> itemArrayList, List<AppFoodInfo> itemss) {
-            SharedPref.init(context);
-            this.context = applicationContext;
-            this.items = itemArrayList;
-            addOnsitems = new ArrayList<>();
-            Log.d("checklistfood",new Gson().toJson(itemArrayList));
-        }
-
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design_foods_item, viewGroup, false);
-            return new ViewHolder(view);
-        }
-
-        @SuppressLint("RecyclerView")
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int i) {
-
-            String url = items.get(i).getProductImage();
-            if (url != null) {
-                Glide.with(context).load(url).into(holder.fBinding.categoryImage);
-            }
-
-            holder.fBinding.categoryName.setText(items.get(i).getProductName());
-            holder.fBinding.price.setText(SharedPref.read("CURRENCY", "") + " " + items.get(i).getPrice());
-            holder.fBinding.notes.setText(items.get(i).getDestcription());
-            holder.fBinding.varient.setText(items.get(i).getVariantName());
-
-
-            if (items.get(i).getOfferIsavailable() != null) {
-                if (items.get(i).getOfferIsavailable().equals("1") && isOfferAvailable2(items.get(i).getOfferstartdate(), items.get(i).getOfferendate())) {
-                    holder.fBinding.offerLay.setVisibility(View.VISIBLE);
-                    holder.fBinding.offerRate.setText(items.get(i).getOffersRate());
-                }
-            }
-
-           *//* holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toasty.success(context,items.get(i).getProductId(),Toasty.LENGTH_SHORT).show();
-                }
-            });*//*
-
-
-
-
-            holder.itemView.setOnClickListener(v -> {
-
-                if (holder.fBinding.qtyShowTv.getVisibility()==View.VISIBLE){
-                    holder.fBinding.qtyShowTv.setVisibility(View.GONE);
-                }else{
-                    holder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
-
-                    if (foodtasks.size() == 0) {
-                        if (items.get(i).getAddons().equals(1) || itemss2.size() > 0) {
-                            List<Addonsinfo> addons = items.get(i).getAddonsinfo();
-
-                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(i).getVariantName(),holder.fBinding.qtyShowTv,items);
-
-                        } else {
-
-                            insertFood(items.get(i));
-                            Gson g = new Gson();
-                            int count = items.get(i).quantity;
-                            count++;
-                            items.get(i).quantity = count;
-
-                            //holder.qtyShowTv.setText(String.valueOf(items.get(i).quantity));
-                            List<Foodinfo> orderedItems = new ArrayList<>();
-                            for (Foodinfo food : items) {
-                                if (food.quantity > 0) {
-                                    orderedItems.add(food);
-                                }
-                            }
-                            items.get(i).setDestcription("");
-                            Data data = new Data();
-                            data.setFoodinfo(orderedItems);
-                            String foods = g.toJson(data);
-
-                            items.get(i).quantity = 0;
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getFoodCart();
-                                }
-                            }, 1000);
-
-                        }
-                    }
-                    else if (foodtasks.size() > 0 && itemss2.size() > 0) {
-
-                        if (items.get(i).getAddons().equals(1) || itemss2.size() > 0) {
-                            List<Addonsinfo> addons = items.get(i).getAddonsinfo();
-                            *//*Gson gson = new Gson();
-                            String string = gson.toJson(addons);*//*
-
-                            FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), holder.fBinding.qtyShowTv, items);
-
-                        } else {
-
-                            insertFood(items.get(i));
-                            Gson g = new Gson();
-                            int count = items.get(i).quantity;
-                            count++;
-                            items.get(i).quantity = count;
-                            List<Foodinfo> orderedItems = new ArrayList<>();
-                            for (Foodinfo food : items) {
-                                if (food.quantity > 0) {
-                                    orderedItems.add(food);
-                                }
-                            }
-                            items.get(i).setDestcription("");
-                            Data data = new Data();
-                            data.setFoodinfo(orderedItems);
-                            String foods = g.toJson(data);
-
-                            items.get(i).quantity = 0;
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getFoodCart();
-                                }
-                            }, 1000);
-
-                        }
-                    }
-                    try {
-                        if (holder.fBinding.qtyShowTv.getVisibility() == View.VISIBLE) {
-                            String list = items.get(i).getProductId() + items.get(i).getVariantid();
-                            for (int t = 0; t < foodtasks.size(); t++) {
-                                String list1 = foodtasks.get(t).getProductId() + foodtasks.get(t).getVariantid();
-
-                                if (list.equals(list1)) {
-
-                                    deleteFood(foodtasks.get(t));
-                                }
-                            }
-                        } else {
-                            Log.d("ooo", "onClick: ");
-                            if (items.get(i).getAddons().equals(1)) {
-                                List<Addonsinfo> addons = items.get(i).getAddonsinfo();
-                                Gson gson = new Gson();
-                                String string = gson.toJson(addons);
-
-                                FoodCartDialog(addons, i, items.get(i).getVariantid(), items.get(0).getVariantName(), holder.fBinding.qtyShowTv, items);
-                            } else {
-
-                                insertFood(items.get(i));
-                                holder.fBinding.qtyShowTv.setVisibility(View.VISIBLE);
-                                Gson g = new Gson();
-                                int count = items.get(i).quantity;
-                                count++;
-                                items.get(i).quantity = count;
-                                List<Foodinfo> orderedItems = new ArrayList<>();
-                                for (Foodinfo food : items) {
-                                    if (food.quantity > 0) {
-                                        orderedItems.add(food);
-                                    }
-                                }
-                                items.get(i).setDestcription("");
-                                Data data = new Data();
-                                data.setFoodinfo(orderedItems);
-                                String foods = g.toJson(data);
-
-
-                                items.get(i).quantity = 0;
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getFoodCart();
-                                    }
-                                }, 1000);
-
-                            }
-                        }
-                    }
-                    catch (Exception ignored) {*//**//*}
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private DesignFoodsItemBinding fBinding;
-            public ViewHolder(View view) {
-                super(view);
-                fBinding = DesignFoodsItemBinding.bind(view);
-            }
-        }
-
-        private boolean isOfferAvailable2(String offerstartdate, String offerendate) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date strDate = null;
-            Date endDate = null;
-            try {
-                strDate = sdf.parse(offerstartdate);
-                endDate = sdf.parse(offerendate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (System.currentTimeMillis() >= strDate.getTime() &&
-                    System.currentTimeMillis() <= endDate.getTime()) {
-                Log.wtf("TRUE","");
-                return true;
-            } else {
-                Log.wtf("False","");
-                return false;
-            }
-        }
-
-
-
-
-
-
-        *//*public void FoodCartDialog(List<Addonsinfo> addonsinfoList, final int pos, String variantId, String variantName,
-                                   ImageView qtyShowTv, List<Foodinfo> list) {
-            SharedPref.init(context);
-
-            if (addonsinfoList == null) {
-                addonsinfoList = new ArrayList<>();
-            }
-
-            final Dialog dialog = new Dialog(context);
-            View view = LayoutInflater.from(context).inflate(R.layout.food_cart_dialog,null);
-            FoodCartDialogBinding dBinding = FoodCartDialogBinding.bind(view);
-            dBinding.addonsHeader.setVisibility(View.GONE);
-            dialog.setContentView(view);
-
-            String productName = "",productId = "";
-            List<Varientlist> varientlists = new ArrayList<>();
-            List<String> variantnames = new ArrayList<>();
-
-
-
-
-            Log.d("checkItemss2",new Gson().toJson(itemss2));
-            Log.d("checkItemss3",new Gson().toJson(list));
-
-
-            if (variantId.contains(list.get(pos).getVariantid())) {
-                variantname = list.get(pos).getVariantName();
-                variantid = list.get(pos).getVariantid();
-                productName = list.get(pos).getProductName();
-                productId = list.get(pos).getProductId();
-                variantPric = list.get(pos).getPrice();
-                varientlists = list.get(pos).getVarientlist();
-                Log.d("detailsCheck", "pname: " + productName + "pPrice " + variantPric + "list " + new Gson().toJson(varientlists));
-                dBinding.variantPriceTV.setText(variantPric);
-                dBinding.variantNameTV.setText(productName);
-
-                for (int j = 0; j < varientlists.size(); j++) {
-                    variantnames.add(varientlists.get(j).getMultivariantName());
-
-                }
-                if (variantnames.size()==1){
-                    variantnames.clear();
-                    variantnames.add(variantName);
-                }
-                Log.d("variantCheck", String.valueOf(variantnames));
-
-
-                dBinding.variantSpinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
-                        variantnames));
-            }
-            else {
-                productName = list.get(pos).getProductName();
-                variantPric = list.get(pos).getPrice();
-                varientlists = list.get(pos).getVarientlist();
-                dBinding.variantPriceTV.setText(variantPric);
-                dBinding.variantNameTV.setText(productName);
-                Log.d("detailsCheck", "pname: " + productName + "pPrice " + variantPric + "list " + new Gson().toJson(varientlists));
-            }
-
-
-
-            dBinding.plusBtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view) {
-                    countNow++;
-                    dBinding.quantityFromUser.setText(String.valueOf(countNow));
-                    double price =  Double.parseDouble(variantPric) * countNow;
-                    dBinding.variantPriceTV.setText(""+price);
-                }
-            });
-
-
-
-            dBinding.minusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (countNow == 1) {
-                        return;
-                    } else {
-                        countNow--;
-                        dBinding.quantityFromUser.setText(String.valueOf(countNow));
-                        double priceReduce = Double.parseDouble(variantPric);
-                        double price =  Double.parseDouble(dBinding.variantPriceTV.getText().toString()) - priceReduce;
-                        dBinding.variantPriceTV.setText(""+price);
-                    }
-
-                }
-            });
-
-
-            List<Varientlist> finalVarientlists = varientlists;
-            Log.d("checkvarientId",new Gson().toJson(finalVarientlists));
-
-
-
-            dBinding.variantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    selecTedVariants = dBinding.variantSpinner.getSelectedItem().toString();
-                    for (int j = 0; j < finalVarientlists.size(); j++) {
-                        if (selecTedVariants.equals(finalVarientlists.get(j).getMultivariantName())){
-                            variantid = finalVarientlists.get(j).getMultivariantid();
-                            Log.d("checkvarientId",variantid);
-                        }
-
-                    }
-                    for (int k = 0; k < finalVarientlists.size(); k++) {
-                        if (finalVarientlists.get(k).getMultivariantName() == selecTedVariants) {
-                            if (!finalVarientlists.get(k).getMultivariantPrice().isEmpty()) {
-                                Log.d("variantprice", variantPric);
-                                dBinding.variantPriceTV.setText(finalVarientlists.get(k).getMultivariantPrice());
-                                variantPric = finalVarientlists.get(k).getMultivariantPrice();
-                            } else if (!finalVarientlists.get(k).getMultivariantName().isEmpty()) {
-                                variantname = finalVarientlists.get(k).getMultivariantName();
-                                variantid = finalVarientlists.get(k).getMultivariantid();
-                                Log.d("checkVarientId",variantId+","+variantName);
-
-                            } else if (!finalVarientlists.get(k).getMultivariantid().isEmpty()) {
-                                variantid = finalVarientlists.get(k).getMultivariantid();
-
-
-                            }
-
-                        }
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-
-
-
-            dBinding.recyclerDialog.setLayoutManager(new LinearLayoutManager(context));
-
-
-
-            try {
-                Log.d("addonslisize", "" + addonsinfoList.size());
-                addOnsitems = addonsinfoList;
-
-
-                if (addOnsitems.size() == 0) {
-                    dBinding.recyclerDialog.setVisibility(View.GONE);
-                }
-                else {
-                    dBinding.addonsHeader.setVisibility(View.VISIBLE);
-                    dBinding.recyclerDialog.setAdapter(new AddOnsItemAdapter(context, addOnsitems,dBinding.variantPriceTV.getText().toString(),dBinding.variantPriceTV));
-                }
-            }
-            catch (Exception e) {
-            }
-
-
-            SharedPref.write("name", "");
-            SharedPref.write("SUM", "");
-
-
-            String finalProductName = productName;
-            String finalProductId = productId;
-
-
-
-
-
-            dBinding.addToCartBtn.setOnClickListener(v -> {
-                List<Addonsinfo> addonsinfos = new ArrayList<>();
-                Gson g = new Gson();
-                int counts = this.items.get(pos).quantity;
-                counts++;
-                quantity = dBinding.quantityFromUser.getText().toString();
-                if (orderQuantity == 0) {
-                    orderQuantity = Integer.parseInt(quantity);
-                } else {
-                    orderQuantity = Integer.parseInt(quantity) + orderQuantity;
-                }
-                Log.d("quantitycheck", "" + quantity);
-
-
-                if(items.get(pos).getProductName() == finalProductName &&
-                        items.get(pos).getProductId() == finalProductId &&
-                        items.get(pos).getVariantName() == variantName &&
-                        items.get(pos).getVariantid() == variantId){
-
-
-                    this.items.get(pos).setVariantName(variantname);
-                    this.items.get(pos).setVariantid(variantid);
-                    this.items.get(pos).setPrice(String.valueOf(Double.parseDouble(this.items.get(pos).getPrice())+Double.parseDouble(variantPric)));
-                    this.items.get(pos).quantitys += orderQuantity;
-                    this.items.get(pos).quantity += orderQuantity;
-                    this.items.get(pos).setQuantity( this.items.get(pos).getQuantity()+Integer.parseInt(quantity));
-                    this.items.get(pos).setVariantName(selecTedVariants);
-                    this.items.get(pos).setAddons(list.get(pos).getAddons());
-
-                    Log.wtf("ITEMS",items.toString());
-                }
-
-                *//**//*this.items.get(pos).setPrice(variantPric);
-                this.items.get(pos).setVariantName(variantname);
-                this.items.get(pos).setVariantid(variantid);
-                this.items.get(pos).quantitys = orderQuantity;
-                this.items.get(pos).quantity = orderQuantity;
-                this.items.get(pos).setQuantity(Integer.parseInt(quantity));
-                this.items.get(pos).setVariantName(selecTedVariants);
-                this.items.get(pos).setAddons(list.get(pos).getAddons());
-                Log.d("addOnsChecker",""+addOnsChecker);*//**//*
-
-                if (addOnsChecker==1){
-                    if (list.get(pos).getAddons() == 1){
-                        if (!SharedPref.read("addOnslist","").equals("")){
-                            Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
-                            addonsinfos = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
-                            this.items.get(pos).setAddonsinfo(addonsinfos);
-                        }
-                    }
-
-                } else {
-                    this.items.get(pos).setAddons(0);
-                }
-
-                orderedItems.clear();
-                orderedItems.removeAll(orderedItems);
-                for (Foodinfo foodss : this.items)
-                    if (foodss.quantity > 0) {
-                        Log.d("foodss", "foods" + new Gson().toJson(foodss));
-                        orderedItems.add(foodss);
-                    }
-
-                this.items.get(pos).setDestcription("");
-                Data data = new Data();
-                data.setFoodinfo(orderedItems);
-                String updateFoods = g.toJson(orderedItems);
-                String foods = g.toJson(data);
-                Log.d("ppok", "onClick: " + updateFoods);
-
-                this.items.get(pos).quantity = 0;
-
-                insertFood(this.items.get(pos));
-
-                Toasty.success(FoodActivity.this,"Item added to cart").show();
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() { getFoodCart(); }
-                }, 1000);
-
-                dialog.dismiss();
-
-                qtyShowTv.setVisibility(View.GONE);
-                //getAllFoodItem();
-            });
-
-
-            List<Addonsinfo> finalAddonsinfoList1 = addonsinfoList;
-
-
-
-            dBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    qtyShowTv.setVisibility(View.GONE);
-                }
-            });
-
-
-
-
-
-            dBinding.addMultipleBtn.setOnClickListener(v -> {
-                List<Addonsinfo> addonsinfos = new ArrayList<>();
-                Gson g = new Gson();
-                int counts = this.items.get(pos).quantity;
-                counts++;
-                quantity = dBinding.quantityFromUser.getText().toString();
-                if (orderQuantity == 0) {
-                    orderQuantity = Integer.parseInt(quantity);
-                } else {
-                    orderQuantity = Integer.parseInt(quantity) + orderQuantity;
-                }
-
-                Log.d("quantitycheck", "" + quantity);
-
-                this.items.get(pos).setPrice(variantPric);
-                this.items.get(pos).setVariantName(variantname);
-                this.items.get(pos).setVariantid(variantid);
-                this.items.get(pos).quantitys = orderQuantity;
-                this.items.get(pos).quantity = orderQuantity;
-                this.items.get(pos).setQuantity(Integer.parseInt(quantity));
-                this.items.get(pos).setVariantName(selecTedVariants);
-                this.items.get(pos).setAddons(list.get(pos).getAddons());
-
-                if (addOnsChecker==1){
-                    if (list.get(pos).getAddons()==1){
-                        if (!SharedPref.read("addOnslist","").equals("")){
-                            Type type = new TypeToken<List<Addonsinfo>>() {}.getType();
-                            addonsinfos = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
-                            this.items.get(pos).setAddonsinfo(addonsinfos);
-
-                        }
-                    }
-
-                }
-                else{
-                    this.items.get(pos).setAddons(0);
-                }
-
-                orderedItems.clear();
-                orderedItems.removeAll(orderedItems);
-                for (Foodinfo foodss : this.items)
-                    if (foodss.quantity > 0) {
-                        Log.d("foodss", "foods" + new Gson().toJson(foodss));
-                        orderedItems.add(foodss);
-
-                    }
-
-                this.items.get(pos).setDestcription("");
-                Data data = new Data();
-                data.setFoodinfo(orderedItems);
-                String updateFoods = g.toJson(orderedItems);
-                String foods = g.toJson(data);
-                Log.d("ppok", "onClick: " + updateFoods);
-
-                this.items.get(pos).quantity = 0;
-
-                insertFood(this.items.get(pos));
-
-                Toasty.success(FoodActivity.this,"Item added to cart").show();
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getFoodCart();
-                    }
-                }, 1000);
-
-                //getAllFoodItem();
-            });
-
-            dialog.show();
-            int width = getResources().getDisplayMetrics().widthPixels;
-            Window win = dialog.getWindow();
-            win.setLayout((9*width)/10, WindowManager.LayoutParams.WRAP_CONTENT);
-            win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }*//*
-    }*/
-
-
-
-
 
     @Override
     public void onFoodItemClick(Context context, Foodinfo food, ImageView selectedMark) {
-        varientlist = food.getVarientlist();
+        variantList = food.getVarientlist();
         List<String> variantNameList = new ArrayList<>();
+        boolean isCustomQty;
 
-
-        if (food.getTotalvariant().equals("1")){
+        if (food.getTotalvariant().equals("1")) {
             variantNameList.add(food.getVariantName());
         } else {
-            for (int i =0; i < varientlist.size(); i++){
-                variantNameList.add(varientlist.get(i).getMultivariantName());
+            for (int i = 0; i < variantList.size(); i++) {
+                variantNameList.add(variantList.get(i).getMultivariantName());
             }
         }
 
-
         final Dialog dialog = new Dialog(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.food_cart_dialog,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.food_cart_dialog, null);
         FoodCartDialogBinding dBinding = FoodCartDialogBinding.bind(view);
         dBinding.addonsHeader.setVisibility(View.GONE);
         dialog.setContentView(view);
 
+        if (food.getIscustqty() != null && food.getIscustqty().equals("1")) {
+            dBinding.quantityEt.setText("1.0");
+            isCustomQty = true;
+        } else {
+            dBinding.quantityEt.setText("1");
+            isCustomQty = false;
+        }
 
         dBinding.productName.setText(food.getProductName());
 
-
         dBinding.variantSpinner.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, variantNameList));
 
+        if (food.getAddons().equals(1)) {
+            dBinding.addonsHeader.setVisibility(View.VISIBLE);
+            dBinding.dialogAddonsRv.setVisibility(View.VISIBLE);
+        }
 
         dBinding.closeBtn.setOnClickListener(view1 -> {
             dialog.dismiss();
         });
 
+        if (food.getIscustqty() != null && food.getIscustqty().equals("1")) {
+            dBinding.quantityEt.setFocusable(true);
+            dBinding.quantityEt.setFocusableInTouchMode(true);
+        }
 
+        if (food.getIscustomeprice() != null && food.getIscustomeprice().equals("1")) {
+            dBinding.customPriceLay.setVisibility(View.VISIBLE);
+        }
 
+        dBinding.customPriceEt.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                double addonTotal = 0.0;
+                if (!charSequence.toString().isEmpty() && !charSequence.toString().equals(".")) {
+                    variantPrice = charSequence.toString();
+                    try {
+                        Type type = new TypeToken<List<Addonsinfo>>() {/**/}.getType();
+                        List<Addonsinfo> addonsList = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
+                        if (addonsList.size() > 0) {
+                            for (int a = 0; a < addonsList.size(); a++) {
+                                addonTotal += (addonsList.get(a).getAddonsquantity() * Double.parseDouble(addonsList.get(a).getAddonsprice()));
+                            }
+                        }
+                    } catch (Exception e) {/**/}
+                    setCartDialogTotalPrice(dBinding,addonTotal);
+                } else {
+                    variantPrice = "0.0";
+                    setCartDialogTotalPrice(dBinding,addonTotal);
+                }
+            } @Override public void afterTextChanged(Editable editable) {/**/}
+        });
 
         dBinding.variantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-
+            @Override public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 variantName = dBinding.variantSpinner.getSelectedItem().toString();
-
-                if (food.getTotalvariant().equals("1")){
-                    variantid = food.getVariantid();
+                if (food.getTotalvariant().equals("1")) {
+                    variantId = food.getVariantid();
                     variantPrice = food.getPrice();
+                    dBinding.customPriceEt.setText(variantPrice);
                 } else {
-                    variantid = varientlist.get(pos).getMultivariantid();
-                    variantPrice = varientlist.get(pos).getMultivariantPrice();
+                    variantId = variantList.get(pos).getMultivariantid();
+                    variantPrice = variantList.get(pos).getMultivariantPrice();
+                    dBinding.customPriceEt.setText(variantPrice);
                 }
-
-                dBinding.totalPriceTV.setText(variantPrice);
-
-                //Setting addon Adapter
-                if (food.getAddons().equals(1)){
-                    SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
-                    dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {/**/}
+            } @Override public void onNothingSelected(AdapterView<?> adapterView) {/**/}
         });
 
-
-
-
-        dBinding.plusBtn.setOnClickListener(view1 -> {
-            if (dBinding.quantityEt.getText().toString().isEmpty()){
-
-                dBinding.quantityEt.setText("1");
-                dBinding.totalPriceTV.setText(variantPrice);
-
-            } else {
-
-                countNow = Integer.parseInt(dBinding.quantityEt.getText().toString());
-                countNow ++;
-                dBinding.quantityEt.setText(String.valueOf(countNow));
-                double oldPrice = Double.parseDouble(dBinding.totalPriceTV.getText().toString());
-                dBinding.totalPriceTV.setText(String.valueOf(oldPrice+Double.parseDouble(variantPrice)));
-            }
-        });
-
-
-
-
-        dBinding.minusBtn.setOnClickListener(view1 ->{
-            if (dBinding.quantityEt.getText().toString().isEmpty()){
-
-                dBinding.quantityEt.setText("1");
-                dBinding.totalPriceTV.setText(variantPrice);
-
-            } else {
-
-                countNow = Integer.parseInt(dBinding.quantityEt.getText().toString());
-                if (countNow>1){
-                    countNow --;
-                    dBinding.quantityEt.setText(String.valueOf(countNow));
-                    double oldPrice = Double.parseDouble(dBinding.totalPriceTV.getText().toString());
-                    dBinding.totalPriceTV.setText(String.valueOf(oldPrice-Double.parseDouble(variantPrice)));
-                }
-            }
-        });
-
-
-
+        //Setting addon Adapter
+        if (food.getAddons().equals(1)) {
+            SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
+            dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(food.getAddonsinfo(), dBinding.totalPriceTv));
+        }
 
         dBinding.quantityEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
-            @Override
-            public void onTextChanged(CharSequence text, int i, int i1, int i2) {
-                if (!text.toString().isEmpty()){
-                    dBinding.totalPriceTV.setText(String.valueOf(Double.parseDouble(dBinding.quantityEt.getText().toString())*Double.parseDouble(variantPrice)));
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {/**/}
+            @Override public void onTextChanged(CharSequence text, int i, int i1, int i2) {
+                double addonTotal = 0.0;
+                if (!text.toString().isEmpty() && !text.toString().equals(".")) {
+                    try {
+                        Type type = new TypeToken<List<Addonsinfo>>() {/**/}.getType();
+                        List<Addonsinfo> addonsList = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
+                        if (addonsList.size() > 0) {
+                            for (int a = 0; a < addonsList.size(); a++) {
+                                addonTotal += (addonsList.get(a).getAddonsquantity() * Double.parseDouble(addonsList.get(a).getAddonsprice()));
+                            }
+                        }
+                    } catch (Exception e) {/**/}
+                    dBinding.totalPriceTv.setText(new DecimalFormat("#.##").format((Double.parseDouble(dBinding.quantityEt.getText().toString())*Double.parseDouble(variantPrice))+addonTotal));
                 } else {
-                    dBinding.totalPriceTV.setText("0.0");
+                    dBinding.totalPriceTv.setText("0.0");
                 }
+            } @Override public void afterTextChanged(Editable editable) {/**/}
+        });
 
-                //Setting addon Adapter
-                if (food.getAddons().equals(1)){
-                    SharedPref.write("addOnslist", new Gson().toJson(food.getAddons()));
-                    dBinding.dialogAddonsRv.setAdapter(new AddOnsItemAdapter(context,food.getAddonsinfo(),variantPrice,dBinding.totalPriceTV));
+        dBinding.plusBtn.setOnClickListener(view1 -> {
+            dBinding.quantityEt.clearFocus();
+            dBinding.customPriceEt.clearFocus();
+            if (dBinding.quantityEt.getText().toString().isEmpty()) {
+                dBinding.quantityEt.setText("1");
+            } else {
+                countNow = Float.parseFloat(dBinding.quantityEt.getText().toString());
+                countNow++;
+                Log.wtf("A:KLAKLKA",""+isCustomQty);
+                dBinding.quantityEt.setText(getQuantity(countNow,isCustomQty));
+            }
+        });
+
+        dBinding.minusBtn.setOnClickListener(view1 -> {
+            dBinding.quantityEt.clearFocus();
+            dBinding.customPriceEt.clearFocus();
+            if (dBinding.quantityEt.getText().toString().isEmpty()) {
+                dBinding.quantityEt.setText("1");
+            } else {
+                countNow = Float.parseFloat(dBinding.quantityEt.getText().toString());
+                if (countNow > 1) {
+                    countNow--;
+                    dBinding.quantityEt.setText(getQuantity(countNow,isCustomQty));
                 }
             }
-            @Override
-            public void afterTextChanged(Editable editable) {/**/}
         });
 
-
-
+        dBinding.customPriceBtn.setOnClickListener(view1 -> {
+            if (dBinding.customPriceEt.getVisibility() == View.VISIBLE) {
+                dBinding.customPriceEt.setVisibility(View.GONE);
+            } else {
+                dBinding.customPriceEt.setVisibility(View.VISIBLE);
+            }
+        });
 
         dBinding.addToCartBtn.setOnClickListener(view1 -> {
-
-            AddFoodToCartHandler(food,dBinding);
-
-            dialog.dismiss();
+            String quantity = dBinding.quantityEt.getText().toString();
+            if (!quantity.equals(".") && Float.parseFloat(quantity) > 0) {
+                AddFoodToCartHandler(food, dBinding);
+                dialog.dismiss();
+            } else {
+                Toasty.info(FoodActivity.this,"Invalid Quantity",Toasty.LENGTH_SHORT,true).show();
+            }
         });
-
-
-
 
         dBinding.addMultipleBtn.setOnClickListener(view1 -> {
-
-            AddFoodToCartHandler(food,dBinding);
-
+            dBinding.quantityEt.clearFocus();
+            dBinding.customPriceEt.clearFocus();
+            String quantity = dBinding.quantityEt.getText().toString();
+            if (!quantity.equals(".") && Float.parseFloat(quantity) > 0) {
+                AddFoodToCartHandler(food, dBinding);
+            } else {
+                Toasty.info(FoodActivity.this,"Invalid Quantity",Toasty.LENGTH_SHORT,true).show();
+            }
         });
-
-
-
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-
                 SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
-
                 selectedMark.setVisibility(View.GONE);
             }
         });
 
-
-
         dialog.show();
         int width = getResources().getDisplayMetrics().widthPixels;
         Window win = dialog.getWindow();
-        win.setLayout((9*width)/10, WindowManager.LayoutParams.WRAP_CONTENT);
+        win.setLayout((8 * width) / 9, WindowManager.LayoutParams.WRAP_CONTENT);
         win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-
-
-
-
+    private void setCartDialogTotalPrice(FoodCartDialogBinding dBinding, double addonsTotal) {
+        String quantity = dBinding.quantityEt.getText().toString();
+        if (!quantity.isEmpty() && !quantity.equals(".")){
+            dBinding.totalPriceTv.setText(new DecimalFormat("#.##").format((Double.parseDouble(dBinding.quantityEt.getText().toString())*Double.parseDouble(variantPrice))+ addonsTotal));
+        } else {
+            dBinding.totalPriceTv.setText(new DecimalFormat("#.##").format((0.0*Double.parseDouble(variantPrice))+ addonsTotal));
+        }
+    }
 
 
     private void AddFoodToCartHandler(Foodinfo food, FoodCartDialogBinding dBinding) {
-        Type type = new TypeToken<List<Addonsinfo>>(){/**/}.getType();
+        Type type = new TypeToken<List<Addonsinfo>>() {/**/}.getType();
         List<Addonsinfo> addonsList = new Gson().fromJson(SharedPref.read("addOnslist", ""), type);
-
         boolean haveToInsert = false;
 
         if (food.getAddons().equals(1) && addonsList.size() > 0) {
@@ -1282,56 +624,39 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         }
 
         //fake new AddonList for Checking
-        List<Addonsinfo> newAddons = new ArrayList<>();
+        List<String> newAddons = new ArrayList<>();
         for (int n = 0; n < addonsList.size(); n++) {
-            newAddons.add(new Addonsinfo(addonsList.get(n).getAddonsid(), addonsList.get(n).getAddOnName(), addonsList.get(n).getAddonsprice(), 0));
+            newAddons.add(addonsList.get(n).getAddonsid());
         }
 
-        if (foodtasks.size() > 0) {
-
-            for (int l = 0; l < foodtasks.size(); l++) {
-
-                if (foodtasks.get(l).getProductId().equals(food.getProductId()) &&
-                        foodtasks.get(l).getVariantName().equals(variantName)) {
-
+        if (foodTask.size() > 0) {
+            for (int l = 0; l < foodTask.size(); l++) {
+                if (foodTask.get(l).getProductId().equals(food.getProductId()) &&
+                        foodTask.get(l).getVariantName().equals(variantName) &&
+                        foodTask.get(l).getPrice().equals(new DecimalFormat("#.##").format(Double.parseDouble(variantPrice)))) {
                     //fake old AddonList for Checking
-                    List<Addonsinfo> oldAddons = new ArrayList<>();
-                    for (int o = 0; o < foodtasks.get(l).getAddonsinfo().size(); o++) {
-                        oldAddons.add(new Addonsinfo(foodtasks.get(l).getAddonsinfo().get(o).getAddonsid(),
-                                foodtasks.get(l).getAddonsinfo().get(o).getAddOnName(),
-                                foodtasks.get(l).getAddonsinfo().get(o).getAddonsprice(), 0));
+                    List<String> oldAddons = new ArrayList<>();
+                    for (int o = 0; o < foodTask.get(l).getAddonsinfo().size(); o++) {
+                        oldAddons.add(foodTask.get(l).getAddonsinfo().get(o).getAddonsid());
                     }
-
-
                     if (new Gson().toJson(newAddons).contains(new Gson().toJson(oldAddons))) {
-
-                        for (int a = 0; a < foodtasks.get(l).getAddonsinfo().size(); a++) {
-
+                        for (int a = 0; a < foodTask.get(l).getAddonsinfo().size(); a++) {
                             for (int b = 0; b < addonsList.size(); b++) {
-
-                                if (foodtasks.get(l).getAddonsinfo().get(a).getAddonsid().equals(addonsList.get(b).getAddonsid())) {
-
-                                    foodtasks.get(l).getAddonsinfo().get(a).setAddonsquantity(
-                                            foodtasks.get(l).getAddonsinfo().get(a).getAddonsquantity()
+                                if (foodTask.get(l).getAddonsinfo().get(a).getAddonsid().equals(addonsList.get(b).getAddonsid())) {
+                                    foodTask.get(l).getAddonsinfo().get(a).setAddonsquantity(foodTask.get(l).getAddonsinfo().get(a).getAddonsquantity()
                                                     + addonsList.get(b).getAddonsquantity());
                                 }
                             }
-
                         }
                         //updating quantity
                         haveToInsert = false;
-
-                        foodtasks.get(l).setQuantitys(foodtasks.get(l).getQuantitys() + Integer.parseInt(dBinding.quantityEt.getText().toString()));
-                        foodtasks.get(l).setAddOnsTotal(foodtasks.get(l).getAddOnsTotal() + addonsTotal);
-
-                        updateFood(foodtasks.get(l));
-
+                        foodTask.get(l).setQuantitys(foodTask.get(l).getQuantitys() + Float.parseFloat(dBinding.quantityEt.getText().toString()));
+                        foodTask.get(l).setAddOnsTotal(foodTask.get(l).getAddOnsTotal() + addonsTotal);
+                        updateFood(foodTask.get(l));
                         break;
-
                     } else {
                         haveToInsert = true;
                     }
-
                 } else {
                     haveToInsert = true;
                 }
@@ -1339,56 +664,50 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         } else {
             haveToInsert = true;
         }
-
-
         if (haveToInsert) {
-            insertFood(food, Integer.parseInt(dBinding.quantityEt.getText().toString()), addonsList);
+            insertFood(food, Float.parseFloat(dBinding.quantityEt.getText().toString()), addonsList);
         }
-
-        addOnsChecker = 0;
-
         getUnit();
     }
 
+    private String getQuantity(float quantity, boolean isCustom) {
+        if (isCustom == true) {
+            return String.valueOf(quantity);
+        } else {
+            return String.valueOf(quantity).split("\\.")[0];
+        }
+    }
 
-
-
-
-
-
-    private void insertFood(Foodinfo food, int quantity, List<Addonsinfo> addonsList) {
+    private void insertFood(Foodinfo food, float quantity, List<Addonsinfo> addonsList) {
         class AddProduct extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 Foodinfo unitListItem = new Foodinfo();
-
                 unitListItem.setProductId(food.getProductId());
                 unitListItem.setProductName(food.getProductName());
-                unitListItem.setVariantid(variantid);
+                unitListItem.setVariantid(variantId);
                 unitListItem.setVariantName(variantName);
-                unitListItem.setPrice(variantPrice);
+                unitListItem.setPrice(new DecimalFormat("#.##").format(Double.parseDouble(variantPrice)));
                 unitListItem.setQuantitys(quantity);
-
+                unitListItem.setIscustqty(food.getIscustqty());
+                ////////////////////////////////////
                 unitListItem.setProductvat(food.getProductvat());
                 unitListItem.setOfferIsavailable(food.getOfferIsavailable());
                 unitListItem.setOfferstartdate(food.getOfferstartdate());
                 unitListItem.setOfferendate(food.getOfferendate());
                 unitListItem.setOffersRate(food.getOffersRate());
-
+                /////////////////////////////////////
                 unitListItem.setAddons(addOnsChecker);
                 unitListItem.setAddOnsTotal(addonsTotal);
                 unitListItem.setAddonsinfo(addonsList);
 
                 appDatabase.taskDao().insertFood(unitListItem);
-
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
                 getUnit();
             }
         }
@@ -1396,42 +715,33 @@ public class FoodActivity extends AppCompatActivity implements FoodDialogInterfa
         st.execute();
 
     }
-
 
 
     private void updateFood(Foodinfo foodinfo) {
         class AddProduct extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 appDatabase.taskDao().updateFood(foodinfo);
-
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
                 getUnit();
             }
         }
         AddProduct st = new AddProduct();
         st.execute();
-
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        //setFoodCartHeaders();
         getUnit();
         SharedPref.write("addOnslist", new Gson().toJson(new ArrayList<Addonsinfo>()));
     }
-
-
-
 
 
     @Override

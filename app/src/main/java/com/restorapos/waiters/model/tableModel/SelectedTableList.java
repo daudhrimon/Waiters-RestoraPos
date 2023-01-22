@@ -2,9 +2,9 @@ package com.restorapos.waiters.model.tableModel;
 
 public class SelectedTableList {
     private String tableId;
-    private String  persons;
+    private String persons;
 
-    public SelectedTableList(String tableId, String  persons) {
+    public SelectedTableList(String tableId, String persons) {
         this.tableId = tableId;
         this.persons = persons;
     }
